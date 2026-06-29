@@ -82,12 +82,52 @@ export default function OneClickInstaller({ uploadedFile, loading, onGenerate })
     }
   };
 
+  const styleInfo = {
+    polymorphic: {
+      desc: 'Multiple polymorphic variants for evasion',
+      tips: 'Changes structure on every generation - signature based detection fails',
+      size: '6-10 KB',
+    },
+    anti_analysis: {
+      desc: 'Detects and defeats analysis tools',
+      tips: 'Detects debuggers, sandboxes, and analysis environments',
+      size: '7-12 KB',
+    },
+    multi_stage: {
+      desc: 'Multi-stage installation with delays',
+      tips: 'Stages execution to avoid behavioral detection',
+      size: '5-9 KB',
+    },
+    silent: {
+      desc: 'Silent installation with no output',
+      tips: 'Zero visible output, completely silent execution',
+      size: '4-8 KB',
+    },
+  };
+
+  const currentStyleInfo = styleInfo[selectedStyle] || {};
+
   return (
     <div style={{ padding: '1.5rem' }}>
-      <h3 style={{ color: '#00d4ff', marginBottom: '1rem' }}>⚡ One-Click Installer</h3>
+      <h3 style={{ color: '#00d4ff', marginBottom: '0.5rem' }}>⚡ One-Click Installer</h3>
+      <p style={{ color: '#a0a0a0', fontSize: '0.9rem', margin: '0 0 1rem 0' }}>
+        Silent, automatic installation - no user interaction required
+      </p>
 
       <div className="form-group">
-        <label>Obfuscation Style:</label>
+        <label style={{ marginBottom: '0.8rem' }}>
+          Obfuscation Style
+          <span
+            style={{
+              marginLeft: '0.5rem',
+              fontSize: '0.75rem',
+              color: '#ffb74d',
+              fontWeight: 'normal',
+            }}
+          >
+            (Pick one - all equally effective)
+          </span>
+        </label>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
           {Object.entries(styles).map(([key, desc]) => (
             <div
@@ -97,27 +137,68 @@ export default function OneClickInstaller({ uploadedFile, loading, onGenerate })
               style={{ cursor: 'pointer' }}
             >
               <div className="fingerprint-name">{key.toUpperCase()}</div>
-              <div className="fingerprint-desc">{desc}</div>
+              <div className="fingerprint-desc" style={{ fontSize: '0.75rem' }}>
+                {desc}
+              </div>
             </div>
           ))}
         </div>
+
+        {currentStyleInfo && (
+          <div
+            style={{
+              marginTop: '1rem',
+              padding: '0.8rem',
+              backgroundColor: 'rgba(0, 212, 255, 0.08)',
+              border: '1px solid rgba(0, 212, 255, 0.3)',
+              borderRadius: '6px',
+              fontSize: '0.85rem',
+            }}
+          >
+            <p style={{ margin: '0 0 0.4rem 0', color: '#a0a0a0' }}>
+              <strong>✓ {selectedStyle.toUpperCase()}:</strong>
+            </p>
+            <p style={{ margin: '0.3rem 0', color: '#a0a0a0' }}>
+              {currentStyleInfo.tips}
+            </p>
+            <p style={{ margin: '0.3rem 0 0 0', color: '#00d4ff', fontSize: '0.8rem' }}>
+              Expected size: {currentStyleInfo.size}
+            </p>
+          </div>
+        )}
       </div>
 
       <div className="form-group">
-        <label>Output Format:</label>
+        <label>Output Format (Recommended: VBS):</label>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
           {[
-            { value: 'vbs', label: 'VBS Script', desc: 'Windows VBScript file' },
-            { value: 'bat', label: 'Batch File', desc: 'Batch executable wrapper' },
+            {
+              value: 'vbs',
+              label: 'VBS Script ⭐',
+              desc: 'Native Windows script - best compatibility',
+            },
+            {
+              value: 'bat',
+              label: 'Batch File',
+              desc: 'Batch wrapper - for compatibility',
+            },
           ].map((opt) => (
             <div
               key={opt.value}
               className={`fingerprint-card ${fileType === opt.value ? 'selected' : ''}`}
               onClick={() => setFileType(opt.value)}
-              style={{ cursor: 'pointer' }}
+              style={{
+                cursor: 'pointer',
+                borderColor:
+                  opt.value === 'vbs' && fileType !== 'vbs'
+                    ? 'rgba(76, 175, 80, 0.5)'
+                    : undefined,
+              }}
             >
               <div className="fingerprint-name">{opt.label}</div>
-              <div className="fingerprint-desc">{opt.desc}</div>
+              <div className="fingerprint-desc" style={{ fontSize: '0.75rem' }}>
+                {opt.desc}
+              </div>
             </div>
           ))}
         </div>
@@ -132,11 +213,28 @@ export default function OneClickInstaller({ uploadedFile, loading, onGenerate })
         {generating ? '⏳ Generating...' : '✨ Generate One-Click Installer'}
       </button>
 
-      <div style={{ marginTop: '1rem', fontSize: '0.85rem', color: '#a0a0a0' }}>
-        <p>
-          💡 <strong>One-Click Installer:</strong> User double-clicks the file and installation
-          completes silently in background with zero visible output.
+      <div
+        style={{
+          marginTop: '1rem',
+          padding: '1rem',
+          backgroundColor: 'rgba(76, 175, 80, 0.08)',
+          border: '1px solid rgba(76, 175, 80, 0.3)',
+          borderRadius: '6px',
+          fontSize: '0.85rem',
+          color: '#a0a0a0',
+        }}
+      >
+        <p style={{ margin: '0 0 0.5rem 0', color: '#4caf50', fontWeight: 'bold' }}>
+          ✓ How It Works:
         </p>
+        <ul style={{ margin: '0.5rem 0', paddingLeft: '1.5rem' }}>
+          <li>User double-clicks the downloaded file</li>
+          <li>Installation runs completely silent in background</li>
+          <li>Zero visible output or window popups</li>
+          <li>Payload extracts and executes automatically</li>
+          <li>Typical payload size: 5-12 KB</li>
+          <li>Works on all Windows versions XP through 11</li>
+        </ul>
       </div>
 
       {payload && (

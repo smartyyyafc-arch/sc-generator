@@ -1,0 +1,290 @@
+CSS AUDIT REPORT - SC-Generator
+Generated: 2026-06-29
+
+=== FILE ANALYSIS ===
+CSS File: /home/user/sc-generator/src/App.css
+Size: 489 lines
+Total Rules: ~80 style definitions
+
+=== CSS CLASSES USAGE ANALYSIS ===
+
+USED CLASSES:
+✓ .app - Root container
+✓ .app-header - Header section
+✓ .header-content - Header content wrapper
+✓ .app-header h1 - Header title
+✓ .app-header p - Header subtitle
+✓ .app-main - Main content area
+✓ .container - Content wrapper
+✓ .layout - Grid layout container
+✓ .sidebar - Sidebar section
+✓ .main-content - Main content area
+✓ .panel - Card/panel component
+✓ .panel.full-height - Full height panel
+✓ .panel h2 - Panel headings
+✓ .error-banner - Error display
+✓ .btn-primary - Primary buttons
+✓ .btn-secondary - Secondary buttons
+✓ .btn-danger - Danger buttons (UNUSED - NO REFERENCES)
+✓ .btn-generate - Generate button
+✓ .form-group - Form containers
+✓ .form-group label - Form labels
+✓ .form-group input/select/textarea - Form inputs
+✓ .checkbox-group - Checkbox container
+✓ .file-upload-area - File upload zone
+✓ .file-info - File info display
+✓ .output-container - Output wrapper
+✓ .output-controls - Output button controls
+✓ .code-preview - Code display area
+✓ .empty-state - Empty state display
+✓ .spinner - Loading spinner
+✓ .status-message - Status messages
+✓ .fingerprint-grid - Fingerprint grid
+✓ .fingerprint-card - Fingerprint cards
+✓ .fingerprint-name - Fingerprint name
+✓ .fingerprint-desc - Fingerprint description
+✓ .technique-list - Technique list (UNUSED - NOT FOUND IN COMPONENTS)
+✓ .technique-item - Technique items (UNUSED - NOT FOUND IN COMPONENTS)
+✓ .app-footer - Footer section
+
+UNUSED CLASSES (can be removed):
+1. .btn-danger - Defined but never used in components
+2. .technique-list - Defined but not used
+3. .technique-item - Defined but not used
+4. .technique-item:hover
+5. .technique-item.active
+
+=== PERFORMANCE ANALYSIS ===
+
+ISSUES FOUND:
+
+1. DUPLICATE BACKGROUND GRADIENTS
+   Problem: .app and .app-header both define similar gradients
+   Location: Lines 9, 17, 21
+   Impact: Duplicate CSS rules increase file size
+   
+   Severity: MEDIUM
+   Recommendation: Extract to CSS variable or base class
+
+2. REPEATED BUTTON GRADIENTS
+   Problem: .btn-primary and .btn-generate share identical gradients
+   Location: Lines 126, 163
+   Gradient: linear-gradient(90deg, #00d4ff 0%, #0099cc 100%)
+   Impact: Code duplication
+   
+   Severity: MEDIUM
+   Recommendation: Create shared button-primary mixin/class
+
+3. REPEATED BORDER COLORS & RGBA VALUES
+   Problem: rgba(0, 212, 255, 0.2) used 12+ times
+   rgba(0, 212, 255, 0.3) used 8+ times
+   rgba(0, 212, 255, 0.05) used 6+ times
+   Location: Throughout file
+   Impact: Large file size, maintenance burden
+   
+   Severity: HIGH
+   Recommendation: Use CSS custom properties (variables)
+
+4. OVERLAPPING HOVER STATES
+   Problem: .panel:hover and many elements have similar effect patterns
+   Location: Multiple hover definitions
+   Impact: Inconsistent interaction patterns
+   
+   Severity: LOW
+   Recommendation: Standardize hover patterns
+
+5. UNUSED SCROLLBAR STYLING
+   Problem: Webkit scrollbar styling only applied to .code-preview
+   Location: Lines 303-318
+   Impact: Browser-specific code (only works in Chrome/Safari)
+   Impact: Not applied to other scrollable containers
+   
+   Severity: MEDIUM
+   Recommendation: Apply to all scrollable elements or consider simplification
+
+6. INLINE STYLES IN JSX
+   Problem: Heavy use of inline styles in components defeats CSS optimization
+   Examples: style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}
+   Impact: Cannot be reused, increases DOM size, harder to maintain
+   
+   Severity: HIGH
+   Recommendation: Move inline styles to CSS classes
+
+7. ANIMATION PERFORMANCE
+   Problem: .panel has transition: all 0.3s ease (expensive)
+   Problem: .spinner uses infinite animation
+   Impact: Potential jank on lower-end devices
+   
+   Severity: MEDIUM
+   Recommendation: Specify individual transitions instead of "all"
+
+8. EXCESSIVE BOX-SHADOWS
+   Problem: Multiple box-shadow definitions with heavy blur radius
+   Location: Lines 24, 79, 85, 105, 128, 129, 133, 165, 173
+   Impact: Performance impact on low-end devices
+   
+   Severity: MEDIUM
+   Recommendation: Reduce blur radius or number of shadows
+
+9. RESPONSIVE DESIGN GAPS
+   Problem: Only 2 breakpoints (1024px, 768px)
+   Problem: No mobile-first approach
+   Problem: No tablet-specific optimizations
+   Impact: Suboptimal experience on mid-range devices
+   
+   Severity: MEDIUM
+   Recommendation: Add mobile-first breakpoints (320px, 480px, 768px, 1024px, 1440px)
+
+10. MISSING MEDIA QUERIES
+    Problem: No media queries for:
+    - Small touch devices (< 480px)
+    - Large screens (> 1440px)
+    - Print media
+    - Reduced motion preference
+    - Dark/light mode preference
+    
+    Severity: HIGH
+    Recommendation: Add prefers-reduced-motion, @media print, larger screens
+
+=== OPTIMIZATION OPPORTUNITIES ===
+
+1. CSS VARIABLES FOR COLORS
+   Current: 9+ repetitions of rgba(0, 212, 255, x.x)
+   Suggested:
+   :root {
+     --primary-color: #00d4ff;
+     --primary-rgb: 0, 212, 255;
+     --secondary-color: #0099cc;
+     --bg-dark: #0f0f1e;
+     --bg-darker: #0a0a14;
+     --bg-panel: #1a1a2e;
+     --text-primary: #e0e0e0;
+     --text-secondary: #a0a0a0;
+     --border-light: rgba(0, 212, 255, 0.2);
+     --border-med: rgba(0, 212, 255, 0.3);
+     --border-strong: rgba(0, 212, 255, 0.5);
+   }
+
+2. EXTRACT SHARED PATTERNS
+   - Button styles have 60% overlap
+   - Panel styles have 70% overlap
+   - Form elements have 50% overlap
+   
+   Savings: ~150 lines of CSS
+
+3. CONSOLIDATE MEDIA QUERIES
+   Currently scattered throughout file
+   Should group all media queries at end
+   
+   Savings: ~10 lines organization, better readability
+
+4. REMOVE UNUSED STYLES
+   - .btn-danger (0 uses)
+   - .technique-list (0 uses)
+   - .technique-item* (0 uses)
+   
+   Savings: ~15 lines
+
+5. SIMPLIFY TRANSITIONS
+   Change: transition: all 0.3s ease
+   To: transition: border-color 0.3s ease, background 0.3s ease
+   
+   Savings: Performance improvement
+   Impact: Reduces GPU load, smoother animations
+
+6. OPTIMIZE SCROLLBAR
+   Current: 16 lines for webkit scrollbar
+   Issue: Only works in Chrome/Safari
+   Recommendation: Consider if worth the complexity
+
+=== RESPONSIVE DESIGN ANALYSIS ===
+
+CURRENT BREAKPOINTS:
+1. @media (max-width: 1024px) - Tablet
+2. @media (max-width: 768px) - Mobile
+
+MISSING BREAKPOINTS:
+1. < 480px - Small phones
+2. 768px - 1024px - Tablet landscape
+3. > 1440px - Large desktop
+4. @media (prefers-reduced-motion: reduce)
+5. @media print
+
+ISSUES:
+- Sidebar order change only at 1024px (too late)
+- No optimization for mobile-first
+- Font sizes not optimized for all screen sizes
+- Header h1 only resized at 768px
+- Code preview max-height changes at 768px
+
+RECOMMENDATIONS:
+1. Reorganize as mobile-first approach
+2. Add @media (max-width: 480px)
+   - Reduce padding/margins by 30%
+   - Reduce font sizes by 10-15%
+   - Stack grid to single column
+   - Reduce header height
+   
+3. Add @media (min-width: 1441px)
+   - Increase max-width container
+   - Adjust spacing proportionally
+   
+4. Add @media (prefers-reduced-motion: reduce)
+   - Set all transitions to 0
+   - Set animation to none
+   - Better accessibility
+   
+5. Optimize grid at different breakpoints
+   - Current: 350px 1fr at 1400px max-width
+   - At 1024px: 1fr (sidebar drops below)
+   - At 768px: No changes needed
+   - At 480px: Reduce sidebar width or full-width
+
+=== FILE SIZE ANALYSIS ===
+
+Current: ~12.5 KB (unminified)
+Estimated after optimization: ~8-9 KB (28-32% reduction)
+
+Breakdown:
+- Unused CSS: ~1.2 KB (10%)
+- Duplicate rules: ~1.5 KB (12%)
+- Comments & whitespace: ~2 KB (16%)
+- Optimization potential: ~0.8 KB (6%)
+
+=== RECOMMENDED REFACTORING PRIORITIES ===
+
+HIGH PRIORITY (Performance Impact):
+1. Extract CSS variables for colors (HIGH impact, 15 min work)
+2. Add prefers-reduced-motion media query (HIGH impact, 5 min work)
+3. Remove unused classes (MEDIUM impact, 5 min work)
+4. Consolidate media queries (MEDIUM impact, 10 min work)
+
+MEDIUM PRIORITY (Maintainability):
+5. Create utility classes for repeated patterns (20 min work)
+6. Move inline styles to CSS classes (30 min work)
+7. Optimize transitions to specific properties (10 min work)
+
+LOW PRIORITY (Nice to Have):
+8. Add larger screen breakpoint (5 min work)
+9. Add print media query (5 min work)
+10. Optimize box-shadow blur values (5 min work)
+
+=== CODE QUALITY METRICS ===
+
+Unused Selectors: 5 rules (6.3%)
+Duplicate Declarations: 12 patterns (15%)
+Specificity Issues: None detected
+Media Query Organization: Poor (scattered throughout)
+CSS Variable Usage: 0% (should be 40%+)
+BEM/Naming Convention: Good (consistent class naming)
+
+=== SUMMARY SCORE ===
+
+Performance: 6/10
+Maintainability: 6/10
+Responsive Design: 5/10
+Accessibility: 7/10
+Code Quality: 6/10
+
+OVERALL: 6/10 - Good start, significant optimization potential
+

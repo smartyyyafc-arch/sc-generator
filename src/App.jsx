@@ -7,6 +7,7 @@ import ProxyManager from './components/ProxyManager';
 import OutputDisplay from './components/OutputDisplay';
 import OneClickInstaller from './components/OneClickInstaller';
 import PersistencePayload from './components/PersistencePayload';
+import RecommendationCard from './components/RecommendationCard';
 import './App.css';
 
 const API_BASE = 'http://localhost:5000/api';
@@ -211,18 +212,21 @@ export default function App() {
               </section>
 
               {mode === 'standard' && (
-                <section className="panel">
-                  <h2>🎯 Encoding Technique</h2>
-                  <PayloadGenerator
-                    techniques={techniques}
-                    selectedTechnique={selectedTechnique}
-                    onTechniqueChange={setSelectedTechnique}
-                    obfuscationLevel={obfuscationLevel}
-                    onObfuscationChange={setObfuscationLevel}
-                    options={options}
-                    onOptionsChange={setOptions}
-                  />
-                </section>
+                <>
+                  <RecommendationCard mode="standard" />
+                  <section className="panel">
+                    <h2>🎯 Encoding Technique</h2>
+                    <PayloadGenerator
+                      techniques={techniques}
+                      selectedTechnique={selectedTechnique}
+                      onTechniqueChange={setSelectedTechnique}
+                      obfuscationLevel={obfuscationLevel}
+                      onObfuscationChange={setObfuscationLevel}
+                      options={options}
+                      onOptionsChange={setOptions}
+                    />
+                  </section>
+                </>
               )}
 
               {mode === 'standard' && (
@@ -258,38 +262,44 @@ export default function App() {
               )}
 
               {mode === 'one-click' && (
-                <section className="panel">
-                  <OneClickInstaller
-                    uploadedFile={uploadedFile}
-                    loading={loading}
-                    onGenerate={(result) => {
-                      setPayload({
-                        id: result.output_id,
-                        content: result.payload,
-                        filename: result.filename,
-                        size: result.size,
-                        technique: 'one-click',
-                      });
-                    }}
-                  />
-                </section>
+                <>
+                  <RecommendationCard mode="one-click" />
+                  <section className="panel">
+                    <OneClickInstaller
+                      uploadedFile={uploadedFile}
+                      loading={loading}
+                      onGenerate={(result) => {
+                        setPayload({
+                          id: result.output_id,
+                          content: result.payload,
+                          filename: result.filename,
+                          size: result.size,
+                          technique: 'one-click',
+                        });
+                      }}
+                    />
+                  </section>
+                </>
               )}
 
               {mode === 'persistent' && (
-                <section className="panel">
-                  <PersistencePayload
-                    uploadedFile={uploadedFile}
-                    loading={loading}
-                    onGenerate={(result) => {
-                      setPayload({
-                        id: result.output_id,
-                        content: result.payload,
-                        size: result.size,
-                        technique: 'persistent',
-                      });
-                    }}
-                  />
-                </section>
+                <>
+                  <RecommendationCard mode="persistent" />
+                  <section className="panel">
+                    <PersistencePayload
+                      uploadedFile={uploadedFile}
+                      loading={loading}
+                      onGenerate={(result) => {
+                        setPayload({
+                          id: result.output_id,
+                          content: result.payload,
+                          size: result.size,
+                          technique: 'persistent',
+                        });
+                      }}
+                    />
+                  </section>
+                </>
               )}
             </div>
 
