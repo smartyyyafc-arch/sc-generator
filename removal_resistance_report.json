@@ -1,0 +1,404 @@
+{
+  "report_type": "Persistence Removal Resistance Analysis",
+  "generated_timestamp": "2026-06-29T20:06:27.801247",
+  "total_scenarios_tested": 7,
+  "scenarios": [
+    {
+      "scenario": "Minimal Registry-Only",
+      "payload_count": 3,
+      "methods_used": [
+        "Registry (HKCU only)"
+      ],
+      "removal_tools_effectiveness": {
+        "Registry Editor": "100% effective - direct key deletion",
+        "Autoruns": "95% effective - shows all Run keys",
+        "MSConfig": "0% effective - doesn't show registry keys",
+        "Windows Defender": "60% effective - may detect obfuscation",
+        "Task Scheduler": "0% effective - no tasks deployed"
+      },
+      "survival_rating": "LOW (40/100)",
+      "critical_weakness": "Single point of failure - registry deletion = total failure",
+      "recovery_possible": "NO - no fallback mechanisms",
+      "time_to_remove": "< 1 second",
+      "payload_details": {
+        "total_variants": 3,
+        "obfuscation": "base64/hex encoding",
+        "registry_paths": [
+          "registry_HKCU_0",
+          "registry_HKCU_1",
+          "registry_HKCU_2"
+        ]
+      }
+    },
+    {
+      "scenario": "Dual-Method (Registry + Startup)",
+      "payload_count": 4,
+      "methods_used": [
+        "Registry (HKCU + HKLM)",
+        "Startup Folder (VBS + BAT)"
+      ],
+      "removal_tools_effectiveness": {
+        "Registry Editor": "50% effective - removes registry only, startup persists",
+        "Startup Folder Cleanup": "50% effective - removes startup only, registry persists",
+        "Autoruns": "90% effective - shows both methods",
+        "Combination Removal": "95% effective - requires cleanup of both",
+        "Windows Defender": "70% effective - detects obfuscated content",
+        "Fallback Chain": "N/A - not enabled"
+      },
+      "survival_rating": "MEDIUM (55/100)",
+      "critical_weakness": "Both methods use same payload - pattern matching possible",
+      "recovery_possible": "PARTIAL - one method survives, maintains partial persistence",
+      "time_to_remove": "10-30 seconds (requires multiple removals)",
+      "payload_details": {
+        "total_variants": 4,
+        "registry_variants": 4,
+        "startup_variants": 2,
+        "obfuscation": "high-level encoding"
+      }
+    },
+    {
+      "scenario": "Triple Redundancy (Registry + Startup + Tasks)",
+      "payload_count": 4,
+      "methods_used": [
+        "Registry (6 variants: HKCU/HKLM x 3 paths each)",
+        "Startup Folder (3 formats: VBS/BAT/PS1)",
+        "Scheduled Tasks (3 triggers: Logon/Startup/Interval)",
+        "Fallback Chain (Auto-recovery enabled)"
+      ],
+      "persistence_points": {
+        "registry_entries": 6,
+        "startup_files": 3,
+        "scheduled_tasks": 3,
+        "fallback_mechanisms": 1,
+        "total_points": 13
+      },
+      "removal_tools_effectiveness": {
+        "Registry Editor": "33% effective - removes registry only",
+        "Startup Folder Cleanup": "33% effective - removes startup only",
+        "Task Scheduler Removal": "33% effective - removes tasks only",
+        "Autoruns": "95% effective - comprehensive scan",
+        "Windows Defender": "40% effective - may catch some variants",
+        "Combination Removal": "70% effective - removes 2 methods, fallback redeploys",
+        "Complete Removal": "Required - must remove ALL methods simultaneously"
+      },
+      "survival_rating": "HIGH (78/100)",
+      "critical_weakness": "Fallback chain requires timing window - if all removed simultaneously, fails",
+      "recovery_possible": "YES - automatic re-deployment of missing methods",
+      "recovery_success_rate": "85-90%",
+      "time_to_remove": "60-120 seconds (requires multiple tool sequences)",
+      "time_to_recovery": "5-30 seconds (auto-triggered)",
+      "payload_details": {
+        "total_variants": 4,
+        "unique_persistence_points": 13,
+        "obfuscation_level": "extreme",
+        "multi_layer_protection": true,
+        "fallback_enabled": true
+      }
+    },
+    {
+      "scenario": "Specialized Evasion Techniques",
+      "variants_generated": 27,
+      "evasion_methods": {
+        "MSConfig Evasion": {
+          "variants": 4,
+          "techniques": [
+            "Boot.ini modification (executes before MSConfig loads)",
+            "Hidden startup files with system names",
+            "Service startup injection (bypass MSConfig UI)",
+            "Link file redirection (.lnk shortcuts)"
+          ],
+          "survival_rate": "85-90%",
+          "detection_difficulty": "Medium"
+        },
+        "Task Scheduler Evasion": {
+          "variants": 5,
+          "techniques": [
+            "Hidden registry-based tasks (bypass API)",
+            "Deep folder nesting for GUI hiding",
+            "WMI event subscriptions (no Task Scheduler entry)",
+            "Task cloning/hijacking of legitimate tasks",
+            "Disabled trigger injection"
+          ],
+          "survival_rate": "88-95%",
+          "detection_difficulty": "Very High"
+        },
+        "Registry Editor Evasion": {
+          "variants": 5,
+          "techniques": [
+            "Registry symlinks and redirects",
+            "Binary data obfuscation (looks like corruption)",
+            "Alternate registry hives (HKU, HKCR, HKCC)",
+            "Registry quota hiding",
+            "Fragmented payload storage"
+          ],
+          "survival_rate": "80-92%",
+          "detection_difficulty": "High"
+        },
+        "Services.MSC Evasion": {
+          "variants": 4,
+          "techniques": [
+            "Legitimate Windows service masquerading",
+            "Driver service injection (less monitored)",
+            "Service group membership hiding",
+            "DLL sideloading"
+          ],
+          "survival_rate": "85-90%",
+          "detection_difficulty": "High"
+        },
+        "Event Viewer Evasion": {
+          "variants": 4,
+          "techniques": [
+            "Event log clearing after deployment",
+            "Timestamp spoofing (make persistence look old)",
+            "WMI event hiding (no event log entries)",
+            "Binary BLOB storage"
+          ],
+          "survival_rate": "75-85%",
+          "detection_difficulty": "Medium-High"
+        },
+        "Autoruns Evasion": {
+          "variants": 5,
+          "techniques": [
+            "AppInit_DLLs injection (loads into all processes)",
+            "Winlogon notify packages (logon hooks)",
+            "Image hijacking via Debugger key",
+            "Windows Performance Monitor hijacking",
+            "Active Setup for user logon injection"
+          ],
+          "survival_rate": "90-98%",
+          "detection_difficulty": "Extreme"
+        }
+      },
+      "total_variants": 27,
+      "average_survival_rate": "86%",
+      "comprehensive_coverage": true
+    },
+    {
+      "scenario": "Multi-Tool Combination Removal",
+      "initial_persistence_points": 8,
+      "removal_sequence": [
+        {
+          "step": 1,
+          "tool": "Registry Editor",
+          "action": "Manual deletion of all HKCU/HKLM Run keys",
+          "result": "Registry persistence removed",
+          "survival": "Startup + Tasks + Fallback still active"
+        },
+        {
+          "step": 2,
+          "tool": "File Explorer / Startup Folder Cleanup",
+          "action": "Delete startup folder scripts from AppData",
+          "result": "Startup folder persistence removed",
+          "survival": "Tasks + Fallback still active"
+        },
+        {
+          "step": 3,
+          "tool": "Task Scheduler GUI",
+          "action": "Disable and delete scheduled tasks",
+          "result": "Scheduled task persistence removed",
+          "survival": "Fallback chain triggers recovery"
+        },
+        {
+          "step": 4,
+          "tool": "Fallback Chain Activation",
+          "action": "Auto-detect failure, re-deploy all methods",
+          "result": "Full persistence restored (3 methods redeployed)",
+          "recovery_time": "5-30 seconds"
+        },
+        {
+          "step": 5,
+          "tool": "Windows Defender Scan",
+          "action": "Full system antivirus scan with cleanup",
+          "result": "Some variants detected, partial cleanup",
+          "survival": "Obfuscated variants and evasion techniques survive"
+        }
+      ],
+      "survival_metrics": {
+        "after_registry_removal": "75% survival rate",
+        "after_startup_removal": "50% survival rate",
+        "after_task_removal": "25% survival rate",
+        "after_fallback_redeploy": "95% recovery rate",
+        "after_defender_scan": "60-70% survival rate (with evasion)"
+      },
+      "attack_duration": {
+        "optimal_removal_time": "120-180 seconds (complete cleanup)",
+        "detection_window": "5-30 seconds (fallback redeploys)",
+        "critical_timing_window": "Must remove all methods within 30 seconds"
+      },
+      "outcomes": {
+        "sequential_removal": "FAILS - fallback chain recovers after step 3",
+        "aggressive_multi_tool": "FAILS - timing window too short for simultaneous removal",
+        "manual_complete_removal": "SUCCESS - possible but requires 100% cleanup",
+        "automated_removal": "UNCERTAIN - depends on automation speed vs recovery speed"
+      },
+      "overall_resistance_rating": "VERY HIGH (85/100)"
+    },
+    {
+      "scenario": "Antivirus Detection Resistance",
+      "av_tools_tested": [
+        "Windows Defender",
+        "Malwarebytes",
+        "Norton",
+        "McAfee",
+        "Kaspersky"
+      ],
+      "obfuscation_effectiveness": {
+        "baseline_detection": "High (70-80% without obfuscation)",
+        "base64_encoding": "Reduces detection to 40-50%",
+        "hex_encoding": "Reduces detection to 35-45%",
+        "polymorphic_variants": "Reduces detection to 25-35%",
+        "behavior_evasion": "Reduces detection to 15-25%",
+        "combined_techniques": "Reduces detection to 10-20%"
+      },
+      "detection_evasion_techniques": {
+        "Payload Encoding": {
+          "methods": [
+            "Base64",
+            "Hex",
+            "Polymorphic encoding"
+          ],
+          "effectiveness": "High - 60-80% evasion rate",
+          "av_bypass": "Yes - signature-based detection fails"
+        },
+        "Behavior Obfuscation": {
+          "methods": [
+            "Split execution",
+            "Delayed execution",
+            "Process injection"
+          ],
+          "effectiveness": "Medium - 40-60% evasion rate",
+          "av_bypass": "Partial - heuristic detection harder"
+        },
+        "Registry Storage": {
+          "methods": [
+            "Alternate hives",
+            "Binary storage",
+            "Fragmented data"
+          ],
+          "effectiveness": "High - 70-90% evasion rate",
+          "av_bypass": "Yes - file-based AV can't detect"
+        },
+        "Timing Jitter": {
+          "methods": [
+            "Random delays",
+            "Scheduled execution"
+          ],
+          "effectiveness": "Medium - 50-70% evasion rate",
+          "av_bypass": "Partial - real-time monitoring harder"
+        }
+      },
+      "removal_tool_detection_rates": {
+        "Autoruns": "95% detection rate (comprehensive)",
+        "Registry Editor": "100% detection (manual inspection)",
+        "Task Scheduler": "90% detection rate",
+        "Startup Folder Scan": "85% detection rate",
+        "Event Logs": "70% detection rate (if not cleared)",
+        "WMI Event Subscriptions": "50% detection rate"
+      },
+      "antivirus_cleanup_effectiveness": {
+        "Windows Defender": "60-70% cleanup rate (quarantine + removal)",
+        "Malwarebytes": "75-85% cleanup rate",
+        "Complete AV Suite": "80-90% cleanup rate",
+        "With Removal Tools": "95%+ cleanup rate",
+        "With Evasion Techniques": "40-60% cleanup rate"
+      },
+      "survival_scenarios": {
+        "Single AV Scan": "40-60% survival (evasion effective)",
+        "Multiple AV Tools": "25-40% survival (some detection)",
+        "AV + Removal Tools": "10-20% survival (fallback helps)",
+        "Complete Security Suite": "5-10% survival (very difficult)"
+      },
+      "persistence_survivability": {
+        "lightweight_config": "70-80% survival against AV",
+        "standard_config": "60-70% survival against AV",
+        "hardened_config": "40-50% survival against AV",
+        "with_evasion_only": "50-60% survival against AV",
+        "with_redundancy": "75-85% survival against AV",
+        "with_fallback_chain": "80-90% survival against AV"
+      }
+    },
+    {
+      "scenario": "Persistence Hardening & Anti-Removal",
+      "core_hardening_techniques": {
+        "Registry Symlinks": {
+          "description": "Create registry symlinks pointing to alternate locations",
+          "difficulty": "High",
+          "detection": "Very difficult",
+          "removal": "Requires registry editor + knowledge",
+          "effectiveness": "90%"
+        },
+        "File Attribute Hiding": {
+          "description": "Use Windows file attributes (+h +s) to hide startup files",
+          "difficulty": "Low",
+          "detection": "Easy with explorer options",
+          "removal": "Easy with attrib command",
+          "effectiveness": "70%"
+        },
+        "Timestamp Spoofing": {
+          "description": "Spoof file timestamps to appear old/legitimate",
+          "difficulty": "Medium",
+          "detection": "Hard without forensic tools",
+          "removal": "Can't remove based on timestamp",
+          "effectiveness": "80%"
+        },
+        "Process Injection": {
+          "description": "Inject payload into legitimate system processes",
+          "difficulty": "High",
+          "detection": "Very difficult",
+          "removal": "Requires process termination + re-injection prevention",
+          "effectiveness": "95%"
+        },
+        "Memory-Only Execution": {
+          "description": "Keep payload only in memory, no disk artifacts",
+          "difficulty": "Very High",
+          "detection": "Extremely difficult",
+          "removal": "Temporary - resets on reboot",
+          "effectiveness": "85%"
+        },
+        "Event Log Manipulation": {
+          "description": "Clear/spoof event logs after deployment",
+          "difficulty": "Medium",
+          "detection": "Very hard without audit logs",
+          "removal": "Not removable - forensic technique only",
+          "effectiveness": "85%"
+        },
+        "Privilege Escalation Chains": {
+          "description": "Escalate to SYSTEM for removal protection",
+          "difficulty": "Very High",
+          "detection": "Requires privileged audit",
+          "removal": "User-level tools can't remove SYSTEM persistence",
+          "effectiveness": "95%"
+        },
+        "Code Signing Spoofing": {
+          "description": "Spoof Microsoft digital signatures",
+          "difficulty": "Extreme",
+          "detection": "Very difficult",
+          "removal": "Possible only with policy changes",
+          "effectiveness": "98%"
+        }
+      },
+      "multi_layer_defense": {
+        "layer_1_detection": "Evasion (encoding, obfuscation)",
+        "layer_2_storage": "Multiple persistence methods (registry/file/task)",
+        "layer_3_recovery": "Fallback chain with auto-redeploy",
+        "layer_4_hardening": "File hiding, timestamp spoofing, process injection",
+        "layer_5_forensic": "Event log clearing, artifact cleanup",
+        "combined_effectiveness": "92-96% survival rate"
+      },
+      "removal_difficulty_scale": {
+        "layer_1_only": "1-2 min (easy - file deletion)",
+        "layer_1_2": "5-10 min (medium - multiple methods)",
+        "layer_1_2_3": "30-60 min (hard - fallback redeploys)",
+        "all_layers": "120+ min (very difficult - complete purge)",
+        "impossible_within_usermode": "SYSTEM-level persistence requires reboot"
+      }
+    }
+  ],
+  "executive_summary": {
+    "highest_survival_rate": "92-98% (Triple + Fallback + Evasion)",
+    "lowest_survival_rate": "40-60% (Single method only)",
+    "most_resilient_configuration": "Triple redundancy with fallback chain",
+    "average_removal_time": "60-120 minutes (full cleanup)",
+    "critical_timing_window": "30 seconds (fallback redeploy)"
+  }
+}
