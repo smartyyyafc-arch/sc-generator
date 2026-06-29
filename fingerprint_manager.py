@@ -314,14 +314,15 @@ class FingerprintManager:
         """Check if content is a PE (Windows executable) file"""
         return len(content) > 64 and content[:2] == b'MZ'
 
-    def add_proxy(self, url: str, proxy_type: str = 'http', auth: Optional[Dict] = None) -> str:
-        """Add proxy configuration"""
+    def add_proxy(self, url: str, proxy_type: str = 'http', auth: Optional[Dict] = None, headers: Optional[Dict] = None) -> str:
+        """Add proxy configuration with optional custom headers"""
         proxy_id = str(uuid.uuid4())[:8]
         proxy = ProxyConfig(
             id=proxy_id,
             url=url,
             type=proxy_type,
-            auth=auth
+            auth=auth,
+            headers=headers
         )
         self.proxies[proxy_id] = proxy
         self._save_proxies()
