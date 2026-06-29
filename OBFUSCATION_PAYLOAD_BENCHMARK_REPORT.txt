@@ -1,0 +1,183 @@
+
+====================================================================================================
+PAYLOAD SIZE ANALYSIS REPORT
+====================================================================================================
+
+ENCODING METHOD STATISTICS
+----------------------------------------------------------------------------------------------------
+
+ARRAY
+  Average Overhead Ratio: 204.80%
+  Overhead Ratio Range: 200.00% - 206.19%
+  Average Max Payload: 875 bytes
+  Payload Size Range: 556 - 1492 bytes
+  Average Encode Time: 0.010ms
+
+BASE64
+  Average Overhead Ratio: 134.88%
+  Overhead Ratio Range: 133.33% - 139.53%
+  Average Max Payload: 500 bytes
+  Payload Size Range: 360 - 764 bytes
+  Average Encode Time: 0.009ms
+
+HEX
+  Average Overhead Ratio: 200.00%
+  Overhead Ratio Range: 200.00% - 200.00%
+  Average Max Payload: 596 bytes
+  Payload Size Range: 387 - 989 bytes
+  Average Encode Time: 0.005ms
+
+NESTED
+  Average Overhead Ratio: 269.76%
+  Overhead Ratio Range: 266.67% - 279.07%
+  Average Max Payload: 745 bytes
+  Payload Size Range: 464 - 1272 bytes
+  Average Encode Time: 0.006ms
+
+POLYMORPH
+  Average Overhead Ratio: 176.30%
+  Overhead Ratio Range: 133.33% - 205.70%
+  Average Max Payload: 569 bytes
+  Payload Size Range: 364 - 966 bytes
+  Average Encode Time: 0.007ms
+
+XOR
+  Average Overhead Ratio: 200.00%
+  Overhead Ratio Range: 200.00% - 200.00%
+  Average Max Payload: 573 bytes
+  Payload Size Range: 364 - 966 bytes
+  Average Encode Time: 0.015ms
+
+====================================================================================================
+EFFICIENCY RANKINGS
+----------------------------------------------------------------------------------------------------
+
+Top 5 - Lowest Overhead Ratio:
+  1. BASE64       (simple_10      ) 133.33%
+  2. BASE64       (simple_20      ) 133.33%
+  3. BASE64       (medium_100     ) 133.33%
+  4. POLYMORPH    (medium_100     ) 133.33%
+  5. BASE64       (complex_300    ) 133.98%
+
+Top 5 - Smallest Payload Size:
+  1. BASE64       (simple_10      )    360 bytes
+  2. XOR          (simple_10      )    364 bytes
+  3. POLYMORPH    (simple_10      )    364 bytes
+  4. BASE64       (simple_20      )    380 bytes
+  5. HEX          (simple_10      )    387 bytes
+
+Top 5 - Fastest Encoding:
+  1. HEX          (simple_50      ) 0.003ms
+  2. HEX          (medium_150     ) 0.004ms
+  3. HEX          (medium_100     ) 0.004ms
+  4. HEX          (complex_200    ) 0.004ms
+  5. HEX          (huge_500       ) 0.004ms
+
+Worst 3 - Highest Overhead Ratio:
+  1. NESTED       (simple_50      ) 279.07%
+  2. NESTED       (medium_150     ) 274.29%
+  3. NESTED       (huge_500       ) 268.40%
+
+====================================================================================================
+PAYLOAD SIZE COMPARISON BY COMMAND SIZE
+----------------------------------------------------------------------------------------------------
+
+
+complex_200 (Original: 158 bytes)
+  Method        | Encoded | Overhead | Payload (Max/Min/Avg) | Ratio
+  -----------------------------------------------------------------------------------------------
+  ARRAY        |     325 |     +167 | 1013/ 416/ 633 | 205.70%
+  BASE64       |     212 |      +54 |  564/ 312/ 429 | 134.18%
+  HEX          |     316 |     +158 |  691/ 416/ 548 | 200.00%
+  NESTED       |     424 |     +266 |  872/ 527/ 684 | 268.35%
+  POLYMORPH    |     325 |     +167 |  668/ 416/ 544 | 205.70%
+  XOR          |     316 |     +158 |  668/ 416/ 548 | 200.00%
+
+complex_300 (Original: 206 bytes)
+  Method        | Encoded | Overhead | Payload (Max/Min/Avg) | Ratio
+  -----------------------------------------------------------------------------------------------
+  ARRAY        |     424 |     +218 | 1164/ 515/ 747 | 205.83%
+  BASE64       |     276 |      +70 |  628/ 376/ 493 | 133.98%
+  HEX          |     412 |     +206 |  787/ 512/ 644 | 200.00%
+  NESTED       |     552 |     +346 | 1000/ 655/ 812 | 267.96%
+  POLYMORPH    |     412 |     +206 |  759/ 512/ 610 | 200.00%
+  XOR          |     412 |     +206 |  764/ 512/ 644 | 200.00%
+
+huge_500 (Original: 307 bytes)
+  Method        | Encoded | Overhead | Payload (Max/Min/Avg) | Ratio
+  -----------------------------------------------------------------------------------------------
+  ARRAY        |     633 |     +326 | 1492/ 724/ 991 | 206.19%
+  BASE64       |     412 |     +105 |  764/ 512/ 629 | 134.20%
+  HEX          |     614 |     +307 |  989/ 714/ 846 | 200.00%
+  NESTED       |     824 |     +517 | 1272/ 927/1084 | 268.40%
+  POLYMORPH    |     412 |     +105 |  966/ 724/ 853 | 134.20%
+  XOR          |     614 |     +307 |  966/ 714/ 846 | 200.00%
+
+medium_100 (Original: 72 bytes)
+  Method        | Encoded | Overhead | Payload (Max/Min/Avg) | Ratio
+  -----------------------------------------------------------------------------------------------
+  ARRAY        |     148 |      +76 |  756/ 239/ 432 | 205.56%
+  BASE64       |      96 |      +24 |  448/ 196/ 313 | 133.33%
+  HEX          |     144 |      +72 |  519/ 244/ 376 | 200.00%
+  NESTED       |     192 |     +120 |  640/ 295/ 452 | 266.67%
+  POLYMORPH    |      96 |      +24 |  496/ 196/ 364 | 133.33%
+  XOR          |     144 |      +72 |  496/ 244/ 376 | 200.00%
+
+medium_150 (Original: 70 bytes)
+  Method        | Encoded | Overhead | Payload (Max/Min/Avg) | Ratio
+  -----------------------------------------------------------------------------------------------
+  ARRAY        |     144 |      +74 |  752/ 235/ 428 | 205.71%
+  BASE64       |      96 |      +26 |  448/ 196/ 313 | 137.14%
+  HEX          |     140 |      +70 |  515/ 240/ 372 | 200.00%
+  NESTED       |     192 |     +122 |  640/ 295/ 452 | 274.29%
+  POLYMORPH    |      96 |      +26 |  492/ 196/ 341 | 137.14%
+  XOR          |     140 |      +70 |  492/ 240/ 372 | 200.00%
+
+simple_10 (Original: 6 bytes)
+  Method        | Encoded | Overhead | Payload (Max/Min/Avg) | Ratio
+  -----------------------------------------------------------------------------------------------
+  ARRAY        |      12 |       +6 |  556/ 103/ 277 | 200.00%
+  BASE64       |       8 |       +2 |  360/ 108/ 225 | 133.33%
+  HEX          |      12 |       +6 |  387/ 112/ 244 | 200.00%
+  NESTED       |      16 |      +10 |  464/ 119/ 276 | 266.67%
+  POLYMORPH    |      12 |       +6 |  364/ 108/ 227 | 200.00%
+  XOR          |      12 |       +6 |  364/ 112/ 244 | 200.00%
+
+simple_20 (Original: 21 bytes)
+  Method        | Encoded | Overhead | Payload (Max/Min/Avg) | Ratio
+  -----------------------------------------------------------------------------------------------
+  ARRAY        |      43 |      +22 |  603/ 134/ 313 | 204.76%
+  BASE64       |      28 |       +7 |  380/ 128/ 245 | 133.33%
+  HEX          |      42 |      +21 |  417/ 142/ 274 | 200.00%
+  NESTED       |      56 |      +35 |  504/ 159/ 316 | 266.67%
+  POLYMORPH    |      42 |      +21 |  394/ 134/ 257 | 200.00%
+  XOR          |      42 |      +21 |  394/ 142/ 274 | 200.00%
+
+simple_50 (Original: 43 bytes)
+  Method        | Encoded | Overhead | Payload (Max/Min/Avg) | Ratio
+  -----------------------------------------------------------------------------------------------
+  ARRAY        |      88 |      +45 |  664/ 179/ 362 | 204.65%
+  BASE64       |      60 |      +17 |  412/ 160/ 277 | 139.53%
+  HEX          |      86 |      +43 |  461/ 186/ 318 | 200.00%
+  NESTED       |     120 |      +77 |  568/ 223/ 380 | 279.07%
+  POLYMORPH    |      86 |      +43 |  413/ 186/ 294 | 200.00%
+  XOR          |      86 |      +43 |  438/ 186/ 318 | 200.00%
+
+====================================================================================================
+KEY INSIGHTS
+----------------------------------------------------------------------------------------------------
+
+Overall Average Overhead Ratio: 197.62%
+Overall Average Max Payload Size: 643 bytes
+
+Best Overall for Overhead Ratio: BASE64
+Best Overall for Payload Size: BASE64
+
+OBSERVATIONS:
+  1. Hex encoding has smallest overhead ratio (2x input size)
+  2. Base64 has ~1.33x overhead but better performance characteristics
+  3. Nested encoding has highest overhead due to multiple layers
+  4. VBS payloads tend to be larger due to decoder boilerplate
+  5. Payload size scales more with decoder complexity than encoding method
+
+====================================================================================================

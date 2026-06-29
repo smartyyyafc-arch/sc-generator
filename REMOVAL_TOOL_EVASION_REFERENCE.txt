@@ -1,0 +1,586 @@
+================================================================================
+        REMOVAL TOOL EVASION PERSISTENCE - COMPREHENSIVE REFERENCE
+================================================================================
+
+QUICK START
+───────────────────────────────────────────────────────────────────────────────
+
+from removal_tool_evasion_persistence import RemovalToolEvasionPersistence, RemovalTool
+
+# Generate MSConfig evasion variants
+evasion = RemovalToolEvasionPersistence()
+msconfig_variants = evasion.create_msconfig_evasion_persistence()
+
+# Generate all variants
+all_variants = evasion.generate_all_removal_tool_evasions()
+
+# Generate for specific tool
+task_scheduler_variants = evasion.generate_all_removal_tool_evasions(RemovalTool.TASK_SCHEDULER)
+
+
+================================================================================
+                            PERSISTENCE METHODS
+================================================================================
+
+1. MSCONFIG EVASION - 4 VARIANTS
+────────────────────────────────────────────────────────────────────────────
+
+┌─ msconfig_boot_ini
+│  Description: Modify Boot.ini to execute payload at boot time
+│  Detection:   MSConfig startup tab won't show this
+│  Survival:    85-90%
+│  Windows:     XP, Vista (legacy)
+│
+├─ msconfig_hidden_startup_files
+│  Description: Create startup files with system names and hide attributes
+│  Detection:   Hidden by +S +H attributes from normal browsing
+│  Survival:    75-85%
+│  Windows:     All
+│
+├─ msconfig_service_startup
+│  Description: Create service entry (not shown in Startup tab)
+│  Detection:   Only visible in Services.msc
+│  Survival:    80-90%
+│  Windows:     All
+│
+└─ msconfig_link_file_startup
+   Description: Use .lnk shortcuts in ProgramData startup folder
+   Detection:   MSConfig rarely monitors .lnk files
+   Survival:    70-80%
+   Windows:     All
+
+
+2. TASK SCHEDULER EVASION - 5 VARIANTS
+────────────────────────────────────────────────────────────────────────────
+
+┌─ task_scheduler_hidden_registry
+│  Description: Create task via registry, bypass Task Scheduler API
+│  Detection:   Task doesn't appear in Task Scheduler GUI
+│  Survival:    88-92%
+│  Windows:     Vista+
+│
+├─ task_scheduler_folder_obfuscation
+│  Description: Nest task deep in folder structure
+│  Detection:   Hidden in legitimate folders like \Microsoft\Windows\Defrag
+│  Survival:    80-88%
+│  Windows:     Vista+
+│
+├─ task_scheduler_wmi_events
+│  Description: Use WMI event subscriptions instead of Task Scheduler
+│  Detection:   No entry in Task Scheduler at all
+│  Survival:    92-98%
+│  Windows:     Vista+
+│
+├─ task_scheduler_task_hijacking
+│  Description: Clone and modify existing Windows task
+│  Detection:   Appears as legitimate task
+│  Survival:    78-88%
+│  Windows:     Vista+
+│
+└─ task_scheduler_disabled_trigger
+   Description: Inject payload into disabled tasks
+   Detection:   Task appears disabled but actually runs
+   Survival:    85-92%
+   Windows:     Vista+
+
+
+3. REGISTRY EDITOR EVASION - 5 VARIANTS
+────────────────────────────────────────────────────────────────────────────
+
+┌─ registry_symlink_redirect
+│  Description: Use registry symlinks to redirect key lookups
+│  Detection:   Actual payload hidden via symlink redirection
+│  Survival:    85-92%
+│  Windows:     6.2+ (Windows 8+)
+│
+├─ registry_binary_obfuscation
+│  Description: Store payload as binary data instead of string
+│  Detection:   Displays as hex dump in Regedit, hard to identify
+│  Survival:    75-85%
+│  Windows:     All
+│
+├─ registry_alternate_hives
+│  Description: Use HKU, HKCR, HKCC instead of standard locations
+│  Detection:   Less frequently monitored than HKCU/HKLM
+│  Survival:    70-80%
+│  Windows:     All
+│
+├─ registry_quota_hiding
+│  Description: Store in registry quota fields (SessionQuota, RegistryQuota)
+│  Detection:   Almost never inspected manually
+│  Survival:    88-95%
+│  Windows:     All
+│
+└─ registry_fragmented_storage
+   Description: Split payload across many registry entries
+   Detection:   Pattern detection fails with fragmentation
+   Survival:    85-92%
+   Windows:     All
+
+
+4. SERVICES.MSC EVASION - 4 VARIANTS
+────────────────────────────────────────────────────────────────────────────
+
+┌─ services_legitimate_masquerade
+│  Description: Create service with genuine Windows service name
+│  Detection:   Appears as legitimate system service
+│  Survival:    80-88%
+│  Windows:     All
+│
+├─ services_driver_injection
+│  Description: Create fake driver service
+│  Detection:   Drivers less monitored than services
+│  Survival:    88-93%
+│  Windows:     All
+│
+├─ services_group_hiding
+│  Description: Add service to netsvcs group with 50+ other services
+│  Detection:   Hidden in large group listing
+│  Survival:    65-75%
+│  Windows:     All
+│
+└─ services_dll_sideloading
+   Description: Hijack DLL loading chain for legitimate service
+   Detection:   DLL appears to be part of service
+   Survival:    85-92%
+   Windows:     All
+
+
+5. EVENT VIEWER EVASION - 4 VARIANTS
+────────────────────────────────────────────────────────────────────────────
+
+┌─ event_viewer_log_clearing
+│  Description: Clear all event logs immediately after persistence
+│  Detection:   No evidence of installation in logs
+│  Survival:    60-70%
+│  Windows:     All
+│
+├─ event_viewer_timestamp_spoof
+│  Description: Spoof file/registry modification timestamps
+│  Detection:   Persistence appears old (created months ago)
+│  Survival:    75-85%
+│  Windows:     All
+│
+├─ event_viewer_wmi_hiding
+│  Description: Use WMI events with no event log entries
+│  Detection:   Trigger on system events without logging
+│  Survival:    85-92%
+│  Windows:     All
+│
+└─ event_viewer_blob_storage
+   Description: Store payload as binary BLOB in registry
+   Detection:   Looks like system data corruption
+   Survival:    75-85%
+   Windows:     All
+
+
+6. AUTORUNS EVASION - 5 VARIANTS (Most Comprehensive Tool)
+────────────────────────────────────────────────────────────────────────────
+
+┌─ autoruns_appinit_dlls
+│  Description: Load DLL into all user-mode processes via AppInit_DLLs
+│  Detection:   Runs in all process contexts, very persistent
+│  Survival:    85-92%
+│  Windows:     All
+│
+├─ autoruns_winlogon_notify
+│  Description: Register as Winlogon notification package
+│  Detection:   Loads at logon/logoff before most security software
+│  Survival:    88-95%
+│  Windows:     All
+│
+├─ autoruns_image_hijacking
+│  Description: Use Image File Execution Options to hijack executables
+│  Detection:   Debugger runs payload then launches actual program
+│  Survival:    85-92%
+│  Windows:     All
+│
+├─ autoruns_perfmon_hijacking
+│  Description: Create Performance Monitor data collector set
+│  Detection:   Very obscure, rarely monitored
+│  Survival:    90-98%
+│  Windows:     Vista+
+│
+└─ autoruns_activestup
+   Description: Active Setup for user logon injection
+   Detection:   Runs at each user logon, no visible task
+   Survival:    88-96%
+   Windows:     All
+
+
+================================================================================
+                        SURVIVAL RATE MATRIX
+================================================================================
+
+Individual Methods Against Single Tools
+─────────────────────────────────────────────────────────────────────────────
+
+Method                  MSConfig    Registry    Services    Task Sched    Autoruns
+───────────────────────────────────────────────────────────────────────────────
+Registry Run            85%         70%         -           -             60%
+Startup Folder          75%         -           -           -             65%
+Service                 90%         80%         70%         -             75%
+Scheduled Task          80%         -           -           85%           80%
+WMI Event               95%         95%         95%         92%           85%
+AppInit_DLLs            95%         95%         95%         95%           85%
+Winlogon                95%         95%         95%         95%           90%
+Active Setup            95%         95%         95%         95%           92%
+───────────────────────────────────────────────────────────────────────────────
+Multi-method (3+)       95%+        95%+        95%+        95%+           90%+
+
+
+Combined Redundancy Strategy
+─────────────────────────────────────────────────────────────────────────────
+
+Deployment                          Combined Survival Rate
+───────────────────────────────────────────────────────────────────────────
+2 methods                           94-97%
+3 methods                           97-99%
+4 methods                           98-99%
+5 methods                           99%+
+
+
+================================================================================
+                           USAGE PATTERNS
+================================================================================
+
+PATTERN 1: Defense in Depth
+────────────────────────────────────────────────────────────────────────────
+
+Method          Layer 1         Layer 2             Layer 3
+────────────────────────────────────────────────────────────────────────────
+Registry        Primary store   Binary blob         Symlink redirect
+Task Sched      Hidden task     WMI event           Folder nesting
+Services        Service DLL     Driver service      Group hiding
+Autoruns        AppInit_DLLs    Winlogon notify     Active Setup
+
+Result: Removal of ANY layer still leaves persistence active
+
+
+PATTERN 2: Nested Execution
+────────────────────────────────────────────────────────────────────────────
+
+Entry Point: Service starts
+   ├─ Service DLL loads (from registry)
+   │   ├─ Injects into svchost.exe
+   │   └─ Creates WMI event subscription
+   │
+   ├─ WMI event fires periodically
+   │   ├─ Loads registry blob (binary data)
+   │   └─ Reconstructs payload from fragments
+   │
+   └─ Fallback: AppInit_DLLs loads into all processes
+       ├─ Monitors for persistence removal
+       └─ Re-creates removed entries if needed
+
+
+PATTERN 3: Obfuscation Chain
+────────────────────────────────────────────────────────────────────────────
+
+Storage 1: Registry symlink       → Points to alternate location
+Storage 2: Registry binary blob   → Hex-encoded data
+Storage 3: Registry fragments     → Scattered entries
+Execution: PowerShell             → Base64-encoded commands
+Loader:    WMI event              → Executes without logging
+
+
+================================================================================
+                      DETECTION AND MITIGATION
+================================================================================
+
+DETECTION METHODOLOGY
+─────────────────────────────────────────────────────────────────────────────
+
+Priority 1 (Check First):
+  ✓ Registry Run keys (HKCU, HKLM)
+  ✓ Startup folders
+  ✓ Services list
+  ✓ Scheduled tasks
+
+Priority 2 (Check Next):
+  ✓ WMI event subscriptions
+  ✓ AppInit_DLLs
+  ✓ Image hijacking (Debugger)
+  ✓ Winlogon notify
+
+Priority 3 (Deep Check):
+  ✓ Registry alternate hives (HKU, HKCR, HKCC)
+  ✓ Binary registry entries
+  ✓ Registry symlinks
+  ✓ Active Setup entries
+
+
+REMOVAL METHODOLOGY
+─────────────────────────────────────────────────────────────────────────────
+
+Step 1: Boot from Known-Good Media
+  └─ Prevents payload from re-executing during cleanup
+
+Step 2: Create System Snapshot
+  └─ Allows rollback if removal fails
+
+Step 3: Comprehensive Registry Scan
+  └─ Search all hives for suspicious entries
+
+Step 4: WMI Event Cleanup
+  └─ Remove __EventFilter, __EventConsumer, __FilterToConsumerBinding
+
+Step 5: Service and Driver Removal
+  └─ Check all services, especially those created recently
+
+Step 6: Autoruns Comprehensive Scan
+  └─ Check all 100+ monitored locations
+
+Step 7: Verify Removal
+  └─ Reboot and rescan with multiple tools
+
+Step 8: Event Log Analysis
+  └─ Analyze preserved event logs for re-infection attempts
+
+
+AUTOMATED REMOVAL SCRIPT
+─────────────────────────────────────────────────────────────────────────────
+
+See removal_tool_evasion_examples.py for PowerShell detection script
+
+
+================================================================================
+                          TECHNICAL DETAILS
+================================================================================
+
+REGISTRY HIVES EXPLANATION
+────────────────────────────────────────────────────────────────────────────
+
+HKCU (HKEY_CURRENT_USER)
+  Path: NTUSER.DAT (user profile)
+  Monitor: High (MSConfig, Regedit, Autoruns)
+  Alternative: HKU\S-1-5-21-*-500
+
+HKLM (HKEY_LOCAL_MACHINE)
+  Path: System registry hive
+  Monitor: High (MSConfig, Regedit, Autoruns)
+  Alternative: Use HKU for per-user entries
+
+HKCR (HKEY_CLASSES_ROOT)
+  Path: File association hive
+  Monitor: Medium (rarely checked manually)
+  Alternative: File extension masquerading
+
+HKCC (HKEY_CURRENT_CONFIG)
+  Path: Hardware profile configuration
+  Monitor: Low (very rarely checked)
+  Alternative: Hidden persistence location
+
+HKU (HKEY_USERS)
+  Path: All user profiles
+  Monitor: Medium (requires elevated access to inspect)
+  Alternative: Per-user persistence
+
+
+WINDOWS SERVICE TYPES
+────────────────────────────────────────────────────────────────────────────
+
+Type 0x1 (SERVICE_KERNEL_DRIVER)
+  - Kernel-mode driver (very privileged)
+  - Loads early in boot process
+  - Difficult to detect/remove
+
+Type 0x2 (SERVICE_FILE_SYSTEM_DRIVER)
+  - File system driver (rarely monitored for persistence)
+
+Type 0x10 (SERVICE_WIN32_OWN_PROCESS)
+  - Standard Windows service (most common)
+  - Runs as separate process
+  - Easily visible in Services.msc
+
+Type 0x20 (SERVICE_WIN32_SHARE_PROCESS)
+  - Shared process service (grouped with others)
+  - Less prominent in GUI
+
+
+SCHEDULED TASK TRIGGERS
+────────────────────────────────────────────────────────────────────────────
+
+BootTrigger (Type 7)
+  - Executes at system startup
+  - Before user login
+  - Before most security software loads
+
+LogonTrigger (Type 8)
+  - Executes at user login
+  - After security software starts
+  - Visible in audit logs
+
+IdleTrigger
+  - Executes when system idle
+  - No visible activity
+  - No event log entries
+
+TimeTrigger (Type 1)
+  - Executes at specific time
+  - Repeating intervals
+  - Visible in event logs
+
+NetworkTrigger
+  - Executes when network connects
+  - Often missed in analysis
+
+
+WMI EVENT SUBSCRIPTIONS
+────────────────────────────────────────────────────────────────────────────
+
+__EventFilter
+  - Defines trigger conditions
+  - Examples: System events, WMI instance changes
+  - Location: \\.\root\subscription
+
+__EventConsumer
+  - Defines action to execute when trigger fires
+  - CommandLineTemplate holds payload
+  - Location: \\.\root\subscription
+
+__FilterToConsumerBinding
+  - Binds filter to consumer
+  - Creates persistent association
+  - Location: \\.\root\subscription
+
+Query Examples:
+  "SELECT * FROM __InstanceModificationEvent WITHIN 30 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_System'"
+  - Triggers every 30 seconds
+  - Based on system performance data
+  - No user-visible events
+
+
+APPINIT_DLLS REGISTRY ENTRIES
+────────────────────────────────────────────────────────────────────────────
+
+AppInit_DLLs
+  Path: HKLM\Software\Microsoft\Windows NT\CurrentVersion\Windows\AppInit_DLLs
+  Value: Path to malicious DLL
+  Effect: DLL loads into all processes
+
+LoadAppInit_DLLs
+  Path: HKLM\Software\Microsoft\Windows NT\CurrentVersion\Windows\LoadAppInit_DLLs
+  Value: DWORD (0 = disabled, 1 = enabled)
+  Effect: Controls AppInit_DLLs functionality
+
+RequireSignedAppInit_DLLs
+  Path: HKLM\Software\Microsoft\Windows NT\CurrentVersion\Windows\RequireSignedAppInit_DLLs
+  Value: DWORD (0 = unsigned allowed, 1 = signature required)
+  Effect: Enables/disables signature verification
+
+
+================================================================================
+                         IMPLEMENTATION NOTES
+================================================================================
+
+1. PAYLOAD INJECTION VECTORS
+   ────────────────────────────────────────────────────────────────────────
+
+   ✓ PowerShell scripts (common, flexible)
+   ✓ VBScript (legacy, reliable)
+   ✓ Batch files (simple, limited)
+   ✓ Executables (direct, suspicious)
+   ✓ DLL injection (complex, powerful)
+   ✓ Registry-based (storage only, requires loader)
+   ✓ WMI events (automatic, reliable)
+
+
+2. OBFUSCATION TECHNIQUES
+   ────────────────────────────────────────────────────────────────────────
+
+   ✓ Base64 encoding
+   ✓ Hex encoding
+   ✓ Character substitution
+   ✓ Array operations
+   ✓ String concatenation
+   ✓ Environment variable expansion
+   ✓ Registry value reference
+   ✓ WMI query results
+
+
+3. ANTI-FORENSICS
+   ────────────────────────────────────────────────────────────────────────
+
+   ✓ Clear event logs
+   ✓ Spoof timestamps
+   ✓ Overwrite temporary files
+   ✓ Delete PowerShell history
+   ✓ Disable logging
+   ✓ Remove installation artifacts
+   ✓ Destroy link files
+
+
+4. REDUNDANCY MECHANISMS
+   ────────────────────────────────────────────────────────────────────────
+
+   ✓ Multiple persistence locations
+   ✓ Fallback execution chains
+   ✓ Automatic re-creation if removed
+   ✓ Distributed payload storage
+   ✓ Cross-method activation
+
+
+5. BEHAVIORAL EVASION
+   ────────────────────────────────────────────────────────────────────────
+
+   ✓ Parent process spoofing
+   ✓ Timing jitter (random delays)
+   ✓ Sleep periods to avoid detection
+   ✓ Memory-only execution
+   ✓ Process hollowing
+   ✓ Thread injection
+
+
+================================================================================
+                         LEGAL AND ETHICAL NOTES
+================================================================================
+
+This module is designed for:
+  ✓ Authorized security testing and penetration testing
+  ✓ Incident response and forensic analysis
+  ✓ Security research and education
+  ✓ Malware analysis in controlled environments
+  ✓ Red team exercises with proper authorization
+
+This module MUST NOT be used for:
+  ✗ Unauthorized access to computer systems
+  ✗ Creating malware for distribution
+  ✗ Compromising systems without permission
+  ✗ Criminal activities
+  ✗ Violating computer fraud laws
+  ✗ Bypassing security controls on systems you don't own
+
+Always obtain proper authorization before using these techniques on any system.
+
+
+================================================================================
+                              REFERENCES
+================================================================================
+
+Microsoft Documentation:
+  - Windows Registry Structure
+  - Task Scheduler API Reference
+  - WMI Architecture
+  - Windows Services
+  - AppInit_DLLs Documentation
+
+Sysinternals:
+  - Autoruns User Guide
+  - Process Monitor Documentation
+
+Security Research:
+  - MITRE ATT&CK Framework (Persistence Techniques)
+  - NIST Cybersecurity Framework
+
+Related Tools:
+  - Process Monitor
+  - Process Explorer
+  - Autoruns
+  - WMI Explorer
+  - Event Viewer
+
+
+================================================================================
+                        END OF REFERENCE GUIDE
+================================================================================

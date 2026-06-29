@@ -1,0 +1,96 @@
+{
+  "summary": {
+    "total_tests": 10,
+    "passed": 8,
+    "failed": 2,
+    "success_rate": "80.0%"
+  },
+  "tests": {
+    "clsid_polymorphism": {
+      "test": "CLSID Polymorphism",
+      "vulnerable": false,
+      "status": "PASS",
+      "details": "CLSID plaintext found: False",
+      "payload_size": 14367
+    },
+    "interface_obfuscation": {
+      "test": "Interface Obfuscation",
+      "obfuscation_detected": true,
+      "originals_hidden": false,
+      "status": "FAIL",
+      "details": "Obfuscation: True, Originals hidden: False",
+      "payload_size": 14379
+    },
+    "timing_jitter": {
+      "test": "Timing Jitter",
+      "has_sleep": true,
+      "has_random": true,
+      "has_timer": true,
+      "status": "PASS",
+      "details": "Sleep: True, Random: True, Timer: True",
+      "payload_size": 14367
+    },
+    "reflection_blocking": {
+      "test": "Reflection Blocking",
+      "has_blocker": true,
+      "has_dummy_interfaces": true,
+      "has_interception": true,
+      "status": "PASS",
+      "details": "Blocker: True, Dummy: True",
+      "payload_size": 14379
+    },
+    "call_stack_spoofing": {
+      "test": "Call Stack Spoofing",
+      "has_spoofer": true,
+      "has_wrapper": true,
+      "has_layers": true,
+      "status": "PASS",
+      "details": "Spoofer: True, Wrapper: True, Layers: True",
+      "payload_size": 14367
+    },
+    "api_wrapping": {
+      "test": "API Wrapping",
+      "has_wrapper": true,
+      "has_pre_op": true,
+      "has_post_op": true,
+      "has_legitimate": true,
+      "status": "PASS",
+      "details": "Wrapper: True, Pre: True, Post: True",
+      "payload_size": 14376
+    },
+    "type_library_obfuscation": {
+      "test": "Type Library Obfuscation",
+      "has_obfuscator": true,
+      "has_type_hiding": true,
+      "generic_types": true,
+      "status": "PASS",
+      "details": "Obfuscator: True, Hiding: True",
+      "payload_size": 14394
+    },
+    "payload_size": {
+      "test": "Payload Size",
+      "size_bytes": 14367,
+      "size_kb": 14.0302734375,
+      "reasonable": true,
+      "status": "PASS",
+      "details": "Size: 14367 bytes (14.03KB)"
+    },
+    "string_obfuscation": {
+      "test": "String Obfuscation",
+      "exposed_patterns_found": 2,
+      "minimal_exposure": false,
+      "status": "FAIL",
+      "details": "Exposed: ['WScript\\\\.Shell', 'Get-Process']",
+      "payload_size": 14398
+    },
+    "entropy_analysis": {
+      "test": "Payload Entropy",
+      "entropy": 4.81,
+      "high_entropy": true,
+      "status": "PASS",
+      "details": "Entropy: 4.81 bits/byte (target > 4.0)",
+      "payload_size": 14379
+    }
+  },
+  "overall_status": "FAIL"
+}

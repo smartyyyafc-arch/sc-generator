@@ -1,0 +1,323 @@
+================================================================================
+COM EXECUTION REFERENCE - Primary and Alternative COM Objects
+================================================================================
+
+1. PRIMARY COM OBJECTS (Specified in Request)
+================================================================================
+
+1.1 Shell.BrowserHelper
+    ProgID: Shell.BrowserHelper
+    CLSID: {64AB4BB7-111E-11D0-8D34-00A0C90F2719}
+    Description: Provides browser helper functionality
+    Methods: ExecuteCommand(), Execute()
+    Execution Context: User context
+    Requirements: Windows, Registry access
+    Risks: Can execute arbitrary commands
+
+1.2 InternetExplorer.Application
+    ProgID: InternetExplorer.Application
+    CLSID: {0002DF01-0000-0000-C000-000000000046}
+    Description: Internet Explorer COM automation object
+    Methods:
+        - Navigate(URL)
+        - ExecWB() - Execute Web Browser commands
+        - PutProperty() / GetProperty()
+        - CreatePrivacyManager()
+    Execution Context: User context
+    Requirements: IE installed (legacy systems), Registry access
+    Capabilities: JavaScript execution, HTML rendering, Script evaluation
+    Risks: Can execute JavaScript/VBScript in document context
+
+1.3 MSHTML (Microsoft HTML)
+    ProgID: HTMLFile
+    CLSID: {25336920-03F9-11CF-8FD0-00AA00686F13}
+    Description: HTML document object
+    Interfaces: IHTMLDocument2, IHTMLDocument3
+    Methods: write(), open(), close()
+    Execution Context: User context via script engine
+    Requirements: MSHTML.dll available
+    Capabilities: Execute embedded scripts, render HTML, access DOM
+    Risks: Can execute VBScript/JavaScript via <script> tags
+
+================================================================================
+
+2. ALTERNATIVE COM OBJECTS FOR CODE EXECUTION
+================================================================================
+
+2.1 WScript.Shell
+    ProgID: WScript.Shell
+    CLSID: {72C24DD5-D70A-438B-8A42-98424B88AFB8}
+    Description: Windows Script Host Shell object
+    Methods:
+        - Run(strCommand, intWindowStyle, bWaitOnReturn)
+        - Exec(strCommand)
+        - CreateShortcut()
+        - GetSpecialFolder()
+        - RegWrite/RegRead/RegDelete
+        - SendKeys()
+    Usage: Direct command execution
+    Context: User context
+    Availability: All Windows systems
+    Examples:
+        $shell = New-Object -ComObject "WScript.Shell"
+        $shell.Run("cmd.exe /c whoami", 1, $false)
+
+2.2 WScript.Network
+    ProgID: WScript.Network
+    CLSID: {093FF3AD-8D1E-43DF-8604-D992A27FE389}
+    Description: Network operations and mapping
+    Methods:
+        - AddWindowsPrinterConnection()
+        - AddPrinterConnection()
+        - RemovePrinterConnection()
+        - MapNetworkDrive()
+        - RemoveNetworkDrive()
+        - EnumPrinterConnections()
+    Usage: Network resource access
+    Context: User context
+
+2.3 ADODB.Stream
+    ProgID: ADODB.Stream
+    CLSID: {00000566-0000-0010-8000-00AA006D2EA4}
+    Description: ADO Stream object for binary/text file I/O
+    Methods:
+        - Open()
+        - Close()
+        - Write()
+        - Read()
+        - SaveToFile()
+        - LoadFromFile()
+    Usage: File I/O operations
+    Capabilities: Read/write files, data conversion
+    Context: User context
+
+2.4 Excel.Application
+    ProgID: Excel.Application
+    CLSID: {00024500-0000-0000-C000-000000000046}
+    Description: Microsoft Excel automation object
+    Methods:
+        - Workbooks.Open()
+        - Workbooks.Add()
+        - Run() - Execute VBA macros
+        - ExecuteMacro()
+    Usage: Office macro execution
+    Context: User context
+    Requirements: Excel installed
+    Risks: Can execute VBA code, file operations
+    Examples:
+        $excel = New-Object -ComObject "Excel.Application"
+        $workbook = $excel.Workbooks.Open("C:\path\to\file.xlsx")
+        $excel.Run("MacroName")
+
+2.5 Word.Application
+    ProgID: Word.Application
+    CLSID: {000209FF-0000-0000-C000-000000000046}
+    Description: Microsoft Word automation object
+    Methods:
+        - Documents.Open()
+        - Documents.Add()
+        - Selection.TypeText()
+        - Run() - Execute VBA macros
+    Usage: Office macro execution, document manipulation
+    Context: User context
+    Requirements: Word installed
+    Risks: Can execute VBA code
+
+2.6 Outlook.Application
+    ProgID: Outlook.Application
+    CLSID: {0006F03A-0000-0000-C000-000000000046}
+    Description: Microsoft Outlook automation object
+    Methods:
+        - GetNamespace("MAPI")
+        - CreateItem()
+        - GetDefaultFolder()
+        - SendMail()
+    Usage: Email access, automation
+    Context: User context
+    Requirements: Outlook installed
+    Risks: Can read/send emails, access contacts
+
+2.7 PowerPoint.Application
+    ProgID: PowerPoint.Application
+    CLSID: {91493440-5A91-11CF-8700-00AA0060263B}
+    Description: Microsoft PowerPoint automation object
+    Methods:
+        - Presentations.Open()
+        - Presentations.Add()
+        - SlideShowSettings.Run()
+    Usage: Presentation manipulation
+    Context: User context
+    Requirements: PowerPoint installed
+
+2.8 ScriptControl
+    ProgID: ScriptControl
+    CLSID: {0E59F1D5-1FBE-11D0-8FF2-00A0D10A6B88}
+    Description: Host ActiveX scripting engines (VBScript, JScript)
+    Methods:
+        - Eval() - Evaluate expressions
+        - Run() - Execute procedures
+        - AddCode() - Add script code
+    Usage: VBScript/JScript code execution
+    Context: User context
+    Capabilities: Direct script evaluation
+    Examples:
+        $sc = New-Object -ComObject "ScriptControl"
+        $sc.Language = "VBScript"
+        $sc.AddCode("Function Test(x) : Test = x * 2 : End Function")
+        $result = $sc.Eval("Test(5)")
+
+2.9 MSXML2.XMLHTTP
+    ProgID: MSXML2.XMLHTTP.3.0
+    CLSID: {F6D90F11-9C73-11D3-B32E-00C04F990BB4}
+    Description: XML HTTP requests
+    Methods:
+        - Open(method, url, async)
+        - Send(body)
+        - GetResponseHeader()
+        - ResponseText/ResponseBody
+    Usage: Network requests, data exfiltration
+    Context: User context
+    Capabilities: HTTP communication, bypasses some security
+
+2.10 Scripting.FileSystemObject
+    ProgID: Scripting.FileSystemObject
+    CLSID: {0D43FE01-F093-11CF-8940-00A0C9054228}
+    Description: File system operations
+    Methods:
+        - CreateTextFile()
+        - OpenTextFile()
+        - DeleteFile()
+        - CopyFile()
+        - CreateFolder()
+        - DeleteFolder()
+        - GetFile()
+        - GetFolder()
+        - FileExists()
+        - FolderExists()
+        - Drives collection
+    Usage: File/folder manipulation
+    Context: User context
+    Availability: All Windows systems
+    Examples:
+        $fso = New-Object -ComObject "Scripting.FileSystemObject"
+        $fso.CreateTextFile("C:\temp\file.txt")
+        $file = $fso.GetFile("C:\path\to\file.txt")
+
+2.11 Shell.Application
+    ProgID: Shell.Application
+    CLSID: {13709620-C279-11CE-A49E-444553540000}
+    Description: Windows Shell operations
+    Methods:
+        - NameSpace() - Access shell folders
+        - CreateShortcut() - Create shortcuts
+        - BrowseForFolder() - Folder picker
+        - ShellExecute() - Execute shell commands
+        - Windows() - Get open windows
+        - Explore() - Open explorer
+        - MinimizeAll(), UndoMinimizeAll()
+    Usage: Shell operations, file browsing
+    Context: User context
+    Examples:
+        $shell = New-Object -ComObject "Shell.Application"
+        $folder = $shell.NameSpace(0xB) # 0xB = All Users\Desktop
+
+2.12 ScheduledTasks.TaskScheduler
+    ProgID: Schedule.Service
+    CLSID: {0F87369F-A4E5-4CFC-BD3E-73E6154572DD}
+    Description: Windows Task Scheduler automation
+    Methods:
+        - GetFolder()
+        - CreateTask()
+        - GetRunningTasks()
+        - GetFolder().DeleteTask()
+    Usage: Task creation, persistence
+    Context: Admin context (elevated)
+    Capabilities: Create/modify scheduled tasks
+    Persistence: Tasks survive reboot
+
+================================================================================
+
+3. EXECUTION METHODS SUMMARY
+================================================================================
+
+Direct Execution Methods:
+├── WScript.Shell.Run()              - Command-line execution
+├── WScript.Shell.Exec()             - Command with I/O capture
+├── Shell.BrowserHelper.Execute()    - Browser helper execution
+├── Excel.Application.Run()          - VBA macro execution
+├── Word.Application.Run()           - VBA macro execution
+├── ScriptControl.Eval()             - Script evaluation
+└── InternetExplorer.ExecWB()        - Web browser commands
+
+Script-Based Methods:
+├── MSHTML document script tags      - Embedded HTML/JavaScript
+├── InternetExplorer JavaScript      - IE document scripting
+├── ScriptControl.AddCode()          - VBScript/JScript
+└── Office VBA macros                - Embedded macros
+
+File I/O Methods:
+├── ADODB.Stream                     - File operations
+├── Scripting.FileSystemObject       - File system access
+├── MSXML2.XMLHTTP                   - Network transfers
+└── Shell.Application.NameSpace()    - Folder/file navigation
+
+Persistence Methods:
+├── ScheduledTasks.TaskScheduler     - Task scheduling
+├── WScript.Shell.RegWrite()         - Registry persistence
+└── Office autostart macros          - Document execution
+
+================================================================================
+
+4. DETECTION EVASION TECHNIQUES
+================================================================================
+
+1. Use less-monitored COM objects (ScriptControl, ADODB.Stream)
+2. Execute via Office documents with auto-executing macros
+3. Use Task Scheduler for persistence (requires admin)
+4. Encode payloads in registry or alternate data streams
+5. Chain multiple COM objects to obfuscate execution
+6. Use file-based execution with hidden attributes
+7. Leverage WMI alongside COM for hybrid execution
+
+================================================================================
+
+5. POWERSHELL COM INSTANTIATION PATTERNS
+================================================================================
+
+# Basic instantiation
+$obj = New-Object -ComObject "ProgID"
+
+# By CLSID
+$obj = New-Object -ComObject "{GUID}"
+
+# With error handling
+$obj = New-Object -ComObject "ProgID" -ErrorAction SilentlyContinue
+
+# Type cast
+[Type]$type = [System.Type]::GetTypeFromProgID("ProgID")
+$obj = [Activator]::CreateInstance($type)
+
+# Direct .NET reflection
+$type = [System.Type]::GetTypeFromProgID("WScript.Shell")
+$instance = [Activator]::CreateInstance($type)
+
+================================================================================
+
+6. DEFENDER/EDR DETECTION BYPASS
+================================================================================
+
+Known Detection Patterns:
+- WScript.Shell.Run() with cmd.exe/powershell.exe
+- InternetExplorer.Application instantiation
+- MSHTML script execution
+- Office.Application macros
+
+Bypass Techniques:
+- Use less common COM objects
+- Execute via scheduled tasks
+- Use ADODB.Stream for file operations
+- Chain multiple objects
+- Delay execution with WMI
+- Use legitimate admin tools via COM
+
+================================================================================

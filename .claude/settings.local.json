@@ -1,0 +1,5 @@
+{
+  "env": {
+    "TEST_VAR_LOCAL": "local_scope_value"
+  }
+}

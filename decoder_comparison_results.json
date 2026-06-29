@@ -1,0 +1,140 @@
+{
+  "payload_size": {
+    "small_original": 25,
+    "small_base64": 36,
+    "small_ratio": 1.44,
+    "medium_original": 72,
+    "medium_base64": 96,
+    "medium_ratio": 1.3333333333333333,
+    "large_original": 730,
+    "large_base64": 976,
+    "large_ratio": 1.336986301369863,
+    "python_decoder": 99,
+    "hardened_decoder": 3000,
+    "vbs_msxml_domxml": 376,
+    "vbs_adodb_stream": 501,
+    "vbs_binary_manipulation": 1443,
+    "vbs_wscript_shell": 601,
+    "vbs_xmlhttp": 467,
+    "vbs_regex_split": 647,
+    "vbs_array_char": 863
+  },
+  "execution_speed": {
+    "standard_base64": 0.003025479999905656,
+    "hardened_no_checks": 19.56191590200001,
+    "hardened_with_checks": 9.19978697700003
+  },
+  "code_complexity": {},
+  "detection_indicators": {
+    "Standard Base64": {
+      "risk": "HIGH",
+      "indicators_count": 2
+    },
+    "Hardened Decoder": {
+      "risk": "MEDIUM-HIGH",
+      "indicators_count": 6
+    },
+    "VBS MSXML (DOMDocument)": {
+      "risk": "MEDIUM",
+      "indicators_count": 3
+    },
+    "VBS ADODB Stream": {
+      "risk": "MEDIUM",
+      "indicators_count": 4
+    },
+    "VBS Binary Manipulation": {
+      "risk": "MEDIUM-LOW",
+      "indicators_count": 4
+    },
+    "VBS WScript.Shell Exec": {
+      "risk": "MEDIUM-HIGH",
+      "indicators_count": 4
+    },
+    "VBS XMLHTTP": {
+      "risk": "HIGH",
+      "indicators_count": 2
+    },
+    "VBS Regex Split": {
+      "risk": "MEDIUM-LOW",
+      "indicators_count": 3
+    },
+    "Multi-Variant (Polymorphic)": {
+      "risk": "LOW-MEDIUM",
+      "indicators_count": 4
+    }
+  },
+  "feature_matrix": {
+    "Standard Base64": {
+      "Speed": 5,
+      "Security": 1,
+      "Evasion": 1,
+      "Complexity": 1,
+      "Detectability": 5,
+      "VBS Compatible": 3,
+      "Polymorphic": 1
+    },
+    "Hardened Base64": {
+      "Speed": 2,
+      "Security": 5,
+      "Evasion": 3,
+      "Complexity": 5,
+      "Detectability": 4,
+      "VBS Compatible": 1,
+      "Polymorphic": 1
+    },
+    "VBS MSXML": {
+      "Speed": 3,
+      "Security": 2,
+      "Evasion": 3,
+      "Complexity": 2,
+      "Detectability": 3,
+      "VBS Compatible": 5,
+      "Polymorphic": 2
+    },
+    "VBS Binary Manipulation": {
+      "Speed": 1,
+      "Security": 2,
+      "Evasion": 4,
+      "Complexity": 5,
+      "Detectability": 2,
+      "VBS Compatible": 5,
+      "Polymorphic": 5
+    },
+    "Multi-Variant Wrapper": {
+      "Speed": 3,
+      "Security": 3,
+      "Evasion": 5,
+      "Complexity": 5,
+      "Detectability": 1,
+      "VBS Compatible": 5,
+      "Polymorphic": 5
+    }
+  },
+  "recommendations": {
+    "Maximum Speed": {
+      "choice": "Standard Base64",
+      "reason": "Native implementation, no overhead",
+      "trade_off": "Highly detectable"
+    },
+    "Best Evasion": {
+      "choice": "Multi-Variant Wrapper (Polymorphic)",
+      "reason": "Each invocation produces unique code, defeats signature detection",
+      "trade_off": "Slight speed penalty"
+    },
+    "Best Security": {
+      "choice": "Hardened Base64 with Anti-Analysis",
+      "reason": "Comprehensive protection against dynamic analysis and tampering",
+      "trade_off": "3-5x slower execution"
+    },
+    "Balance": {
+      "choice": "VBS Binary Manipulation Variant",
+      "reason": "Good obfuscation, moderate complexity, VBS compatible",
+      "trade_off": "Slower than standard"
+    },
+    "Stealth": {
+      "choice": "Multi-Variant with Junk Code",
+      "reason": "Polymorphism + obfuscation, defeats both static and runtime analysis",
+      "trade_off": "Larger code size"
+    }
+  }
+}

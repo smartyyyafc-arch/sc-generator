@@ -1,0 +1,305 @@
+================================================================================
+WMI LOCATOR CONNECTION VARIANTS
+================================================================================
+
+[LOCAL_DOT]
+Description: Local connection using dot (.) notation
+Type: local
+--------------------------------------------------------------------------------
+Dim objLoc_qTBGfwoY, objConn_BPkrThEK, objSvc_PmkJsaiE, objProc_GZoMctRc
+On Error Resume Next
+Set objLoc_qTBGfwoY = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_BPkrThEK = objLoc_qTBGfwoY.ConnectServer(".", "root\cimv2")
+Set objSvc_PmkJsaiE = objConn_BPkrThEK.Get("Win32_Process")
+objSvc_PmkJsaiE.Create "cmd.exe /c whoami"
+Set objProc_GZoMctRc = Nothing
+Set objSvc_PmkJsaiE = Nothing
+Set objConn_BPkrThEK = Nothing
+Set objLoc_qTBGfwoY = Nothing
+On Error GoTo 0
+
+================================================================================
+
+[LOCAL_LOCALHOST]
+Description: Local connection using 'localhost' string
+Type: local
+--------------------------------------------------------------------------------
+Dim objLoc_qTBGfwoY, objConn_BPkrThEK, objSvc_PmkJsaiE, objProc_GZoMctRc
+On Error Resume Next
+Set objLoc_qTBGfwoY = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_BPkrThEK = objLoc_qTBGfwoY.ConnectServer("localhost", "root\cimv2")
+Set objSvc_PmkJsaiE = objConn_BPkrThEK.Get("Win32_Process")
+objSvc_PmkJsaiE.Create "cmd.exe /c whoami"
+Set objProc_GZoMctRc = Nothing
+Set objSvc_PmkJsaiE = Nothing
+Set objConn_BPkrThEK = Nothing
+Set objLoc_qTBGfwoY = Nothing
+On Error GoTo 0
+
+================================================================================
+
+[LOCAL_127001]
+Description: Local connection using 127.0.0.1 loopback
+Type: local
+--------------------------------------------------------------------------------
+Dim objLoc_qTBGfwoY, objConn_BPkrThEK, objSvc_PmkJsaiE, objProc_GZoMctRc
+On Error Resume Next
+Set objLoc_qTBGfwoY = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_BPkrThEK = objLoc_qTBGfwoY.ConnectServer("127.0.0.1", "root\cimv2")
+Set objSvc_PmkJsaiE = objConn_BPkrThEK.Get("Win32_Process")
+objSvc_PmkJsaiE.Create "cmd.exe /c whoami"
+Set objProc_GZoMctRc = Nothing
+Set objSvc_PmkJsaiE = Nothing
+Set objConn_BPkrThEK = Nothing
+Set objLoc_qTBGfwoY = Nothing
+On Error GoTo 0
+
+================================================================================
+
+[REMOTE_IP]
+Description: Remote connection using IP address (example)
+Type: remote
+--------------------------------------------------------------------------------
+Dim objLoc_qTBGfwoY, objConn_BPkrThEK, objSvc_PmkJsaiE, objProc_GZoMctRc
+On Error Resume Next
+Set objLoc_qTBGfwoY = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_BPkrThEK = objLoc_qTBGfwoY.ConnectServer("192.168.1.100", "root\cimv2")
+Set objSvc_PmkJsaiE = objConn_BPkrThEK.Get("Win32_Process")
+objSvc_PmkJsaiE.Create "cmd.exe /c whoami"
+Set objProc_GZoMctRc = Nothing
+Set objSvc_PmkJsaiE = Nothing
+Set objConn_BPkrThEK = Nothing
+Set objLoc_qTBGfwoY = Nothing
+On Error GoTo 0
+
+================================================================================
+
+[REMOTE_AUTHENTICATED]
+Description: Remote connection with username/password
+Type: remote_auth
+--------------------------------------------------------------------------------
+Dim objLoc_qTBGfwoY, objConn_BPkrThEK, objSvc_PmkJsaiE, objProc_GZoMctRc
+On Error Resume Next
+Set objLoc_qTBGfwoY = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_BPkrThEK = objLoc_qTBGfwoY.ConnectServer("192.168.1.100", "root\cimv2", "admin", "password")
+Set objSvc_PmkJsaiE = objConn_BPkrThEK.Get("Win32_Process")
+objSvc_PmkJsaiE.Create "cmd.exe /c whoami"
+Set objProc_GZoMctRc = Nothing
+Set objSvc_PmkJsaiE = Nothing
+Set objConn_BPkrThEK = Nothing
+Set objLoc_qTBGfwoY = Nothing
+On Error GoTo 0
+
+================================================================================
+
+[IMPERSONATION_LEVEL]
+Description: Connection with impersonation level (delegate=3)
+Type: security
+--------------------------------------------------------------------------------
+Dim objLoc_qTBGfwoY, objConn_BPkrThEK, objSvc_PmkJsaiE, objProc_GZoMctRc
+On Error Resume Next
+Set objLoc_qTBGfwoY = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_BPkrThEK = objLoc_qTBGfwoY.ConnectServer(".", "root\cimv2")
+objConn_BPkrThEK.Security_.ImpersonationLevel = 3
+Set objSvc_PmkJsaiE = objConn_BPkrThEK.Get("Win32_Process")
+objSvc_PmkJsaiE.Create "cmd.exe /c whoami"
+Set objProc_GZoMctRc = Nothing
+Set objSvc_PmkJsaiE = Nothing
+Set objConn_BPkrThEK = Nothing
+Set objLoc_qTBGfwoY = Nothing
+On Error GoTo 0
+
+================================================================================
+
+[AUTHENTICATION_LEVEL]
+Description: Connection with packet-level authentication
+Type: security
+--------------------------------------------------------------------------------
+Dim objLoc_qTBGfwoY, objConn_BPkrThEK, objSvc_PmkJsaiE, objProc_GZoMctRc
+On Error Resume Next
+Set objLoc_qTBGfwoY = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_BPkrThEK = objLoc_qTBGfwoY.ConnectServer(".", "root\cimv2")
+objConn_BPkrThEK.Security_.AuthenticationLevel = 6
+Set objSvc_PmkJsaiE = objConn_BPkrThEK.Get("Win32_Process")
+objSvc_PmkJsaiE.Create "cmd.exe /c whoami"
+Set objProc_GZoMctRc = Nothing
+Set objSvc_PmkJsaiE = Nothing
+Set objConn_BPkrThEK = Nothing
+Set objLoc_qTBGfwoY = Nothing
+On Error GoTo 0
+
+================================================================================
+
+[WINMGMT_NAMESPACE]
+Description: Connection using winmgmt root namespace
+Type: namespace
+--------------------------------------------------------------------------------
+Dim objLoc_qTBGfwoY, objConn_BPkrThEK, objSvc_PmkJsaiE, objProc_GZoMctRc
+On Error Resume Next
+Set objLoc_qTBGfwoY = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_BPkrThEK = objLoc_qTBGfwoY.ConnectServer(".", "\\\\.\\root\\cimv2")
+Set objSvc_PmkJsaiE = objConn_BPkrThEK.Get("Win32_Process")
+objSvc_PmkJsaiE.Create "cmd.exe /c whoami"
+Set objProc_GZoMctRc = Nothing
+Set objSvc_PmkJsaiE = Nothing
+Set objConn_BPkrThEK = Nothing
+Set objLoc_qTBGfwoY = Nothing
+On Error GoTo 0
+
+================================================================================
+
+[WDM_NAMESPACE]
+Description: Connection using WDM (driver model) namespace
+Type: namespace
+--------------------------------------------------------------------------------
+Dim objLoc_qTBGfwoY, objConn_BPkrThEK, objSvc_PmkJsaiE, objProc_GZoMctRc
+On Error Resume Next
+Set objLoc_qTBGfwoY = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_BPkrThEK = objLoc_qTBGfwoY.ConnectServer(".", "root\\WDM")
+Set objSvc_PmkJsaiE = objConn_BPkrThEK.Get("Win32_Process")
+objSvc_PmkJsaiE.Create "cmd.exe /c whoami"
+Set objProc_GZoMctRc = Nothing
+Set objSvc_PmkJsaiE = Nothing
+Set objConn_BPkrThEK = Nothing
+Set objLoc_qTBGfwoY = Nothing
+On Error GoTo 0
+
+================================================================================
+
+[DCIM_NAMESPACE]
+Description: Connection using DCIM namespace
+Type: namespace
+--------------------------------------------------------------------------------
+Dim objLoc_qTBGfwoY, objConn_BPkrThEK, objSvc_PmkJsaiE, objProc_GZoMctRc
+On Error Resume Next
+Set objLoc_qTBGfwoY = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_BPkrThEK = objLoc_qTBGfwoY.ConnectServer(".", "root\\dcim")
+Set objSvc_PmkJsaiE = objConn_BPkrThEK.Get("Win32_Process")
+objSvc_PmkJsaiE.Create "cmd.exe /c whoami"
+Set objProc_GZoMctRc = Nothing
+Set objSvc_PmkJsaiE = Nothing
+Set objConn_BPkrThEK = Nothing
+Set objLoc_qTBGfwoY = Nothing
+On Error GoTo 0
+
+================================================================================
+
+[HARDWARE_NAMESPACE]
+Description: Connection using hardware namespace
+Type: namespace
+--------------------------------------------------------------------------------
+Dim objLoc_qTBGfwoY, objConn_BPkrThEK, objSvc_PmkJsaiE, objProc_GZoMctRc
+On Error Resume Next
+Set objLoc_qTBGfwoY = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_BPkrThEK = objLoc_qTBGfwoY.ConnectServer(".", "root\\hardware")
+Set objSvc_PmkJsaiE = objConn_BPkrThEK.Get("Win32_Process")
+objSvc_PmkJsaiE.Create "cmd.exe /c whoami"
+Set objProc_GZoMctRc = Nothing
+Set objSvc_PmkJsaiE = Nothing
+Set objConn_BPkrThEK = Nothing
+Set objLoc_qTBGfwoY = Nothing
+On Error GoTo 0
+
+================================================================================
+
+[CIMV1_NAMESPACE]
+Description: Connection using CIMv1 (legacy) namespace
+Type: namespace
+--------------------------------------------------------------------------------
+Dim objLoc_qTBGfwoY, objConn_BPkrThEK, objSvc_PmkJsaiE, objProc_GZoMctRc
+On Error Resume Next
+Set objLoc_qTBGfwoY = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_BPkrThEK = objLoc_qTBGfwoY.ConnectServer(".", "root\\cimv1")
+Set objSvc_PmkJsaiE = objConn_BPkrThEK.Get("Win32_Process")
+objSvc_PmkJsaiE.Create "cmd.exe /c whoami"
+Set objProc_GZoMctRc = Nothing
+Set objSvc_PmkJsaiE = Nothing
+Set objConn_BPkrThEK = Nothing
+Set objLoc_qTBGfwoY = Nothing
+On Error GoTo 0
+
+================================================================================
+
+[DEFAULT_NAMESPACE]
+Description: Connection with empty namespace (default cimv2)
+Type: namespace
+--------------------------------------------------------------------------------
+Dim objLoc_qTBGfwoY, objConn_BPkrThEK, objSvc_PmkJsaiE, objProc_GZoMctRc
+On Error Resume Next
+Set objLoc_qTBGfwoY = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_BPkrThEK = objLoc_qTBGfwoY.ConnectServer(".")
+Set objSvc_PmkJsaiE = objConn_BPkrThEK.Get("Win32_Process")
+objSvc_PmkJsaiE.Create "cmd.exe /c whoami"
+Set objProc_GZoMctRc = Nothing
+Set objSvc_PmkJsaiE = Nothing
+Set objConn_BPkrThEK = Nothing
+Set objLoc_qTBGfwoY = Nothing
+On Error GoTo 0
+
+================================================================================
+
+[FULL_PATH_NAMESPACE]
+Description: Connection using full UNC-style path
+Type: namespace
+--------------------------------------------------------------------------------
+Dim objLoc_qTBGfwoY, objConn_BPkrThEK, objSvc_PmkJsaiE, objProc_GZoMctRc
+On Error Resume Next
+Set objLoc_qTBGfwoY = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_BPkrThEK = objLoc_qTBGfwoY.ConnectServer(".", "\\\\root\\cimv2")
+Set objSvc_PmkJsaiE = objConn_BPkrThEK.Get("Win32_Process")
+objSvc_PmkJsaiE.Create "cmd.exe /c whoami"
+Set objProc_GZoMctRc = Nothing
+Set objSvc_PmkJsaiE = Nothing
+Set objConn_BPkrThEK = Nothing
+Set objLoc_qTBGfwoY = Nothing
+On Error GoTo 0
+
+================================================================================
+
+[SECURITY_FLAGS]
+Description: Connection with security flags enabled
+Type: security
+--------------------------------------------------------------------------------
+Dim objLoc_qTBGfwoY, objConn_BPkrThEK, objSvc_PmkJsaiE, objProc_GZoMctRc
+On Error Resume Next
+Set objLoc_qTBGfwoY = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_BPkrThEK = objLoc_qTBGfwoY.ConnectServer(".", "root\cimv2", "", "", "", "", 128)
+Set objSvc_PmkJsaiE = objConn_BPkrThEK.Get("Win32_Process")
+objSvc_PmkJsaiE.Create "cmd.exe /c whoami"
+Set objProc_GZoMctRc = Nothing
+Set objSvc_PmkJsaiE = Nothing
+Set objConn_BPkrThEK = Nothing
+Set objLoc_qTBGfwoY = Nothing
+On Error GoTo 0
+
+================================================================================
+
+[ENCODED_REMOTE]
+Description: Remote connection with base64 encoded command
+Type: remote_obfuscated
+--------------------------------------------------------------------------------
+Function DecodeBase64(encoded)
+    Dim xmlDoc, node
+    Set xmlDoc = CreateObject("MSXML2.DOMDocument")
+    Set node = xmlDoc.CreateElement("tmp")
+    node.DataType = "bin.base64"
+    node.Text = encoded
+    DecodeBase64 = node.NodeTypedValue
+End Function
+
+Dim objLoc_qTBGfwoY, objConn_BPkrThEK, objSvc_PmkJsaiE, objProc_GZoMctRc, encCmd_fDbqZHFy
+On Error Resume Next
+Set objLoc_qTBGfwoY = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_BPkrThEK = objLoc_qTBGfwoY.ConnectServer("192.168.1.100", "root\cimv2")
+Set objSvc_PmkJsaiE = objConn_BPkrThEK.Get("Win32_Process")
+encCmd_fDbqZHFy = DecodeBase64("Y21kLmV4ZSAvYyB3aG9hbWk=")
+objSvc_PmkJsaiE.Create encCmd_fDbqZHFy
+Set objProc_GZoMctRc = Nothing
+Set objSvc_PmkJsaiE = Nothing
+Set objConn_BPkrThEK = Nothing
+Set objLoc_qTBGfwoY = Nothing
+On Error GoTo 0
+
+================================================================================
+
+

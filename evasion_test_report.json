@@ -1,0 +1,93 @@
+{
+  "timestamp": "2026-06-29T16:45:35.786139",
+  "test_parameters": {
+    "num_variants": 50,
+    "detection_threshold": 0.7,
+    "payload": "echo 'polymorphic payload executed'"
+  },
+  "test_1_basic_evasion": {
+    "test_summary": {
+      "total_variants_tested": 50,
+      "variants_detected": 0,
+      "variants_evaded": 50,
+      "evasion_success_rate": "100.00%",
+      "polymorphic_effectiveness": 1.0
+    },
+    "signature_analysis": {
+      "unique_signatures": 50,
+      "signature_diversity_ratio": "1.0000",
+      "no_two_signatures_identical": true
+    },
+    "entropy_analysis": {
+      "entropy_range": "4.3695 - 5.5361",
+      "entropy_variance": "0.0983",
+      "average_entropy": "5.1752"
+    },
+    "feature_diversity": {
+      "unique_opcode_sequences": 9,
+      "unique_control_flows": 3,
+      "features_triggered_distribution": {
+        "entropy": 45,
+        "api_calls": 50,
+        "memory_footprint": 50
+      }
+    },
+    "confidence_distribution": {
+      "average_confidence": "0.4117",
+      "min_confidence": "0.3865",
+      "max_confidence": "0.4230",
+      "std_deviation": "0.0098"
+    },
+    "evasion_characteristics": {
+      "evaded_variants_count": 50,
+      "avg_confidence_evaded": "0.4117",
+      "detected_variants_count": 0,
+      "avg_confidence_detected": "N/A"
+    },
+    "polymorphic_algorithm_diversity": {
+      "algorithms_used": [
+        "unknown"
+      ],
+      "algorithm_count": 1
+    },
+    "evasion_verdict": {
+      "polymorphic": true,
+      "effective_entropy_variation": false,
+      "strong_control_flow_diversity": true,
+      "overall_evasion_success": true
+    }
+  },
+  "test_2_signature_resistance": {
+    "total_variants": 50,
+    "unique_signatures": 50,
+    "collisions": 0,
+    "collision_rate": 0.0,
+    "collision_resistant": true
+  },
+  "test_3_behavioral_diversity": {
+    "behavior_distribution": {
+      "uses_subprocess": 50,
+      "uses_os_system": 0,
+      "uses_exec": 0,
+      "high_entropy": 43,
+      "complex_control_flow": 0
+    },
+    "behavioral_variance": 0.4
+  },
+  "test_4_feature_space_distribution": {
+    "entropy_min": 4.369473417335247,
+    "entropy_max": 5.536099684126427,
+    "entropy_mean": 5.17516629306945,
+    "entropy_stdev": 0.3135572932971478,
+    "unique_opcode_sequences": 9,
+    "opcode_diversity_ratio": 0.18,
+    "feature_space_coverage": "limited"
+  },
+  "overall_evasion_verdict": {
+    "polymorphic_effective": true,
+    "entropy_variation_strong": false,
+    "control_flow_diverse": true,
+    "evasion_success_high": true,
+    "recommendation": "MARGINAL EVASION EFFECTIVENESS"
+  }
+}

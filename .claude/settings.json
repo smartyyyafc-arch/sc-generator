@@ -1,0 +1,5 @@
+{
+  "env": {
+    "TEST_VAR_PROJECT": "project_scope_value"
+  }
+}

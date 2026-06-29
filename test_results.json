@@ -1,0 +1,161 @@
+{
+  "passed": 30,
+  "failed": 1,
+  "tests": [
+    {
+      "name": "Code generation produces output",
+      "status": "PASS",
+      "message": "Condition is true"
+    },
+    {
+      "name": "Contains function declarations",
+      "status": "PASS",
+      "message": "Found 'Function' in output"
+    },
+    {
+      "name": "Contains variable declarations",
+      "status": "PASS",
+      "message": "Found 'Dim' in output"
+    },
+    {
+      "name": "Contains shell execution",
+      "status": "PASS",
+      "message": "Found 'WScript.Shell' in output"
+    },
+    {
+      "name": "Generated 3 different chunk orders (expected >= 2)",
+      "status": "PASS",
+      "message": "Condition is true"
+    },
+    {
+      "name": "Index mapping is created",
+      "status": "PASS",
+      "message": "Condition is true"
+    },
+    {
+      "name": "Mapping stored in code",
+      "status": "PASS",
+      "message": "Found 'Dim' in output"
+    },
+    {
+      "name": "Mapping used in loop",
+      "status": "PASS",
+      "message": "Found 'For' in output"
+    },
+    {
+      "name": "Generated 6 decode functions (expected >= 2)",
+      "status": "PASS",
+      "message": "Condition is true"
+    },
+    {
+      "name": "Contains polymorphic dispatch",
+      "status": "PASS",
+      "message": "Found 'Select Case' in output"
+    },
+    {
+      "name": "No sequential variable names",
+      "status": "PASS",
+      "message": "Correctly excluded 'arr_1'"
+    },
+    {
+      "name": "Contains junk code variables",
+      "status": "PASS",
+      "message": "Found 'junk' in output"
+    },
+    {
+      "name": "Contains arithmetic operations",
+      "status": "PASS",
+      "message": "Found '*' in output"
+    },
+    {
+      "name": "Generates code with hex encoding",
+      "status": "PASS",
+      "message": "Condition is true"
+    },
+    {
+      "name": "Generates code with base64 encoding",
+      "status": "PASS",
+      "message": "Condition is true"
+    },
+    {
+      "name": "Generates code with chunk_size=8",
+      "status": "PASS",
+      "message": "Condition is true"
+    },
+    {
+      "name": "Generates code with chunk_size=16",
+      "status": "PASS",
+      "message": "Condition is true"
+    },
+    {
+      "name": "Generates code with chunk_size=32",
+      "status": "PASS",
+      "message": "Condition is true"
+    },
+    {
+      "name": "Advanced wrapper generates output",
+      "status": "PASS",
+      "message": "Condition is true"
+    },
+    {
+      "name": "Contains conditional logic",
+      "status": "PASS",
+      "message": "Found 'If' in output"
+    },
+    {
+      "name": "Contains random selection",
+      "status": "PASS",
+      "message": "Found 'Rnd()' in output"
+    },
+    {
+      "name": "Array declaration present",
+      "status": "PASS",
+      "message": "Found 'Dim' in output"
+    },
+    {
+      "name": "Loop for array access",
+      "status": "PASS",
+      "message": "Found 'For' in output"
+    },
+    {
+      "name": "Character conversion present",
+      "status": "PASS",
+      "message": "Found 'Chr' in output"
+    },
+    {
+      "name": "Hex encoding correct: ABC -> 414243",
+      "status": "PASS",
+      "message": "Condition is true"
+    },
+    {
+      "name": "For/Next balanced",
+      "status": "PASS",
+      "message": "Condition is true"
+    },
+    {
+      "name": "Function/End Function balanced",
+      "status": "FAIL",
+      "message": "Condition is false"
+    },
+    {
+      "name": "Variables declared",
+      "status": "PASS",
+      "message": "Condition is true"
+    },
+    {
+      "name": "Objects instantiated",
+      "status": "PASS",
+      "message": "Condition is true"
+    },
+    {
+      "name": "Different strategies detected: {'accumulate', 'lookup'}",
+      "status": "PASS",
+      "message": "Condition is true"
+    },
+    {
+      "name": "Large payload generates 164 lines of code",
+      "status": "PASS",
+      "message": "Condition is true"
+    }
+  ]
+}

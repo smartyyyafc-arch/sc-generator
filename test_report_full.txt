@@ -1,0 +1,189 @@
+test_e2e_batch_encode_multiple_commands (__main__.Base64E2EExecutionTest.test_e2e_batch_encode_multiple_commands)
+E2E Test 6: Batch encode multiple commands ... 
+[TEST 6] Batch Encode Multiple Commands
+============================================================
+Encoding 5 commands...
+Batch result count: 5
+  [✓] whoami
+  [✓] ipconfig /all
+  [✓] tasklist /v
+  [✓] systeminfo
+  [✓] net user
+[✓] Test PASSED: All batch commands verified
+
+ok
+test_e2e_cache_performance (__main__.Base64E2EExecutionTest.test_e2e_cache_performance)
+E2E Test 7: Caching with repeated payloads ... 
+[TEST 7] Caching Performance
+============================================================
+Payload: cmd /c tasklist
+First encoding key: b64_922875
+Second encoding key: b64_922875
+[✓] Test PASSED: Caching verified
+
+ok
+test_e2e_cmd_inline_execution (__main__.Base64E2EExecutionTest.test_e2e_cmd_inline_execution)
+E2E Test 3: CMD inline command execution ... 
+[TEST 3] CMD Inline Command Execution
+============================================================
+CMD command: cmd /c echo E2E Test Output
+Encoded: Y21kIC9jIGVjaG8gRTJFIFRlc3QgT3V0cHV0
+Decoded: cmd /c echo E2E Test Output
+[✓] Test PASSED: CMD inline command verified
+
+ok
+test_e2e_complex_command_with_args (__main__.Base64E2EExecutionTest.test_e2e_complex_command_with_args)
+E2E Test 5: Complex command with arguments and special chars ... 
+[TEST 5] Complex Command with Arguments
+============================================================
+Complex command: cmd /c "echo Test & echo Args | find "Test""
+Encoded: Y21kIC9jICJlY2hvIFRlc3QgJiBlY2hvIEFyZ3MgfCBmaW5kICJUZXN0IiI=
+Decoded: cmd /c "echo Test & echo Args | find "Test""
+[✓] Test PASSED: Complex command verified
+
+ok
+test_e2e_encoder_decoder_pair (__main__.Base64E2EExecutionTest.test_e2e_encoder_decoder_pair)
+E2E Test 9: Encoder-Decoder pair generation ... 
+[TEST 9] Encoder-Decoder Pair Generation
+============================================================
+Payload: cmd /c echo Encoder Decoder Pair Test
+Encoder code length: 82
+Decoder code length: 281
+[✓] Test PASSED: Encoder-Decoder pair valid
+
+ok
+test_e2e_error_handling_invalid_base64 (__main__.Base64E2EExecutionTest.test_e2e_error_handling_invalid_base64)
+E2E Test 12: Error handling for invalid Base64 ... 
+[TEST 12] Error Handling - Invalid Base64
+============================================================
+Testing invalid Base64: Invalid!!!Base64!!!
+  [✓] Correctly caught error: Failed to decode Base64: Invalid base64-encoded st...
+  [✓] Correctly caught type error: Expected str, got int...
+[✓] Test PASSED: Error handling verified
+
+ok
+test_e2e_full_vbs_obfuscation_pipeline (__main__.Base64E2EExecutionTest.test_e2e_full_vbs_obfuscation_pipeline)
+E2E Test 11: Full VBS obfuscation pipeline ... 
+[TEST 11] Full VBS Obfuscation Pipeline
+============================================================
+Command: powershell.exe -NoProfile -Command Get-Process
+Full payload generated: 687 bytes
+Polymorphic wrapper applied: 780 bytes
+[✓] Test PASSED: Full pipeline successful
+
+ok
+test_e2e_lookup_table_dynamic_selection (__main__.Base64E2EExecutionTest.test_e2e_lookup_table_dynamic_selection)
+E2E Test 10: Lookup table for dynamic payload selection ... 
+[TEST 10] Lookup Table for Dynamic Payload Selection
+============================================================
+Creating lookup table for 4 payloads...
+  [✓] Forward: cmd /c ipconfig...
+  [✓] Forward: powershell Get-Process...
+  [✓] Forward: net user...
+  [✓] Forward: tasklist /v...
+  [✓] Reverse: Y21kIC9jIGlwY29uZmln...
+  [✓] Reverse: cG93ZXJzaGVsbCBHZXQtUHJvY2Vzcw...
+  [✓] Reverse: bmV0IHVzZXI=...
+  [✓] Reverse: dGFza2xpc3QgL3Y=...
+[✓] Test PASSED: Lookup table valid
+
+ok
+test_e2e_no_scope_errors (__main__.Base64E2EExecutionTest.test_e2e_no_scope_errors)
+E2E Test 14: Comprehensive scope error check ... 
+[TEST 14] Comprehensive Scope Error Check
+============================================================
+  [✓] Command 1: No scope errors
+  [✓] Command 2: No scope errors
+  [✓] Command 3: No scope errors
+  [✓] Command 4: No scope errors
+  [✓] Command 5: No scope errors
+[✓] Test PASSED: No scope errors detected
+
+ok
+test_e2e_performance_metrics (__main__.Base64E2EExecutionTest.test_e2e_performance_metrics)
+E2E Test 15: Performance metrics collection ... 
+[TEST 15] Performance Metrics
+============================================================
+Encode time (100x): 0.0000s (0.00ms per op)
+Decode time (100x): 0.0001s (0.00ms per op)
+VBS gen time (10x): 0.0000s (0.00ms per op)
+[✓] Test PASSED: Metrics collected
+
+ok
+test_e2e_powershell_command (__main__.Base64E2EExecutionTest.test_e2e_powershell_command)
+E2E Test 4: PowerShell command payload ... 
+[TEST 4] PowerShell Command Payload
+============================================================
+PowerShell command: Write-Host 'E2E PowerShell Test'
+VBS Base64: V3JpdGUtSG9zdCAnRTJFIFBvd2VyU2hlbGwgVGVzdCc=
+PowerShell UTF-16LE: VwByAGkAdABlAC0ASABvAHMAdAAgACcARQAyAEUAIABQAG8AdwBlAHIAUwBoAGUAbABsACAAVABlAHMAdAAnAA==
+[✓] Test PASSED: PowerShell encoding verified
+
+ok
+test_e2e_python_script_payload (__main__.Base64E2EExecutionTest.test_e2e_python_script_payload)
+E2E Test 2: Python script execution as payload ... 
+[TEST 2] Python Script Payload Execution
+============================================================
+Python payload: import sys; print('Python E2E Test'); sys.exit(0)
+Encoded: aW1wb3J0IHN5czsgcHJpbnQoJ1B5dGhvbiBFMkUgVGVzdCcpOyBzeXMuZXhpdCgwKQ==
+Decoded: import sys; print('Python E2E Test'); sys.exit(0)
+[✓] Test PASSED: Python script payload verified
+
+ok
+test_e2e_round_trip_validation (__main__.Base64E2EExecutionTest.test_e2e_round_trip_validation)
+E2E Test 13: Round-trip validation with edge cases ... 
+[TEST 13] Round-Trip Validation with Edge Cases
+============================================================
+  [✓] Test 1: 
+  [✓] Test 2: A
+  [✓] Test 3: Test String
+  [✓] Test 4: Test!@#$%^&*()
+  [✓] Test 5: Test
+With
+Newlines
+  [✓] Test 6: Test	With	Tabs
+  [✓] Test 7: xxxxxxxxxxxxxxxxxxxxxxxxxxx...
+[✓] Test PASSED: All round-trip cases valid
+
+ok
+test_e2e_simple_echo_command (__main__.Base64E2EExecutionTest.test_e2e_simple_echo_command)
+E2E Test 1: Simple echo command execution ... 
+[TEST 1] Simple Echo Command Execution
+============================================================
+Original command: echo Test E2E Execution
+Encoded: ZWNobyBUZXN0IEUyRSBFeGVjdXRpb24=
+Decoded: echo Test E2E Execution
+[✓] Test PASSED: Encode-Decode-Verify successful
+
+ok
+test_e2e_vbs_variable_scope (__main__.Base64E2EExecutionTest.test_e2e_vbs_variable_scope)
+E2E Test 8: VBS variable scope (no errors) ... 
+[TEST 8] VBS Variable Scope Validation
+============================================================
+Creating VBS variables with strict scope...
+  [✓] Variable var_0 scoped correctly
+  [✓] Variable var_1 scoped correctly
+  [✓] Variable var_2 scoped correctly
+  [✓] Variable var_3 scoped correctly
+[✓] Test PASSED: No VBS scope errors
+
+ok
+test_scenario_multi_encoding_chain (__main__.TestE2EScenarios.test_scenario_multi_encoding_chain)
+Scenario: Multiple encoding layers ... 
+[SCENARIO 2] Multi-Encoding Chain
+============================================================
+[✓] Multi-encoding chain verified
+
+ok
+test_scenario_staged_execution (__main__.TestE2EScenarios.test_scenario_staged_execution)
+Scenario: Staged payload execution ... 
+[SCENARIO 1] Staged Execution
+============================================================
+[✓] Staged execution verified
+
+ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.002s
+
+OK

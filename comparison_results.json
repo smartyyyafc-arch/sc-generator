@@ -1,0 +1,32 @@
+{
+  "Minimal (Stealth 1)": {
+    "stealth_level": 1,
+    "payload_size": 14371,
+    "jitter_range": "50-500ms",
+    "features_enabled": 9
+  },
+  "Low (Stealth 3)": {
+    "stealth_level": 3,
+    "payload_size": 14371,
+    "jitter_range": "50-500ms",
+    "features_enabled": 9
+  },
+  "Medium (Stealth 5)": {
+    "stealth_level": 5,
+    "payload_size": 14371,
+    "jitter_range": "50-500ms",
+    "features_enabled": 9
+  },
+  "High (Stealth 7)": {
+    "stealth_level": 7,
+    "payload_size": 14371,
+    "jitter_range": "50-500ms",
+    "features_enabled": 9
+  },
+  "Maximum (Stealth 10)": {
+    "stealth_level": 10,
+    "payload_size": 14371,
+    "jitter_range": "50-500ms",
+    "features_enabled": 9
+  }
+}

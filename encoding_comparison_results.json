@@ -1,0 +1,297 @@
+{
+  "timestamp": 1782743481.269022,
+  "payload_analysis": {
+    "tiny": {
+      "original": 3,
+      "base64_encoded": 4,
+      "hex_encoded": 6,
+      "array_decimal": 11,
+      "array_hex_escape": 16,
+      "array_octal": 19,
+      "array_char_codes": 11,
+      "base64_decoder_js": 33,
+      "hex_decoder_js": 60,
+      "array_decoder_js": 58,
+      "base64_decoder_python": 53,
+      "hex_decoder_python": 59,
+      "array_decoder_python": 34,
+      "base64_decoder_ps": 86,
+      "hex_decoder_ps": 148,
+      "array_decoder_ps": 60
+    },
+    "small": {
+      "original": 33,
+      "base64_encoded": 44,
+      "hex_encoded": 66,
+      "array_decimal": 122,
+      "array_hex_escape": 166,
+      "array_octal": 199,
+      "array_char_codes": 122,
+      "base64_decoder_js": 73,
+      "hex_decoder_js": 120,
+      "array_decoder_js": 169,
+      "base64_decoder_python": 93,
+      "hex_decoder_python": 119,
+      "array_decoder_python": 145,
+      "base64_decoder_ps": 126,
+      "hex_decoder_ps": 208,
+      "array_decoder_ps": 171
+    },
+    "medium": {
+      "original": 99,
+      "base64_encoded": 132,
+      "hex_encoded": 198,
+      "array_decimal": 356,
+      "array_hex_escape": 496,
+      "array_octal": 595,
+      "array_char_codes": 356,
+      "base64_decoder_js": 161,
+      "hex_decoder_js": 252,
+      "array_decoder_js": 403,
+      "base64_decoder_python": 181,
+      "hex_decoder_python": 251,
+      "array_decoder_python": 379,
+      "base64_decoder_ps": 214,
+      "hex_decoder_ps": 340,
+      "array_decoder_ps": 405
+    },
+    "large": {
+      "original": 1000,
+      "base64_encoded": 1336,
+      "hex_encoded": 2000,
+      "array_decimal": 3001,
+      "array_hex_escape": 5001,
+      "array_octal": 6001,
+      "array_char_codes": 3001,
+      "base64_decoder_js": 1365,
+      "hex_decoder_js": 2054,
+      "array_decoder_js": 3048,
+      "base64_decoder_python": 1385,
+      "hex_decoder_python": 2053,
+      "array_decoder_python": 3024,
+      "base64_decoder_ps": 1418,
+      "hex_decoder_ps": 2142,
+      "array_decoder_ps": 3050
+    }
+  },
+  "speed_analysis": {
+    "base64_encoding": 0.2995498000018415,
+    "hex_encoding": 0.18040529998870625,
+    "array_decimal": 5.830151000009209,
+    "array_hex_escape": 13.41723450000245,
+    "array_octal": 13.641624299998512,
+    "array_char_codes": 6.288839199987706
+  },
+  "overhead_analysis": {
+    "tiny": {
+      "base64": 33.33333333333333,
+      "hex": 100.0,
+      "array_decimal": 266.66666666666663,
+      "array_hex_escape": 433.3333333333333,
+      "array_octal": 533.3333333333333,
+      "array_char_codes": 266.66666666666663
+    },
+    "small": {
+      "base64": 33.33333333333333,
+      "hex": 100.0,
+      "array_decimal": 269.6969696969697,
+      "array_hex_escape": 403.030303030303,
+      "array_octal": 503.030303030303,
+      "array_char_codes": 269.6969696969697
+    },
+    "medium": {
+      "base64": 33.33333333333333,
+      "hex": 100.0,
+      "array_decimal": 259.5959595959596,
+      "array_hex_escape": 401.01010101010104,
+      "array_octal": 501.01010101010104,
+      "array_char_codes": 259.5959595959596
+    },
+    "large": {
+      "base64": 33.6,
+      "hex": 100.0,
+      "array_decimal": 200.1,
+      "array_hex_escape": 400.1,
+      "array_octal": 500.1,
+      "array_char_codes": 200.1
+    }
+  },
+  "detection_analysis": {
+    "base64": {
+      "overall_detection_risk": 0.7928571428571428,
+      "detection_risk_level": "HIGH",
+      "evasion_score": 0.20714285714285718,
+      "detection_factors": {
+        "signature_detectable": 0.95,
+        "static_analysis": 0.9,
+        "behavioral_pattern": 0.75,
+        "entropy_analysis": 0.6,
+        "regex_pattern_match": 0.85,
+        "sandboxed_detection": 0.7,
+        "ml_detection": 0.8
+      }
+    },
+    "hex": {
+      "overall_detection_risk": 0.75,
+      "detection_risk_level": "HIGH",
+      "evasion_score": 0.25,
+      "detection_factors": {
+        "signature_detectable": 0.85,
+        "static_analysis": 0.75,
+        "behavioral_pattern": 0.7,
+        "entropy_analysis": 0.65,
+        "regex_pattern_match": 0.8,
+        "sandboxed_detection": 0.75,
+        "ml_detection": 0.75
+      }
+    },
+    "array_decimal": {
+      "overall_detection_risk": 0.4285714285714286,
+      "detection_risk_level": "MEDIUM",
+      "evasion_score": 0.5714285714285714,
+      "detection_factors": {
+        "signature_detectable": 0.45,
+        "static_analysis": 0.5,
+        "behavioral_pattern": 0.4,
+        "entropy_analysis": 0.3,
+        "regex_pattern_match": 0.35,
+        "sandboxed_detection": 0.55,
+        "ml_detection": 0.45
+      }
+    },
+    "array_hex_escape": {
+      "overall_detection_risk": 0.40714285714285714,
+      "detection_risk_level": "MEDIUM",
+      "evasion_score": 0.5928571428571429,
+      "detection_factors": {
+        "signature_detectable": 0.5,
+        "static_analysis": 0.45,
+        "behavioral_pattern": 0.35,
+        "entropy_analysis": 0.25,
+        "regex_pattern_match": 0.4,
+        "sandboxed_detection": 0.5,
+        "ml_detection": 0.4
+      }
+    },
+    "array_octal": {
+      "overall_detection_risk": 0.34285714285714286,
+      "detection_risk_level": "LOW",
+      "evasion_score": 0.6571428571428571,
+      "detection_factors": {
+        "signature_detectable": 0.4,
+        "static_analysis": 0.4,
+        "behavioral_pattern": 0.3,
+        "entropy_analysis": 0.25,
+        "regex_pattern_match": 0.25,
+        "sandboxed_detection": 0.45,
+        "ml_detection": 0.35
+      }
+    },
+    "array_char_codes": {
+      "overall_detection_risk": 0.4857142857142857,
+      "detection_risk_level": "MEDIUM",
+      "evasion_score": 0.5142857142857142,
+      "detection_factors": {
+        "signature_detectable": 0.5,
+        "static_analysis": 0.55,
+        "behavioral_pattern": 0.45,
+        "entropy_analysis": 0.35,
+        "regex_pattern_match": 0.45,
+        "sandboxed_detection": 0.6,
+        "ml_detection": 0.5
+      }
+    }
+  },
+  "recommendations": {
+    "best_evasion": {
+      "method": "array_octal",
+      "risk_score": 0.34285714285714286
+    },
+    "best_speed": {
+      "method": "hex_encoding",
+      "speed_us": 0.18040529998870625
+    },
+    "lowest_overhead": {
+      "method": "base64",
+      "overhead_pct": 33.4
+    },
+    "detection_ranking": [
+      {
+        "method": "array_octal",
+        "risk_score": 0.34285714285714286
+      },
+      {
+        "method": "array_hex_escape",
+        "risk_score": 0.40714285714285714
+      },
+      {
+        "method": "array_decimal",
+        "risk_score": 0.4285714285714286
+      },
+      {
+        "method": "array_char_codes",
+        "risk_score": 0.4857142857142857
+      },
+      {
+        "method": "hex",
+        "risk_score": 0.75
+      },
+      {
+        "method": "base64",
+        "risk_score": 0.7928571428571428
+      }
+    ],
+    "speed_ranking": [
+      {
+        "method": "hex_encoding",
+        "speed_us": 0.18040529998870625
+      },
+      {
+        "method": "base64_encoding",
+        "speed_us": 0.2995498000018415
+      },
+      {
+        "method": "array_decimal",
+        "speed_us": 5.830151000009209
+      },
+      {
+        "method": "array_char_codes",
+        "speed_us": 6.288839199987706
+      },
+      {
+        "method": "array_hex_escape",
+        "speed_us": 13.41723450000245
+      },
+      {
+        "method": "array_octal",
+        "speed_us": 13.641624299998512
+      }
+    ],
+    "overhead_ranking": [
+      {
+        "method": "base64",
+        "overhead_pct": 33.4
+      },
+      {
+        "method": "hex",
+        "overhead_pct": 100.0
+      },
+      {
+        "method": "array_decimal",
+        "overhead_pct": 249.01489898989897
+      },
+      {
+        "method": "array_char_codes",
+        "overhead_pct": 249.01489898989897
+      },
+      {
+        "method": "array_hex_escape",
+        "overhead_pct": 409.36843434343433
+      },
+      {
+        "method": "array_octal",
+        "overhead_pct": 509.36843434343433
+      }
+    ]
+  }
+}

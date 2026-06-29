@@ -1,0 +1,266 @@
+[
+  {
+    "benchmark": "encoding_speed",
+    "payload_size": 100,
+    "time_ms": 0.02002716064453125,
+    "throughput_mbps": 4.761904761904762
+  },
+  {
+    "benchmark": "encoding_speed",
+    "payload_size": 500,
+    "time_ms": 0.019311904907226562,
+    "throughput_mbps": 24.691358024691358
+  },
+  {
+    "benchmark": "encoding_speed",
+    "payload_size": 1000,
+    "time_ms": 0.023603439331054688,
+    "throughput_mbps": 40.4040404040404
+  },
+  {
+    "benchmark": "encoding_speed",
+    "payload_size": 5000,
+    "time_ms": 0.06794929504394531,
+    "throughput_mbps": 70.17543859649123
+  },
+  {
+    "benchmark": "encoding_speed",
+    "payload_size": 10000,
+    "time_ms": 0.1857280731201172,
+    "throughput_mbps": 51.34788189987163
+  },
+  {
+    "benchmark": "encoding_speed",
+    "payload_size": 50000,
+    "time_ms": 0.6308555603027344,
+    "throughput_mbps": 75.58578987150416
+  },
+  {
+    "benchmark": "encoding_speed",
+    "payload_size": 100000,
+    "time_ms": 1.3129711151123047,
+    "throughput_mbps": 72.6348284002179
+  },
+  {
+    "benchmark": "encoding_speed",
+    "payload_size": 500000,
+    "time_ms": 6.324291229248047,
+    "throughput_mbps": 75.39772298876574
+  },
+  {
+    "benchmark": "decoding_speed",
+    "chunk_count": 32,
+    "time_ms": 0.023365020751953125,
+    "throughput_chunks_per_sec": 1369568.6530612244
+  },
+  {
+    "benchmark": "decoding_speed",
+    "chunk_count": 157,
+    "time_ms": 0.03647804260253906,
+    "throughput_chunks_per_sec": 4303959.006535947
+  },
+  {
+    "benchmark": "decoding_speed",
+    "chunk_count": 313,
+    "time_ms": 0.07224082946777344,
+    "throughput_chunks_per_sec": 4332729.874587459
+  },
+  {
+    "benchmark": "decoding_speed",
+    "chunk_count": 1563,
+    "time_ms": 0.33926963806152344,
+    "throughput_chunks_per_sec": 4606955.131412509
+  },
+  {
+    "benchmark": "decoding_speed",
+    "chunk_count": 3125,
+    "time_ms": 0.6468296051025391,
+    "throughput_chunks_per_sec": 4831256.911168449
+  },
+  {
+    "benchmark": "encoding_type_comparison",
+    "encoding_type": "HEX",
+    "time_ms": 0.2422332763671875,
+    "output_size": 22582
+  },
+  {
+    "benchmark": "encoding_type_comparison",
+    "encoding_type": "BASE64",
+    "time_ms": 0.32520294189453125,
+    "output_size": 16337
+  },
+  {
+    "benchmark": "encoding_type_comparison",
+    "encoding_type": "OCTAL",
+    "time_ms": 2.612590789794922,
+    "output_size": 32584
+  },
+  {
+    "benchmark": "chunk_size_comparison",
+    "chunk_size": 4,
+    "time_ms": 0.9129047393798828,
+    "chunk_count": 2500
+  },
+  {
+    "benchmark": "chunk_size_comparison",
+    "chunk_size": 8,
+    "time_ms": 0.40602684020996094,
+    "chunk_count": 1250
+  },
+  {
+    "benchmark": "chunk_size_comparison",
+    "chunk_size": 16,
+    "time_ms": 0.1990795135498047,
+    "chunk_count": 625
+  },
+  {
+    "benchmark": "chunk_size_comparison",
+    "chunk_size": 32,
+    "time_ms": 0.11205673217773438,
+    "chunk_count": 313
+  },
+  {
+    "benchmark": "chunk_size_comparison",
+    "chunk_size": 64,
+    "time_ms": 0.10371208190917969,
+    "chunk_count": 157
+  },
+  {
+    "benchmark": "chunk_size_comparison",
+    "chunk_size": 128,
+    "time_ms": 0.05650520324707031,
+    "chunk_count": 79
+  },
+  {
+    "benchmark": "chunk_size_comparison",
+    "chunk_size": 256,
+    "time_ms": 0.030994415283203125,
+    "chunk_count": 40
+  },
+  {
+    "benchmark": "chunk_size_comparison",
+    "chunk_size": 512,
+    "time_ms": 0.025272369384765625,
+    "chunk_count": 20
+  },
+  {
+    "benchmark": "output_format_comparison",
+    "format": "PYTHON",
+    "time_ms": 0.08225440979003906,
+    "output_size": 11304
+  },
+  {
+    "benchmark": "output_format_comparison",
+    "format": "VBS",
+    "time_ms": 0.09274482727050781,
+    "output_size": 12768
+  },
+  {
+    "benchmark": "output_format_comparison",
+    "format": "JAVASCRIPT",
+    "time_ms": 0.07700920104980469,
+    "output_size": 11312
+  },
+  {
+    "benchmark": "output_format_comparison",
+    "format": "POWERSHELL",
+    "time_ms": 0.07581710815429688,
+    "output_size": 11306
+  },
+  {
+    "benchmark": "output_format_comparison",
+    "format": "BASH",
+    "time_ms": 0.09775161743164062,
+    "output_size": 11146
+  },
+  {
+    "benchmark": "output_format_comparison",
+    "format": "JSON",
+    "time_ms": 0.1308917999267578,
+    "output_size": 11334
+  },
+  {
+    "benchmark": "output_format_comparison",
+    "format": "C",
+    "time_ms": 0.09870529174804688,
+    "output_size": 11343
+  },
+  {
+    "benchmark": "chunking_strategy_comparison",
+    "strategy": "SEQUENTIAL",
+    "time_ms": 0.18644332885742188,
+    "chunk_count": 313
+  },
+  {
+    "benchmark": "chunking_strategy_comparison",
+    "strategy": "RANDOM_ORDER",
+    "time_ms": 0.12826919555664062,
+    "chunk_count": 313
+  },
+  {
+    "benchmark": "chunking_strategy_comparison",
+    "strategy": "VARIABLE_SIZE",
+    "time_ms": 0.34737586975097656,
+    "chunk_count": 242
+  },
+  {
+    "benchmark": "chunking_strategy_comparison",
+    "strategy": "INTERLEAVED",
+    "time_ms": 0.13113021850585938,
+    "chunk_count": 313
+  },
+  {
+    "benchmark": "memory_usage",
+    "payload_size": 1000,
+    "current_memory_mb": 0.00295257568359375,
+    "peak_memory_mb": 0.0032978057861328125
+  },
+  {
+    "benchmark": "memory_usage",
+    "payload_size": 10000,
+    "current_memory_mb": 0.02921772003173828,
+    "peak_memory_mb": 0.02956104278564453
+  },
+  {
+    "benchmark": "memory_usage",
+    "payload_size": 100000,
+    "current_memory_mb": 0.32790279388427734,
+    "peak_memory_mb": 0.32830333709716797
+  },
+  {
+    "benchmark": "memory_usage",
+    "payload_size": 500000,
+    "current_memory_mb": 1.673295021057129,
+    "peak_memory_mb": 1.6736955642700195
+  },
+  {
+    "benchmark": "scalability",
+    "payload_size": 1000,
+    "time_per_kb_ms": 0.0341796875,
+    "scaling_factor": 1.0
+  },
+  {
+    "benchmark": "scalability",
+    "payload_size": 5000,
+    "time_per_kb_ms": 0.01640625,
+    "scaling_factor": 0.48
+  },
+  {
+    "benchmark": "scalability",
+    "payload_size": 10000,
+    "time_per_kb_ms": 0.0121826171875,
+    "scaling_factor": 0.35642857142857143
+  },
+  {
+    "benchmark": "scalability",
+    "payload_size": 50000,
+    "time_per_kb_ms": 0.0120361328125,
+    "scaling_factor": 0.35214285714285715
+  },
+  {
+    "benchmark": "scalability",
+    "payload_size": 100000,
+    "time_per_kb_ms": 0.011904296875,
+    "scaling_factor": 0.3482857142857143
+  }
+]

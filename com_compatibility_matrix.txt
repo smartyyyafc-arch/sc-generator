@@ -1,0 +1,505 @@
+====================================================================================================================================================================================
+COM VARIANTS COMPATIBILITY AND RELIABILITY MATRIX
+====================================================================================================================================================================================
+
+[SUMMARY STATISTICS]
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Total Tests: 432
+Successful: 356 (82.4%)
+Failed: 76 (17.6%)
+Overall Reliability Score: 0.79/1.00
+
+[COMPATIBILITY BY INSTANTIATION METHOD]
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Method                         Reliability Score    Rating              
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+GetObject(Running)             0.8932 High (75-99%)       
+CreateObject(ProgID)           0.8509 High (75-99%)       
+WMI Class                      0.8335 High (75-99%)       
+CreateObject(CLSID)            0.8310 High (75-99%)       
+New Keyword                    0.8155 High (75-99%)       
+GetObject(Moniker)             0.7674 High (75-99%)       
+Registry Lookup                0.6933 Partial (50-74%)    
+Remote DCOM                    0.6536 Partial (50-74%)    
+
+[COMPATIBILITY BY WINDOWS VERSION]
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Windows Version                Reliability Score    Rating              
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+6.1                            0.8552 High (75-99%)       
+10.0                           0.8230 High (75-99%)       
+6.0                            0.8158 High (75-99%)       
+6.2                            0.7919 High (75-99%)       
+10.0.22000                     0.7561 High (75-99%)       
+5.1                            0.7119 Partial (50-74%)    
+
+[COMPATIBILITY BY COM OBJECT]
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+COM Object                     Reliability Score    Rating              
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+WScript.Shell                  0.8519 High (75-99%)       
+WScript.Network                0.8519 High (75-99%)       
+WbemScripting.SWbemLocator     0.8519 High (75-99%)       
+MSXML2.DOMDocument             0.8519 High (75-99%)       
+Excel.Application              0.7667 High (75-99%)       
+Word.Application               0.7667 High (75-99%)       
+ADODB.Connection               0.7667 High (75-99%)       
+Shell.Application              0.7491 Partial (50-74%)    
+PowerPoint.Application         0.6742 Partial (50-74%)    
+
+[DETAILED COMPATIBILITY MATRIX]
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Method                    COM Object                     Version         Success    Reliability    
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CreateObject(ProgID)      Excel.Application              5.1             YES        0.8550
+CreateObject(ProgID)      Excel.Application              6.0             YES        0.8280
+CreateObject(ProgID)      Excel.Application              6.1             YES        0.8550
+CreateObject(ProgID)      Excel.Application              6.2             YES        0.8100
+CreateObject(ProgID)      Excel.Application              10.0            YES        0.8280
+CreateObject(ProgID)      Excel.Application              10.0.22000      YES        0.7650
+CreateObject(ProgID)      Word.Application               5.1             YES        0.8550
+CreateObject(ProgID)      Word.Application               6.0             YES        0.8280
+CreateObject(ProgID)      Word.Application               6.1             YES        0.8550
+CreateObject(ProgID)      Word.Application               6.2             YES        0.8100
+CreateObject(ProgID)      Word.Application               10.0            YES        0.8280
+CreateObject(ProgID)      Word.Application               10.0.22000      YES        0.7650
+CreateObject(ProgID)      PowerPoint.Application         5.1             NO         0.2565
+CreateObject(ProgID)      PowerPoint.Application         6.0             YES        0.8280
+CreateObject(ProgID)      PowerPoint.Application         6.1             YES        0.8550
+CreateObject(ProgID)      PowerPoint.Application         6.2             YES        0.8100
+CreateObject(ProgID)      PowerPoint.Application         10.0            YES        0.8280
+CreateObject(ProgID)      PowerPoint.Application         10.0.22000      YES        0.7650
+CreateObject(ProgID)      WScript.Shell                  5.1             YES        0.9500
+CreateObject(ProgID)      WScript.Shell                  6.0             YES        0.9200
+CreateObject(ProgID)      WScript.Shell                  6.1             YES        0.9500
+CreateObject(ProgID)      WScript.Shell                  6.2             YES        0.9000
+CreateObject(ProgID)      WScript.Shell                  10.0            YES        0.9200
+CreateObject(ProgID)      WScript.Shell                  10.0.22000      YES        0.8500
+CreateObject(ProgID)      Shell.Application              5.1             NO         0.2850
+CreateObject(ProgID)      Shell.Application              6.0             YES        0.9200
+CreateObject(ProgID)      Shell.Application              6.1             YES        0.9500
+CreateObject(ProgID)      Shell.Application              6.2             YES        0.9000
+CreateObject(ProgID)      Shell.Application              10.0            YES        0.9200
+CreateObject(ProgID)      Shell.Application              10.0.22000      YES        0.8500
+CreateObject(ProgID)      WScript.Network                5.1             YES        0.9500
+CreateObject(ProgID)      WScript.Network                6.0             YES        0.9200
+CreateObject(ProgID)      WScript.Network                6.1             YES        0.9500
+CreateObject(ProgID)      WScript.Network                6.2             YES        0.9000
+CreateObject(ProgID)      WScript.Network                10.0            YES        0.9200
+CreateObject(ProgID)      WScript.Network                10.0.22000      YES        0.8500
+CreateObject(ProgID)      WbemScripting.SWbemLocator     5.1             YES        0.9500
+CreateObject(ProgID)      WbemScripting.SWbemLocator     6.0             YES        0.9200
+CreateObject(ProgID)      WbemScripting.SWbemLocator     6.1             YES        0.9500
+CreateObject(ProgID)      WbemScripting.SWbemLocator     6.2             YES        0.9000
+CreateObject(ProgID)      WbemScripting.SWbemLocator     10.0            YES        0.9200
+CreateObject(ProgID)      WbemScripting.SWbemLocator     10.0.22000      YES        0.8500
+CreateObject(ProgID)      ADODB.Connection               5.1             YES        0.8550
+CreateObject(ProgID)      ADODB.Connection               6.0             YES        0.8280
+CreateObject(ProgID)      ADODB.Connection               6.1             YES        0.8550
+CreateObject(ProgID)      ADODB.Connection               6.2             YES        0.8100
+CreateObject(ProgID)      ADODB.Connection               10.0            YES        0.8280
+CreateObject(ProgID)      ADODB.Connection               10.0.22000      YES        0.7650
+CreateObject(ProgID)      MSXML2.DOMDocument             5.1             YES        0.9500
+CreateObject(ProgID)      MSXML2.DOMDocument             6.0             YES        0.9200
+CreateObject(ProgID)      MSXML2.DOMDocument             6.1             YES        0.9500
+CreateObject(ProgID)      MSXML2.DOMDocument             6.2             YES        0.9000
+CreateObject(ProgID)      MSXML2.DOMDocument             10.0            YES        0.9200
+CreateObject(ProgID)      MSXML2.DOMDocument             10.0.22000      YES        0.8500
+CreateObject(CLSID)       Excel.Application              5.1             YES        0.8280
+CreateObject(CLSID)       Excel.Application              6.0             YES        0.8100
+CreateObject(CLSID)       Excel.Application              6.1             YES        0.8370
+CreateObject(CLSID)       Excel.Application              6.2             YES        0.7920
+CreateObject(CLSID)       Excel.Application              10.0            YES        0.8100
+CreateObject(CLSID)       Excel.Application              10.0.22000      YES        0.7470
+CreateObject(CLSID)       Word.Application               5.1             YES        0.8280
+CreateObject(CLSID)       Word.Application               6.0             YES        0.8100
+CreateObject(CLSID)       Word.Application               6.1             YES        0.8370
+CreateObject(CLSID)       Word.Application               6.2             YES        0.7920
+CreateObject(CLSID)       Word.Application               10.0            YES        0.8100
+CreateObject(CLSID)       Word.Application               10.0.22000      YES        0.7470
+CreateObject(CLSID)       PowerPoint.Application         5.1             NO         0.2484
+CreateObject(CLSID)       PowerPoint.Application         6.0             YES        0.8100
+CreateObject(CLSID)       PowerPoint.Application         6.1             YES        0.8370
+CreateObject(CLSID)       PowerPoint.Application         6.2             YES        0.7920
+CreateObject(CLSID)       PowerPoint.Application         10.0            YES        0.8100
+CreateObject(CLSID)       PowerPoint.Application         10.0.22000      YES        0.7470
+CreateObject(CLSID)       WScript.Shell                  5.1             YES        0.9200
+CreateObject(CLSID)       WScript.Shell                  6.0             YES        0.9000
+CreateObject(CLSID)       WScript.Shell                  6.1             YES        0.9300
+CreateObject(CLSID)       WScript.Shell                  6.2             YES        0.8800
+CreateObject(CLSID)       WScript.Shell                  10.0            YES        0.9000
+CreateObject(CLSID)       WScript.Shell                  10.0.22000      YES        0.8300
+CreateObject(CLSID)       Shell.Application              5.1             NO         0.2760
+CreateObject(CLSID)       Shell.Application              6.0             YES        0.9000
+CreateObject(CLSID)       Shell.Application              6.1             YES        0.9300
+CreateObject(CLSID)       Shell.Application              6.2             YES        0.8800
+CreateObject(CLSID)       Shell.Application              10.0            YES        0.9000
+CreateObject(CLSID)       Shell.Application              10.0.22000      YES        0.8300
+CreateObject(CLSID)       WScript.Network                5.1             YES        0.9200
+CreateObject(CLSID)       WScript.Network                6.0             YES        0.9000
+CreateObject(CLSID)       WScript.Network                6.1             YES        0.9300
+CreateObject(CLSID)       WScript.Network                6.2             YES        0.8800
+CreateObject(CLSID)       WScript.Network                10.0            YES        0.9000
+CreateObject(CLSID)       WScript.Network                10.0.22000      YES        0.8300
+CreateObject(CLSID)       WbemScripting.SWbemLocator     5.1             YES        0.9200
+CreateObject(CLSID)       WbemScripting.SWbemLocator     6.0             YES        0.9000
+CreateObject(CLSID)       WbemScripting.SWbemLocator     6.1             YES        0.9300
+CreateObject(CLSID)       WbemScripting.SWbemLocator     6.2             YES        0.8800
+CreateObject(CLSID)       WbemScripting.SWbemLocator     10.0            YES        0.9000
+CreateObject(CLSID)       WbemScripting.SWbemLocator     10.0.22000      YES        0.8300
+CreateObject(CLSID)       ADODB.Connection               5.1             YES        0.8280
+CreateObject(CLSID)       ADODB.Connection               6.0             YES        0.8100
+CreateObject(CLSID)       ADODB.Connection               6.1             YES        0.8370
+CreateObject(CLSID)       ADODB.Connection               6.2             YES        0.7920
+CreateObject(CLSID)       ADODB.Connection               10.0            YES        0.8100
+CreateObject(CLSID)       ADODB.Connection               10.0.22000      YES        0.7470
+CreateObject(CLSID)       MSXML2.DOMDocument             5.1             YES        0.9200
+CreateObject(CLSID)       MSXML2.DOMDocument             6.0             YES        0.9000
+CreateObject(CLSID)       MSXML2.DOMDocument             6.1             YES        0.9300
+CreateObject(CLSID)       MSXML2.DOMDocument             6.2             YES        0.8800
+CreateObject(CLSID)       MSXML2.DOMDocument             10.0            YES        0.9000
+CreateObject(CLSID)       MSXML2.DOMDocument             10.0.22000      YES        0.8300
+GetObject(Running)        Excel.Application              5.1             YES        0.8820
+GetObject(Running)        Excel.Application              6.0             YES        0.8640
+GetObject(Running)        Excel.Application              6.1             YES        0.8730
+GetObject(Running)        Excel.Application              6.2             YES        0.8550
+GetObject(Running)        Excel.Application              10.0            YES        0.8640
+GetObject(Running)        Excel.Application              10.0.22000      YES        0.8460
+GetObject(Running)        Word.Application               5.1             YES        0.8820
+GetObject(Running)        Word.Application               6.0             YES        0.8640
+GetObject(Running)        Word.Application               6.1             YES        0.8730
+GetObject(Running)        Word.Application               6.2             YES        0.8550
+GetObject(Running)        Word.Application               10.0            YES        0.8640
+GetObject(Running)        Word.Application               10.0.22000      YES        0.8460
+GetObject(Running)        PowerPoint.Application         5.1             NO         0.2646
+GetObject(Running)        PowerPoint.Application         6.0             YES        0.8640
+GetObject(Running)        PowerPoint.Application         6.1             YES        0.8730
+GetObject(Running)        PowerPoint.Application         6.2             YES        0.8550
+GetObject(Running)        PowerPoint.Application         10.0            YES        0.8640
+GetObject(Running)        PowerPoint.Application         10.0.22000      YES        0.8460
+GetObject(Running)        WScript.Shell                  5.1             YES        0.9800
+GetObject(Running)        WScript.Shell                  6.0             YES        0.9600
+GetObject(Running)        WScript.Shell                  6.1             YES        0.9700
+GetObject(Running)        WScript.Shell                  6.2             YES        0.9500
+GetObject(Running)        WScript.Shell                  10.0            YES        0.9600
+GetObject(Running)        WScript.Shell                  10.0.22000      YES        0.9400
+GetObject(Running)        Shell.Application              5.1             NO         0.2940
+GetObject(Running)        Shell.Application              6.0             YES        0.9600
+GetObject(Running)        Shell.Application              6.1             YES        0.9700
+GetObject(Running)        Shell.Application              6.2             YES        0.9500
+GetObject(Running)        Shell.Application              10.0            YES        0.9600
+GetObject(Running)        Shell.Application              10.0.22000      YES        0.9400
+GetObject(Running)        WScript.Network                5.1             YES        0.9800
+GetObject(Running)        WScript.Network                6.0             YES        0.9600
+GetObject(Running)        WScript.Network                6.1             YES        0.9700
+GetObject(Running)        WScript.Network                6.2             YES        0.9500
+GetObject(Running)        WScript.Network                10.0            YES        0.9600
+GetObject(Running)        WScript.Network                10.0.22000      YES        0.9400
+GetObject(Running)        WbemScripting.SWbemLocator     5.1             YES        0.9800
+GetObject(Running)        WbemScripting.SWbemLocator     6.0             YES        0.9600
+GetObject(Running)        WbemScripting.SWbemLocator     6.1             YES        0.9700
+GetObject(Running)        WbemScripting.SWbemLocator     6.2             YES        0.9500
+GetObject(Running)        WbemScripting.SWbemLocator     10.0            YES        0.9600
+GetObject(Running)        WbemScripting.SWbemLocator     10.0.22000      YES        0.9400
+GetObject(Running)        ADODB.Connection               5.1             YES        0.8820
+GetObject(Running)        ADODB.Connection               6.0             YES        0.8640
+GetObject(Running)        ADODB.Connection               6.1             YES        0.8730
+GetObject(Running)        ADODB.Connection               6.2             YES        0.8550
+GetObject(Running)        ADODB.Connection               10.0            YES        0.8640
+GetObject(Running)        ADODB.Connection               10.0.22000      YES        0.8460
+GetObject(Running)        MSXML2.DOMDocument             5.1             YES        0.9800
+GetObject(Running)        MSXML2.DOMDocument             6.0             YES        0.9600
+GetObject(Running)        MSXML2.DOMDocument             6.1             YES        0.9700
+GetObject(Running)        MSXML2.DOMDocument             6.2             YES        0.9500
+GetObject(Running)        MSXML2.DOMDocument             10.0            YES        0.9600
+GetObject(Running)        MSXML2.DOMDocument             10.0.22000      YES        0.9400
+GetObject(Moniker)        Excel.Application              5.1             YES        0.7650
+GetObject(Moniker)        Excel.Application              6.0             YES        0.7380
+GetObject(Moniker)        Excel.Application              6.1             YES        0.7830
+GetObject(Moniker)        Excel.Application              6.2             YES        0.7200
+GetObject(Moniker)        Excel.Application              10.0            YES        0.7470
+GetObject(Moniker)        Excel.Application              10.0.22000      YES        0.7020
+GetObject(Moniker)        Word.Application               5.1             YES        0.7650
+GetObject(Moniker)        Word.Application               6.0             YES        0.7380
+GetObject(Moniker)        Word.Application               6.1             YES        0.7830
+GetObject(Moniker)        Word.Application               6.2             YES        0.7200
+GetObject(Moniker)        Word.Application               10.0            YES        0.7470
+GetObject(Moniker)        Word.Application               10.0.22000      YES        0.7020
+GetObject(Moniker)        PowerPoint.Application         5.1             NO         0.2295
+GetObject(Moniker)        PowerPoint.Application         6.0             YES        0.7380
+GetObject(Moniker)        PowerPoint.Application         6.1             YES        0.7830
+GetObject(Moniker)        PowerPoint.Application         6.2             YES        0.7200
+GetObject(Moniker)        PowerPoint.Application         10.0            YES        0.7470
+GetObject(Moniker)        PowerPoint.Application         10.0.22000      YES        0.7020
+GetObject(Moniker)        WScript.Shell                  5.1             YES        0.8500
+GetObject(Moniker)        WScript.Shell                  6.0             YES        0.8200
+GetObject(Moniker)        WScript.Shell                  6.1             YES        0.8700
+GetObject(Moniker)        WScript.Shell                  6.2             YES        0.8000
+GetObject(Moniker)        WScript.Shell                  10.0            YES        0.8300
+GetObject(Moniker)        WScript.Shell                  10.0.22000      YES        0.7800
+GetObject(Moniker)        Shell.Application              5.1             NO         0.2550
+GetObject(Moniker)        Shell.Application              6.0             YES        0.8200
+GetObject(Moniker)        Shell.Application              6.1             YES        0.8700
+GetObject(Moniker)        Shell.Application              6.2             YES        0.8000
+GetObject(Moniker)        Shell.Application              10.0            YES        0.8300
+GetObject(Moniker)        Shell.Application              10.0.22000      YES        0.7800
+GetObject(Moniker)        WScript.Network                5.1             YES        0.8500
+GetObject(Moniker)        WScript.Network                6.0             YES        0.8200
+GetObject(Moniker)        WScript.Network                6.1             YES        0.8700
+GetObject(Moniker)        WScript.Network                6.2             YES        0.8000
+GetObject(Moniker)        WScript.Network                10.0            YES        0.8300
+GetObject(Moniker)        WScript.Network                10.0.22000      YES        0.7800
+GetObject(Moniker)        WbemScripting.SWbemLocator     5.1             YES        0.8500
+GetObject(Moniker)        WbemScripting.SWbemLocator     6.0             YES        0.8200
+GetObject(Moniker)        WbemScripting.SWbemLocator     6.1             YES        0.8700
+GetObject(Moniker)        WbemScripting.SWbemLocator     6.2             YES        0.8000
+GetObject(Moniker)        WbemScripting.SWbemLocator     10.0            YES        0.8300
+GetObject(Moniker)        WbemScripting.SWbemLocator     10.0.22000      YES        0.7800
+GetObject(Moniker)        ADODB.Connection               5.1             YES        0.7650
+GetObject(Moniker)        ADODB.Connection               6.0             YES        0.7380
+GetObject(Moniker)        ADODB.Connection               6.1             YES        0.7830
+GetObject(Moniker)        ADODB.Connection               6.2             YES        0.7200
+GetObject(Moniker)        ADODB.Connection               10.0            YES        0.7470
+GetObject(Moniker)        ADODB.Connection               10.0.22000      YES        0.7020
+GetObject(Moniker)        MSXML2.DOMDocument             5.1             YES        0.8500
+GetObject(Moniker)        MSXML2.DOMDocument             6.0             YES        0.8200
+GetObject(Moniker)        MSXML2.DOMDocument             6.1             YES        0.8700
+GetObject(Moniker)        MSXML2.DOMDocument             6.2             YES        0.8000
+GetObject(Moniker)        MSXML2.DOMDocument             10.0            YES        0.8300
+GetObject(Moniker)        MSXML2.DOMDocument             10.0.22000      YES        0.7800
+New Keyword               Excel.Application              5.1             YES        0.8100
+New Keyword               Excel.Application              6.0             YES        0.7920
+New Keyword               Excel.Application              6.1             YES        0.8280
+New Keyword               Excel.Application              6.2             YES        0.7740
+New Keyword               Excel.Application              10.0            YES        0.8010
+New Keyword               Excel.Application              10.0.22000      YES        0.7290
+New Keyword               Word.Application               5.1             YES        0.8100
+New Keyword               Word.Application               6.0             YES        0.7920
+New Keyword               Word.Application               6.1             YES        0.8280
+New Keyword               Word.Application               6.2             YES        0.7740
+New Keyword               Word.Application               10.0            YES        0.8010
+New Keyword               Word.Application               10.0.22000      YES        0.7290
+New Keyword               PowerPoint.Application         5.1             NO         0.2430
+New Keyword               PowerPoint.Application         6.0             YES        0.7920
+New Keyword               PowerPoint.Application         6.1             YES        0.8280
+New Keyword               PowerPoint.Application         6.2             YES        0.7740
+New Keyword               PowerPoint.Application         10.0            YES        0.8010
+New Keyword               PowerPoint.Application         10.0.22000      YES        0.7290
+New Keyword               WScript.Shell                  5.1             YES        0.9000
+New Keyword               WScript.Shell                  6.0             YES        0.8800
+New Keyword               WScript.Shell                  6.1             YES        0.9200
+New Keyword               WScript.Shell                  6.2             YES        0.8600
+New Keyword               WScript.Shell                  10.0            YES        0.8900
+New Keyword               WScript.Shell                  10.0.22000      YES        0.8100
+New Keyword               Shell.Application              5.1             NO         0.2700
+New Keyword               Shell.Application              6.0             YES        0.8800
+New Keyword               Shell.Application              6.1             YES        0.9200
+New Keyword               Shell.Application              6.2             YES        0.8600
+New Keyword               Shell.Application              10.0            YES        0.8900
+New Keyword               Shell.Application              10.0.22000      YES        0.8100
+New Keyword               WScript.Network                5.1             YES        0.9000
+New Keyword               WScript.Network                6.0             YES        0.8800
+New Keyword               WScript.Network                6.1             YES        0.9200
+New Keyword               WScript.Network                6.2             YES        0.8600
+New Keyword               WScript.Network                10.0            YES        0.8900
+New Keyword               WScript.Network                10.0.22000      YES        0.8100
+New Keyword               WbemScripting.SWbemLocator     5.1             YES        0.9000
+New Keyword               WbemScripting.SWbemLocator     6.0             YES        0.8800
+New Keyword               WbemScripting.SWbemLocator     6.1             YES        0.9200
+New Keyword               WbemScripting.SWbemLocator     6.2             YES        0.8600
+New Keyword               WbemScripting.SWbemLocator     10.0            YES        0.8900
+New Keyword               WbemScripting.SWbemLocator     10.0.22000      YES        0.8100
+New Keyword               ADODB.Connection               5.1             YES        0.8100
+New Keyword               ADODB.Connection               6.0             YES        0.7920
+New Keyword               ADODB.Connection               6.1             YES        0.8280
+New Keyword               ADODB.Connection               6.2             YES        0.7740
+New Keyword               ADODB.Connection               10.0            YES        0.8010
+New Keyword               ADODB.Connection               10.0.22000      YES        0.7290
+New Keyword               MSXML2.DOMDocument             5.1             YES        0.9000
+New Keyword               MSXML2.DOMDocument             6.0             YES        0.8800
+New Keyword               MSXML2.DOMDocument             6.1             YES        0.9200
+New Keyword               MSXML2.DOMDocument             6.2             YES        0.8600
+New Keyword               MSXML2.DOMDocument             10.0            YES        0.8900
+New Keyword               MSXML2.DOMDocument             10.0.22000      YES        0.8100
+Remote DCOM               Excel.Application              5.1             NO         0.6750
+Remote DCOM               Excel.Application              6.0             NO         0.6300
+Remote DCOM               Excel.Application              6.1             YES        0.7200
+Remote DCOM               Excel.Application              6.2             NO         0.5850
+Remote DCOM               Excel.Application              10.0            NO         0.6480
+Remote DCOM               Excel.Application              10.0.22000      NO         0.5400
+Remote DCOM               Word.Application               5.1             NO         0.6750
+Remote DCOM               Word.Application               6.0             NO         0.6300
+Remote DCOM               Word.Application               6.1             YES        0.7200
+Remote DCOM               Word.Application               6.2             NO         0.5850
+Remote DCOM               Word.Application               10.0            NO         0.6480
+Remote DCOM               Word.Application               10.0.22000      NO         0.5400
+Remote DCOM               PowerPoint.Application         5.1             NO         0.2025
+Remote DCOM               PowerPoint.Application         6.0             NO         0.6300
+Remote DCOM               PowerPoint.Application         6.1             YES        0.7200
+Remote DCOM               PowerPoint.Application         6.2             NO         0.5850
+Remote DCOM               PowerPoint.Application         10.0            NO         0.6480
+Remote DCOM               PowerPoint.Application         10.0.22000      NO         0.5400
+Remote DCOM               WScript.Shell                  5.1             YES        0.7500
+Remote DCOM               WScript.Shell                  6.0             NO         0.7000
+Remote DCOM               WScript.Shell                  6.1             YES        0.8000
+Remote DCOM               WScript.Shell                  6.2             NO         0.6500
+Remote DCOM               WScript.Shell                  10.0            YES        0.7200
+Remote DCOM               WScript.Shell                  10.0.22000      NO         0.6000
+Remote DCOM               Shell.Application              5.1             NO         0.2250
+Remote DCOM               Shell.Application              6.0             NO         0.7000
+Remote DCOM               Shell.Application              6.1             YES        0.8000
+Remote DCOM               Shell.Application              6.2             NO         0.6500
+Remote DCOM               Shell.Application              10.0            YES        0.7200
+Remote DCOM               Shell.Application              10.0.22000      NO         0.6000
+Remote DCOM               WScript.Network                5.1             YES        0.7500
+Remote DCOM               WScript.Network                6.0             NO         0.7000
+Remote DCOM               WScript.Network                6.1             YES        0.8000
+Remote DCOM               WScript.Network                6.2             NO         0.6500
+Remote DCOM               WScript.Network                10.0            YES        0.7200
+Remote DCOM               WScript.Network                10.0.22000      NO         0.6000
+Remote DCOM               WbemScripting.SWbemLocator     5.1             YES        0.7500
+Remote DCOM               WbemScripting.SWbemLocator     6.0             NO         0.7000
+Remote DCOM               WbemScripting.SWbemLocator     6.1             YES        0.8000
+Remote DCOM               WbemScripting.SWbemLocator     6.2             NO         0.6500
+Remote DCOM               WbemScripting.SWbemLocator     10.0            YES        0.7200
+Remote DCOM               WbemScripting.SWbemLocator     10.0.22000      NO         0.6000
+Remote DCOM               ADODB.Connection               5.1             NO         0.6750
+Remote DCOM               ADODB.Connection               6.0             NO         0.6300
+Remote DCOM               ADODB.Connection               6.1             YES        0.7200
+Remote DCOM               ADODB.Connection               6.2             NO         0.5850
+Remote DCOM               ADODB.Connection               10.0            NO         0.6480
+Remote DCOM               ADODB.Connection               10.0.22000      NO         0.5400
+Remote DCOM               MSXML2.DOMDocument             5.1             YES        0.7500
+Remote DCOM               MSXML2.DOMDocument             6.0             NO         0.7000
+Remote DCOM               MSXML2.DOMDocument             6.1             YES        0.8000
+Remote DCOM               MSXML2.DOMDocument             6.2             NO         0.6500
+Remote DCOM               MSXML2.DOMDocument             10.0            YES        0.7200
+Remote DCOM               MSXML2.DOMDocument             10.0.22000      NO         0.6000
+WMI Class                 Excel.Application              5.1             YES        0.7920
+WMI Class                 Excel.Application              6.0             YES        0.8100
+WMI Class                 Excel.Application              6.1             YES        0.8280
+WMI Class                 Excel.Application              6.2             YES        0.8010
+WMI Class                 Excel.Application              10.0            YES        0.8190
+WMI Class                 Excel.Application              10.0.22000      YES        0.7830
+WMI Class                 Word.Application               5.1             YES        0.7920
+WMI Class                 Word.Application               6.0             YES        0.8100
+WMI Class                 Word.Application               6.1             YES        0.8280
+WMI Class                 Word.Application               6.2             YES        0.8010
+WMI Class                 Word.Application               10.0            YES        0.8190
+WMI Class                 Word.Application               10.0.22000      YES        0.7830
+WMI Class                 PowerPoint.Application         5.1             NO         0.2376
+WMI Class                 PowerPoint.Application         6.0             YES        0.8100
+WMI Class                 PowerPoint.Application         6.1             YES        0.8280
+WMI Class                 PowerPoint.Application         6.2             YES        0.8010
+WMI Class                 PowerPoint.Application         10.0            YES        0.8190
+WMI Class                 PowerPoint.Application         10.0.22000      YES        0.7830
+WMI Class                 WScript.Shell                  5.1             YES        0.8800
+WMI Class                 WScript.Shell                  6.0             YES        0.9000
+WMI Class                 WScript.Shell                  6.1             YES        0.9200
+WMI Class                 WScript.Shell                  6.2             YES        0.8900
+WMI Class                 WScript.Shell                  10.0            YES        0.9100
+WMI Class                 WScript.Shell                  10.0.22000      YES        0.8700
+WMI Class                 Shell.Application              5.1             NO         0.2640
+WMI Class                 Shell.Application              6.0             YES        0.9000
+WMI Class                 Shell.Application              6.1             YES        0.9200
+WMI Class                 Shell.Application              6.2             YES        0.8900
+WMI Class                 Shell.Application              10.0            YES        0.9100
+WMI Class                 Shell.Application              10.0.22000      YES        0.8700
+WMI Class                 WScript.Network                5.1             YES        0.8800
+WMI Class                 WScript.Network                6.0             YES        0.9000
+WMI Class                 WScript.Network                6.1             YES        0.9200
+WMI Class                 WScript.Network                6.2             YES        0.8900
+WMI Class                 WScript.Network                10.0            YES        0.9100
+WMI Class                 WScript.Network                10.0.22000      YES        0.8700
+WMI Class                 WbemScripting.SWbemLocator     5.1             YES        0.8800
+WMI Class                 WbemScripting.SWbemLocator     6.0             YES        0.9000
+WMI Class                 WbemScripting.SWbemLocator     6.1             YES        0.9200
+WMI Class                 WbemScripting.SWbemLocator     6.2             YES        0.8900
+WMI Class                 WbemScripting.SWbemLocator     10.0            YES        0.9100
+WMI Class                 WbemScripting.SWbemLocator     10.0.22000      YES        0.8700
+WMI Class                 ADODB.Connection               5.1             YES        0.7920
+WMI Class                 ADODB.Connection               6.0             YES        0.8100
+WMI Class                 ADODB.Connection               6.1             YES        0.8280
+WMI Class                 ADODB.Connection               6.2             YES        0.8010
+WMI Class                 ADODB.Connection               10.0            YES        0.8190
+WMI Class                 ADODB.Connection               10.0.22000      YES        0.7830
+WMI Class                 MSXML2.DOMDocument             5.1             YES        0.8800
+WMI Class                 MSXML2.DOMDocument             6.0             YES        0.9000
+WMI Class                 MSXML2.DOMDocument             6.1             YES        0.9200
+WMI Class                 MSXML2.DOMDocument             6.2             YES        0.8900
+WMI Class                 MSXML2.DOMDocument             10.0            YES        0.9100
+WMI Class                 MSXML2.DOMDocument             10.0.22000      YES        0.8700
+Registry Lookup           Excel.Application              5.1             YES        0.7380
+Registry Lookup           Excel.Application              6.0             NO         0.6750
+Registry Lookup           Excel.Application              6.1             YES        0.7200
+Registry Lookup           Excel.Application              6.2             NO         0.6300
+Registry Lookup           Excel.Application              10.0            NO         0.6840
+Registry Lookup           Excel.Application              10.0.22000      NO         0.5850
+Registry Lookup           Word.Application               5.1             YES        0.7380
+Registry Lookup           Word.Application               6.0             NO         0.6750
+Registry Lookup           Word.Application               6.1             YES        0.7200
+Registry Lookup           Word.Application               6.2             NO         0.6300
+Registry Lookup           Word.Application               10.0            NO         0.6840
+Registry Lookup           Word.Application               10.0.22000      NO         0.5850
+Registry Lookup           PowerPoint.Application         5.1             NO         0.2214
+Registry Lookup           PowerPoint.Application         6.0             NO         0.6750
+Registry Lookup           PowerPoint.Application         6.1             YES        0.7200
+Registry Lookup           PowerPoint.Application         6.2             NO         0.6300
+Registry Lookup           PowerPoint.Application         10.0            NO         0.6840
+Registry Lookup           PowerPoint.Application         10.0.22000      NO         0.5850
+Registry Lookup           WScript.Shell                  5.1             YES        0.8200
+Registry Lookup           WScript.Shell                  6.0             YES        0.7500
+Registry Lookup           WScript.Shell                  6.1             YES        0.8000
+Registry Lookup           WScript.Shell                  6.2             NO         0.7000
+Registry Lookup           WScript.Shell                  10.0            YES        0.7600
+Registry Lookup           WScript.Shell                  10.0.22000      NO         0.6500
+Registry Lookup           Shell.Application              5.1             NO         0.2460
+Registry Lookup           Shell.Application              6.0             YES        0.7500
+Registry Lookup           Shell.Application              6.1             YES        0.8000
+Registry Lookup           Shell.Application              6.2             NO         0.7000
+Registry Lookup           Shell.Application              10.0            YES        0.7600
+Registry Lookup           Shell.Application              10.0.22000      NO         0.6500
+Registry Lookup           WScript.Network                5.1             YES        0.8200
+Registry Lookup           WScript.Network                6.0             YES        0.7500
+Registry Lookup           WScript.Network                6.1             YES        0.8000
+Registry Lookup           WScript.Network                6.2             NO         0.7000
+Registry Lookup           WScript.Network                10.0            YES        0.7600
+Registry Lookup           WScript.Network                10.0.22000      NO         0.6500
+Registry Lookup           WbemScripting.SWbemLocator     5.1             YES        0.8200
+Registry Lookup           WbemScripting.SWbemLocator     6.0             YES        0.7500
+Registry Lookup           WbemScripting.SWbemLocator     6.1             YES        0.8000
+Registry Lookup           WbemScripting.SWbemLocator     6.2             NO         0.7000
+Registry Lookup           WbemScripting.SWbemLocator     10.0            YES        0.7600
+Registry Lookup           WbemScripting.SWbemLocator     10.0.22000      NO         0.6500
+Registry Lookup           ADODB.Connection               5.1             YES        0.7380
+Registry Lookup           ADODB.Connection               6.0             NO         0.6750
+Registry Lookup           ADODB.Connection               6.1             YES        0.7200
+Registry Lookup           ADODB.Connection               6.2             NO         0.6300
+Registry Lookup           ADODB.Connection               10.0            NO         0.6840
+Registry Lookup           ADODB.Connection               10.0.22000      NO         0.5850
+Registry Lookup           MSXML2.DOMDocument             5.1             YES        0.8200
+Registry Lookup           MSXML2.DOMDocument             6.0             YES        0.7500
+Registry Lookup           MSXML2.DOMDocument             6.1             YES        0.8000
+Registry Lookup           MSXML2.DOMDocument             6.2             NO         0.7000
+Registry Lookup           MSXML2.DOMDocument             10.0            YES        0.7600
+Registry Lookup           MSXML2.DOMDocument             10.0.22000      NO         0.6500
+
+====================================================================================================================================================================================
+
+
+======================================================================================================================================================
+COMPATIBILITY TABLE: METHODS vs WINDOWS VERSIONS
+======================================================================================================================================================
+
+Method                         5.1             6.0             6.1             6.2             10.0            10.0.22000      
+------------------------------------------------------------------------------------------------------------------------------------------------------
+CreateObject(ProgID)           ✗ 0.77      ✓ 0.88      ✓ 0.91      ✓ 0.86      ✓ 0.88      ✓ 0.81      
+CreateObject(CLSID)            ✗ 0.74      ✓ 0.86      ✓ 0.89      ✓ 0.84      ✓ 0.86      ✓ 0.79      
+GetObject(Running)             ✗ 0.79      ✓ 0.92      ✓ 0.93      ✓ 0.91      ✓ 0.92      ✓ 0.90      
+GetObject(Moniker)             ✗ 0.69      ✓ 0.78      ✓ 0.83      ✓ 0.76      ✓ 0.79      ✓ 0.75      
+New Keyword                    ✗ 0.73      ✓ 0.84      ✓ 0.88      ✓ 0.82      ✓ 0.85      ✓ 0.77      
+Remote DCOM                    ✗ 0.61      ✗ 0.67      ✓ 0.76      ✗ 0.62      ✗ 0.69      ✗ 0.57      
+WMI Class                      ✗ 0.71      ✓ 0.86      ✓ 0.88      ✓ 0.85      ✓ 0.87      ✓ 0.83      
+Registry Lookup                ✗ 0.66      ✗ 0.72      ✓ 0.76      ✗ 0.67      ✗ 0.73      ✗ 0.62      
+
+======================================================================================================================================================

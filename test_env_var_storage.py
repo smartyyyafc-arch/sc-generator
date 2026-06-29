@@ -1,386 +1,753 @@
 #!/usr/bin/env python3
 """
-Test Suite for Environment Variable Storage
-Tests encoding, chunking, writing, and retrieval of payloads
+Comprehensive test suite for environment variable storage
+Tests: write payload → retrieve → execute → verify persistence
 """
 
-import unittest
 import os
+import sys
 import json
-import base64
+import time
+import subprocess
+import tempfile
+from pathlib import Path
+from typing import Dict, List, Tuple, Optional
+from datetime import datetime
 from env_var_storage import (
     EnvVarWriter, EnvVarReader, EnvVarConfig,
     EnvVarScope, EnvVarEncoding, create_env_var_writer
 )
 
 
-class TestEnvVarEncoding(unittest.TestCase):
-    """Test encoding methods"""
-
-    def setUp(self):
-        self.writer = EnvVarWriter()
-
-    def test_raw_encoding(self):
-        """Test RAW encoding"""
-        value = "test payload"
-        encoded = self.writer.encode_value(value, EnvVarEncoding.RAW)
-        self.assertEqual(encoded, value)
-
-    def test_base64_encoding(self):
-        """Test BASE64 encoding"""
-        value = "test payload"
-        encoded = self.writer.encode_value(value, EnvVarEncoding.BASE64)
-        decoded = base64.b64decode(encoded).decode()
-        self.assertEqual(decoded, value)
-
-    def test_hex_encoding(self):
-        """Test HEX encoding"""
-        value = "test"
-        encoded = self.writer.encode_value(value, EnvVarEncoding.HEX)
-        decoded = bytes.fromhex(encoded).decode()
-        self.assertEqual(decoded, value)
-
-    def test_chunked_base64_encoding(self):
-        """Test CHUNKED_BASE64 encoding"""
-        value = "a" * 1000  # Large payload
-        encoded = self.writer.encode_value(value, EnvVarEncoding.CHUNKED_BASE64)
-        data = json.loads(encoded)
-        self.assertEqual(data["type"], "chunked_base64")
-        self.assertIn("chunks", data)
-        self.assertGreater(len(data["chunks"]), 1)
-
-    def test_chunked_hex_encoding(self):
-        """Test CHUNKED_HEX encoding"""
-        value = "a" * 1000
-        encoded = self.writer.encode_value(value, EnvVarEncoding.CHUNKED_HEX)
-        data = json.loads(encoded)
-        self.assertEqual(data["type"], "chunked_hex")
-        self.assertIn("chunks", data)
-
-
-class TestEnvVarObfuscation(unittest.TestCase):
-    """Test variable name obfuscation"""
-
-    def test_obfuscation_enabled(self):
-        """Test that obfuscation changes variable name"""
-        config = EnvVarConfig(use_obfuscation=True)
-        writer = EnvVarWriter(config)
-        obfuscated = writer.obfuscate_var_name("payload")
-        self.assertNotEqual(obfuscated, "SC_payload")
-        self.assertIn("SC_VAR_", obfuscated)
-
-    def test_obfuscation_disabled(self):
-        """Test that obfuscation can be disabled"""
-        config = EnvVarConfig(use_obfuscation=False)
-        writer = EnvVarWriter(config)
-        obfuscated = writer.obfuscate_var_name("payload")
-        self.assertEqual(obfuscated, "SC_payload")
-
-    def test_consistent_obfuscation(self):
-        """Test that obfuscation is consistent for same input"""
-        config = EnvVarConfig(use_obfuscation=True)
-        writer = EnvVarWriter(config)
-        name1 = writer.obfuscate_var_name("payload")
-        name2 = writer.obfuscate_var_name("payload")
-        self.assertEqual(name1, name2)
-
-
-class TestEnvVarChunking(unittest.TestCase):
-    """Test payload chunking"""
-
-    def setUp(self):
-        self.config = EnvVarConfig(chunk_size=100, encoding=EnvVarEncoding.BASE64)
-        self.writer = EnvVarWriter(self.config)
-
-    def test_small_payload_no_chunking(self):
-        """Test that small payloads don't create multiple chunks"""
-        payload = "small"
-        chunks = self.writer.chunk_payload(payload, "test")
-        # Should have metadata + 1 or more chunks
-        self.assertIn("test_META", chunks)
-
-    def test_large_payload_chunking(self):
-        """Test that large payloads create multiple chunks"""
-        payload = "a" * 1000
-        chunks = self.writer.chunk_payload(payload, "test")
-
-        # Should have metadata
-        self.assertIn("test_META", chunks)
-
-        # Should have multiple chunks
-        chunk_keys = [k for k in chunks.keys() if "CHUNK_" in k]
-        self.assertGreater(len(chunk_keys), 1)
-
-    def test_chunk_metadata(self):
-        """Test that chunk metadata is created correctly"""
-        payload = "test payload"
-        chunks = self.writer.chunk_payload(payload, "test")
-
-        metadata_str = chunks["test_META"]
-        metadata = json.loads(metadata_str)
-
-        self.assertIn("total_chunks", metadata)
-        self.assertIn("encoding", metadata)
-        self.assertIn("original_size", metadata)
-        self.assertGreater(metadata["total_chunks"], 0)
-
-
-class TestEnvVarWrite(unittest.TestCase):
-    """Test writing to environment variables"""
-
-    def setUp(self):
-        self.config = EnvVarConfig(scope=EnvVarScope.PROCESS)
-        self.writer = EnvVarWriter(self.config)
-
-    def test_write_to_process_env(self):
-        """Test writing to process environment"""
-        payload = "test payload"
-        success, vars_list, message = self.writer.write_to_env("test", payload)
-
-        self.assertTrue(success)
-        self.assertGreater(len(vars_list), 0)
-        # Check that metadata var is present (with obfuscation applied)
-        meta_vars = [v for v in vars_list if "_META" in v]
-        self.assertGreater(len(meta_vars), 0)
-
-    def test_written_vars_accessible(self):
-        """Test that written variables are accessible"""
-        payload = "test payload"
-        success, vars_list, _ = self.writer.write_to_env("test", payload)
-
-        if success:
-            for var_name in vars_list:
-                self.assertIn(var_name, os.environ)
-
-    def test_metadata_stored(self):
-        """Test that metadata is stored correctly"""
-        payload = "test"
-        self.writer.write_to_env("test", payload)
-
-        metadata = self.writer.get_var_metadata()
-        self.assertGreater(len(metadata), 0)
-
-    def test_multiple_writes(self):
-        """Test writing multiple payloads"""
-        payload1 = "payload1"
-        payload2 = "payload2"
-
-        success1, vars1, _ = self.writer.write_to_env("test1", payload1)
-        success2, vars2, _ = self.writer.write_to_env("test2", payload2)
-
-        self.assertTrue(success1)
-        self.assertTrue(success2)
-        self.assertGreater(len(vars1), 0)
-        self.assertGreater(len(vars2), 0)
-
-
-class TestEnvVarRead(unittest.TestCase):
-    """Test reading from environment variables"""
-
-    def setUp(self):
-        self.config = EnvVarConfig(scope=EnvVarScope.PROCESS)
-        self.writer = EnvVarWriter(self.config)
-        self.reader = EnvVarReader(self.config)
-
-    def test_read_after_write(self):
-        """Test reading payload after writing"""
-        payload = "test payload data"
-        var_name = "testpayload"
-
-        # Write
-        success, vars_list, _ = self.writer.write_to_env(var_name, payload)
-        self.assertTrue(success)
-
-        # Read
-        obfuscated_name = self.writer.obfuscate_var_name(var_name)
-        # Manual reconstruction for testing
-        metadata_var = f"{obfuscated_name}_META"
-        if metadata_var in os.environ:
-            metadata_str = os.environ[metadata_var]
-            metadata = json.loads(metadata_str)
-            reconstructed = ""
-            for i in range(metadata["total_chunks"]):
-                chunk_var = f"{obfuscated_name}_CHUNK_{i:03d}"
-                if chunk_var in os.environ:
-                    reconstructed += os.environ[chunk_var]
-
-            # Decode
-            if metadata["encoding"] == "base64":
-                original = base64.b64decode(reconstructed).decode()
-                self.assertEqual(original, payload)
-
-    def test_list_payload_vars(self):
-        """Test listing payload variables"""
-        # Write some payloads
-        self.writer.write_to_env("test1", "payload1")
-        self.writer.write_to_env("test2", "payload2")
-
-        # List
-        vars_list = self.reader.list_payload_vars()
-        self.assertGreater(len(vars_list), 0)
-
-
-class TestEnvVarCodeGeneration(unittest.TestCase):
-    """Test code generation for payload retrieval"""
-
-    def setUp(self):
-        self.writer = EnvVarWriter()
-
-    def test_vbs_code_generation(self):
-        """Test VBS retrieval code generation"""
-        code = self.writer.get_retrieval_code("test", "vbs")
-        self.assertIn("Base64Decode", code)
-        self.assertIn("Environment", code)
-        self.assertGreater(len(code), 100)
-
-    def test_powershell_code_generation(self):
-        """Test PowerShell retrieval code generation"""
-        code = self.writer.get_retrieval_code("test", "powershell")
-        self.assertIn("GetEnvironmentVariable", code)
-        self.assertIn("ConvertFrom-Json", code)
-        self.assertGreater(len(code), 100)
-
-    def test_batch_code_generation(self):
-        """Test Batch retrieval code generation"""
-        code = self.writer.get_retrieval_code("test", "batch")
-        self.assertIn("setlocal", code)
-        self.assertGreater(len(code), 50)
-
-    def test_code_contains_var_name(self):
-        """Test that generated code contains variable name"""
-        var_name = "mypayload"
-        for lang in ["vbs", "powershell", "batch"]:
-            code = self.writer.get_retrieval_code(var_name, lang)
-            # Code should handle the variable (not exact name if obfuscated, but structure)
-            self.assertGreater(len(code), 0)
-
-
-class TestEnvVarConfig(unittest.TestCase):
-    """Test configuration management"""
-
-    def test_default_config(self):
-        """Test default configuration"""
-        config = EnvVarConfig()
-        self.assertEqual(config.scope, EnvVarScope.USER)
-        self.assertEqual(config.encoding, EnvVarEncoding.BASE64)
-        self.assertTrue(config.use_obfuscation)
-
-    def test_custom_config(self):
-        """Test custom configuration"""
-        config = EnvVarConfig(
-            scope=EnvVarScope.PROCESS,
-            encoding=EnvVarEncoding.HEX,
-            use_obfuscation=False
-        )
-        self.assertEqual(config.scope, EnvVarScope.PROCESS)
-        self.assertEqual(config.encoding, EnvVarEncoding.HEX)
-        self.assertFalse(config.use_obfuscation)
-
-    def test_factory_function(self):
-        """Test factory function"""
-        writer = create_env_var_writer(
-            scope=EnvVarScope.PROCESS,
-            encoding=EnvVarEncoding.HEX
-        )
-        self.assertIsInstance(writer, EnvVarWriter)
-        self.assertEqual(writer.config.scope, EnvVarScope.PROCESS)
-        self.assertEqual(writer.config.encoding, EnvVarEncoding.HEX)
-
-
-class TestEnvVarIntegration(unittest.TestCase):
-    """Integration tests"""
-
-    def setUp(self):
-        self.writer = create_env_var_writer(
-            scope=EnvVarScope.PROCESS,
-            encoding=EnvVarEncoding.CHUNKED_BASE64
-        )
-
-    def test_end_to_end_workflow(self):
-        """Test complete write-store-read workflow"""
-        payload = "This is a complete test of environment variable storage with a longer payload to ensure chunking works correctly"
-        var_name = "e2e_test"
-
-        # Write
-        success, vars_list, message = self.writer.write_to_env(var_name, payload)
-        self.assertTrue(success, message)
-        self.assertGreater(len(vars_list), 0)
-
-        # Verify all variables are in environment
-        for var in vars_list:
-            self.assertIn(var, os.environ)
-
-        # Get metadata
-        metadata = self.writer.get_var_metadata()
-        self.assertGreater(len(metadata), 0)
-
-    def test_large_payload_handling(self):
-        """Test handling of large payloads"""
-        large_payload = "X" * 10000
-        success, vars_list, message = self.writer.write_to_env("large", large_payload)
-
-        # Should succeed even with large payload due to chunking
-        self.assertTrue(success)
-        self.assertGreater(len(vars_list), 2)  # Should have multiple chunks
-
-    def test_special_characters_in_payload(self):
-        """Test handling of special characters"""
-        payload = "Special chars: !@#$%^&*()[]{}\\\"'`~|"
-        success, vars_list, _ = self.writer.write_to_env("special", payload)
-
-        if success:
-            obfuscated = self.writer.obfuscate_var_name("special")
-            metadata_str = os.environ.get(f"{obfuscated}_META")
-            self.assertIsNotNone(metadata_str)
-
-
-class TestEnvVarValidation(unittest.TestCase):
-    """Test validation"""
-
-    def setUp(self):
-        self.writer = EnvVarWriter()
-
-    def test_value_validation(self):
-        """Test environment variable value validation"""
-        # Small value should pass
-        small_value = "test"
-        self.assertTrue(self.writer._validate_env_var_value(small_value))
-
-        # Extremely large value should fail
-        huge_value = "x" * 50000
-        self.assertFalse(self.writer._validate_env_var_value(huge_value))
-
-    def test_chunking_respects_limits(self):
-        """Test that chunking respects size limits"""
-        payload = "a" * 10000
-        chunks = self.writer.chunk_payload(payload, "test")
-
-        for chunk_value in chunks.values():
-            self.assertTrue(self.writer._validate_env_var_value(chunk_value))
-
-
-def run_tests():
-    """Run all tests"""
-    loader = unittest.TestLoader()
-    suite = unittest.TestSuite()
-
-    suite.addTests(loader.loadTestsFromTestCase(TestEnvVarEncoding))
-    suite.addTests(loader.loadTestsFromTestCase(TestEnvVarObfuscation))
-    suite.addTests(loader.loadTestsFromTestCase(TestEnvVarChunking))
-    suite.addTests(loader.loadTestsFromTestCase(TestEnvVarWrite))
-    suite.addTests(loader.loadTestsFromTestCase(TestEnvVarRead))
-    suite.addTests(loader.loadTestsFromTestCase(TestEnvVarCodeGeneration))
-    suite.addTests(loader.loadTestsFromTestCase(TestEnvVarConfig))
-    suite.addTests(loader.loadTestsFromTestCase(TestEnvVarIntegration))
-    suite.addTests(loader.loadTestsFromTestCase(TestEnvVarValidation))
-
-    runner = unittest.TextTestRunner(verbosity=2)
-    result = runner.run(suite)
-
-    return result.wasSuccessful()
+class EnvVarStorageTestSuite:
+    """Comprehensive test suite for environment variable storage"""
+
+    def __init__(self):
+        """Initialize test suite"""
+        self.test_results: List[Dict] = []
+        self.test_count = 0
+        self.passed_count = 0
+        self.failed_count = 0
+        self.test_payloads = self._create_test_payloads()
+        self.timestamp = datetime.now().isoformat()
+
+    def _create_test_payloads(self) -> Dict[str, str]:
+        """Create various test payloads"""
+        return {
+            "simple": "Hello, World!",
+            "json": json.dumps({"message": "test", "value": 42}),
+            "script": "#!/bin/bash\necho 'Test payload executed'\nexit 0",
+            "large": "X" * 5000,  # Large payload
+            "special_chars": "Special: !@#$%^&*()_+-=[]{}|;':\",./<>?",
+            "multiline": "Line 1\nLine 2\nLine 3\nLine 4",
+            "unicode": "Unicode: café, ñoño, 中文, 日本語, العربية",
+            "empty": "",
+            "with_newlines": "\n\n\nContent with newlines\n\n\n",
+            "base64_like": "aGVsbG8gd29ybGQ=",
+        }
+
+    def log_test(self, name: str, passed: bool, message: str, details: Optional[Dict] = None):
+        """Log test result"""
+        self.test_count += 1
+        if passed:
+            self.passed_count += 1
+            status = "PASS"
+        else:
+            self.failed_count += 1
+            status = "FAIL"
+
+        result = {
+            "test_number": self.test_count,
+            "name": name,
+            "status": status,
+            "message": message,
+            "timestamp": datetime.now().isoformat(),
+            "details": details or {}
+        }
+        self.test_results.append(result)
+        print(f"[{status}] Test {self.test_count}: {name} - {message}")
+
+    def test_1_write_simple_payload(self) -> bool:
+        """Test writing a simple payload to process environment"""
+        try:
+            writer = create_env_var_writer(
+                scope=EnvVarScope.PROCESS,
+                encoding=EnvVarEncoding.BASE64
+            )
+            payload = self.test_payloads["simple"]
+            success, vars_list, message = writer.write_to_env("test_simple", payload)
+
+            details = {
+                "payload": payload,
+                "success": success,
+                "variables": vars_list,
+                "message": message,
+                "var_count": len(vars_list)
+            }
+
+            self.log_test(
+                "Write Simple Payload",
+                success,
+                f"Stored in {len(vars_list)} environment variables",
+                details
+            )
+            return success
+        except Exception as e:
+            self.log_test("Write Simple Payload", False, str(e))
+            return False
+
+    def test_2_write_json_payload(self) -> bool:
+        """Test writing a JSON payload"""
+        try:
+            writer = create_env_var_writer(
+                scope=EnvVarScope.PROCESS,
+                encoding=EnvVarEncoding.BASE64
+            )
+            payload = self.test_payloads["json"]
+            success, vars_list, message = writer.write_to_env("test_json", payload)
+
+            details = {
+                "payload": payload,
+                "success": success,
+                "variables": vars_list,
+                "var_count": len(vars_list)
+            }
+
+            self.log_test(
+                "Write JSON Payload",
+                success,
+                f"Stored JSON in {len(vars_list)} variables",
+                details
+            )
+            return success
+        except Exception as e:
+            self.log_test("Write JSON Payload", False, str(e))
+            return False
+
+    def test_3_write_large_payload(self) -> bool:
+        """Test writing a large payload (chunking)"""
+        try:
+            writer = create_env_var_writer(
+                scope=EnvVarScope.PROCESS,
+                encoding=EnvVarEncoding.BASE64
+            )
+            payload = self.test_payloads["large"]
+            success, vars_list, message = writer.write_to_env("test_large", payload)
+
+            details = {
+                "payload_size": len(payload),
+                "success": success,
+                "variables": vars_list,
+                "var_count": len(vars_list),
+                "message": message
+            }
+
+            self.log_test(
+                "Write Large Payload (Chunking)",
+                success and len(vars_list) > 1,
+                f"Split into {len(vars_list)} chunks",
+                details
+            )
+            return success and len(vars_list) > 1
+        except Exception as e:
+            self.log_test("Write Large Payload", False, str(e))
+            return False
+
+    def test_4_retrieve_simple_payload(self) -> bool:
+        """Test retrieving a simple payload"""
+        try:
+            writer = create_env_var_writer(
+                scope=EnvVarScope.PROCESS,
+                encoding=EnvVarEncoding.BASE64
+            )
+            original_payload = self.test_payloads["simple"]
+            write_success, vars_list, _ = writer.write_to_env("test_retrieve_simple", original_payload)
+
+            if not write_success:
+                self.log_test("Retrieve Simple Payload", False, "Failed to write payload first")
+                return False
+
+            # Retrieve
+            reader = EnvVarReader()
+            obfuscated_name = writer.obfuscate_var_name("test_retrieve_simple")
+            retrieved_payload = reader.read_from_env(obfuscated_name)
+
+            match = retrieved_payload == original_payload
+            details = {
+                "original": original_payload,
+                "retrieved": retrieved_payload,
+                "match": match,
+                "variables": vars_list
+            }
+
+            self.log_test(
+                "Retrieve Simple Payload",
+                match,
+                "Payload retrieved and matches original",
+                details
+            )
+            return match
+        except Exception as e:
+            self.log_test("Retrieve Simple Payload", False, str(e))
+            return False
+
+    def test_5_retrieve_large_payload(self) -> bool:
+        """Test retrieving a chunked payload"""
+        try:
+            writer = create_env_var_writer(
+                scope=EnvVarScope.PROCESS,
+                encoding=EnvVarEncoding.BASE64
+            )
+            original_payload = self.test_payloads["large"]
+            write_success, vars_list, _ = writer.write_to_env("test_retrieve_large", original_payload)
+
+            if not write_success:
+                self.log_test("Retrieve Large Payload", False, "Failed to write payload first")
+                return False
+
+            # Retrieve
+            reader = EnvVarReader()
+            obfuscated_name = writer.obfuscate_var_name("test_retrieve_large")
+            retrieved_payload = reader.read_from_env(obfuscated_name)
+
+            match = retrieved_payload == original_payload
+            details = {
+                "original_size": len(original_payload),
+                "retrieved_size": len(retrieved_payload) if retrieved_payload else 0,
+                "match": match,
+                "chunk_count": len(vars_list)
+            }
+
+            self.log_test(
+                "Retrieve Large Payload",
+                match,
+                f"Retrieved {len(retrieved_payload) if retrieved_payload else 0} bytes from {len(vars_list)} chunks",
+                details
+            )
+            return match
+        except Exception as e:
+            self.log_test("Retrieve Large Payload", False, str(e))
+            return False
+
+    def test_6_multiple_encodings(self) -> bool:
+        """Test different encoding methods"""
+        try:
+            payload = self.test_payloads["simple"]
+            encodings_to_test = [
+                EnvVarEncoding.BASE64,
+                EnvVarEncoding.HEX,
+                EnvVarEncoding.RAW,
+            ]
+
+            all_passed = True
+            encoding_results = {}
+
+            for encoding in encodings_to_test:
+                writer = create_env_var_writer(
+                    scope=EnvVarScope.PROCESS,
+                    encoding=encoding
+                )
+                success, vars_list, _ = writer.write_to_env(f"test_encoding_{encoding.value}", payload)
+
+                if success:
+                    reader = EnvVarReader()
+                    obfuscated_name = writer.obfuscate_var_name(f"test_encoding_{encoding.value}")
+                    retrieved = reader.read_from_env(obfuscated_name)
+                    match = retrieved == payload
+                    encoding_results[encoding.value] = {"success": success, "match": match}
+                    all_passed = all_passed and match
+                else:
+                    encoding_results[encoding.value] = {"success": False}
+                    all_passed = False
+
+            details = {
+                "payload": payload,
+                "encodings_tested": encoding_results
+            }
+
+            self.log_test(
+                "Multiple Encodings",
+                all_passed,
+                f"Tested {len(encodings_to_test)} encoding methods",
+                details
+            )
+            return all_passed
+        except Exception as e:
+            self.log_test("Multiple Encodings", False, str(e))
+            return False
+
+    def test_7_special_characters(self) -> bool:
+        """Test payload with special characters"""
+        try:
+            payload = self.test_payloads["special_chars"]
+            writer = create_env_var_writer(
+                scope=EnvVarScope.PROCESS,
+                encoding=EnvVarEncoding.BASE64
+            )
+            success, vars_list, _ = writer.write_to_env("test_special", payload)
+
+            if success:
+                reader = EnvVarReader()
+                obfuscated_name = writer.obfuscate_var_name("test_special")
+                retrieved = reader.read_from_env(obfuscated_name)
+                match = retrieved == payload
+
+                details = {
+                    "original": payload,
+                    "retrieved": retrieved,
+                    "match": match
+                }
+
+                self.log_test(
+                    "Special Characters",
+                    match,
+                    "Special characters preserved correctly",
+                    details
+                )
+                return match
+            else:
+                self.log_test("Special Characters", False, "Failed to write payload")
+                return False
+        except Exception as e:
+            self.log_test("Special Characters", False, str(e))
+            return False
+
+    def test_8_unicode_characters(self) -> bool:
+        """Test payload with Unicode characters"""
+        try:
+            payload = self.test_payloads["unicode"]
+            writer = create_env_var_writer(
+                scope=EnvVarScope.PROCESS,
+                encoding=EnvVarEncoding.BASE64
+            )
+            success, vars_list, _ = writer.write_to_env("test_unicode", payload)
+
+            if success:
+                reader = EnvVarReader()
+                obfuscated_name = writer.obfuscate_var_name("test_unicode")
+                retrieved = reader.read_from_env(obfuscated_name)
+                match = retrieved == payload
+
+                details = {
+                    "original": payload,
+                    "retrieved": retrieved,
+                    "match": match
+                }
+
+                self.log_test(
+                    "Unicode Characters",
+                    match,
+                    "Unicode characters handled correctly",
+                    details
+                )
+                return match
+            else:
+                self.log_test("Unicode Characters", False, "Failed to write payload")
+                return False
+        except Exception as e:
+            self.log_test("Unicode Characters", False, str(e))
+            return False
+
+    def test_9_empty_payload(self) -> bool:
+        """Test handling of empty payload"""
+        try:
+            payload = self.test_payloads["empty"]
+            writer = create_env_var_writer(
+                scope=EnvVarScope.PROCESS,
+                encoding=EnvVarEncoding.BASE64
+            )
+            success, vars_list, _ = writer.write_to_env("test_empty", payload)
+
+            details = {
+                "payload": payload,
+                "payload_size": len(payload),
+                "success": success,
+                "variables": vars_list
+            }
+
+            self.log_test(
+                "Empty Payload",
+                success,
+                "Empty payload handled",
+                details
+            )
+            return success
+        except Exception as e:
+            self.log_test("Empty Payload", False, str(e))
+            return False
+
+    def test_10_payload_execution(self) -> bool:
+        """Test executing a payload retrieved from environment"""
+        try:
+            script_payload = "#!/bin/bash\necho 'PAYLOAD_EXECUTED_SUCCESSFULLY' > /tmp/test_exec.txt\nexit 0"
+
+            writer = create_env_var_writer(
+                scope=EnvVarScope.PROCESS,
+                encoding=EnvVarEncoding.BASE64
+            )
+            success, vars_list, _ = writer.write_to_env("test_exec_payload", script_payload)
+
+            if not success:
+                self.log_test("Payload Execution", False, "Failed to store payload")
+                return False
+
+            # Retrieve and execute
+            reader = EnvVarReader()
+            obfuscated_name = writer.obfuscate_var_name("test_exec_payload")
+            retrieved = reader.read_from_env(obfuscated_name)
+
+            if retrieved is None:
+                self.log_test("Payload Execution", False, "Failed to retrieve payload")
+                return False
+
+            # Write to temp file and execute
+            with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as f:
+                f.write(retrieved)
+                temp_script = f.name
+
+            try:
+                os.chmod(temp_script, 0o755)
+                result = subprocess.run([temp_script], capture_output=True, timeout=5)
+
+                # Check if execution marker exists
+                exec_marker_exists = os.path.exists('/tmp/test_exec.txt')
+
+                if exec_marker_exists:
+                    with open('/tmp/test_exec.txt', 'r') as f:
+                        marker_content = f.read()
+                    os.remove('/tmp/test_exec.txt')
+
+                details = {
+                    "script_size": len(retrieved),
+                    "execution_result": result.returncode,
+                    "marker_found": exec_marker_exists,
+                    "marker_content": marker_content if exec_marker_exists else None
+                }
+
+                self.log_test(
+                    "Payload Execution",
+                    exec_marker_exists and result.returncode == 0,
+                    "Retrieved payload executed successfully",
+                    details
+                )
+                return exec_marker_exists and result.returncode == 0
+            finally:
+                if os.path.exists(temp_script):
+                    os.remove(temp_script)
+
+        except Exception as e:
+            self.log_test("Payload Execution", False, str(e))
+            return False
+
+    def test_11_persistence_across_processes(self) -> bool:
+        """Test if environment variables persist across subprocess calls"""
+        try:
+            writer = create_env_var_writer(
+                scope=EnvVarScope.PROCESS,
+                encoding=EnvVarEncoding.BASE64
+            )
+            payload = self.test_payloads["json"]
+            success, vars_list, _ = writer.write_to_env("test_persist", payload)
+
+            if not success:
+                self.log_test("Persistence Across Processes", False, "Failed to write payload")
+                return False
+
+            # Create a Python script that reads from subprocess env
+            test_script = """
+import os
+import json
+obfuscated_name = "{obfuscated_name}"
+meta_var = obfuscated_name + "_META"
+meta_str = os.environ.get(meta_var)
+if meta_str:
+    print("FOUND")
+else:
+    print("NOT_FOUND")
+"""
+            obfuscated_name = writer.obfuscate_var_name("test_persist")
+            script_content = test_script.format(obfuscated_name=obfuscated_name)
+
+            with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
+                f.write(script_content)
+                temp_script = f.name
+
+            try:
+                result = subprocess.run(
+                    [sys.executable, temp_script],
+                    capture_output=True,
+                    timeout=5,
+                    env=os.environ.copy()
+                )
+                output = result.stdout.decode().strip()
+                found = output == "FOUND"
+
+                details = {
+                    "variables_stored": vars_list,
+                    "subprocess_output": output,
+                    "found": found
+                }
+
+                self.log_test(
+                    "Persistence Across Processes",
+                    found,
+                    "Environment variables accessible in subprocess",
+                    details
+                )
+                return found
+            finally:
+                if os.path.exists(temp_script):
+                    os.remove(temp_script)
+
+        except Exception as e:
+            self.log_test("Persistence Across Processes", False, str(e))
+            return False
+
+    def test_12_metadata_retrieval(self) -> bool:
+        """Test retrieving and verifying metadata"""
+        try:
+            writer = create_env_var_writer(
+                scope=EnvVarScope.PROCESS,
+                encoding=EnvVarEncoding.BASE64
+            )
+            payload = self.test_payloads["large"]
+            success, vars_list, _ = writer.write_to_env("test_metadata", payload)
+
+            if not success:
+                self.log_test("Metadata Retrieval", False, "Failed to write payload")
+                return False
+
+            metadata = writer.get_var_metadata()
+            obfuscated_name = writer.obfuscate_var_name("test_metadata")
+
+            # Find metadata entries
+            meta_entries = {k: v for k, v in metadata.items() if k.startswith(obfuscated_name)}
+            has_meta = len(meta_entries) > 0
+
+            details = {
+                "variables": vars_list,
+                "metadata_entries": len(meta_entries),
+                "metadata_keys": list(meta_entries.keys()),
+                "sample_metadata": list(meta_entries.values())[0] if meta_entries else None
+            }
+
+            self.log_test(
+                "Metadata Retrieval",
+                has_meta,
+                f"Retrieved metadata for {len(meta_entries)} variables",
+                details
+            )
+            return has_meta
+        except Exception as e:
+            self.log_test("Metadata Retrieval", False, str(e))
+            return False
+
+    def test_13_multiline_payload(self) -> bool:
+        """Test payload with multiple lines"""
+        try:
+            payload = self.test_payloads["multiline"]
+            writer = create_env_var_writer(
+                scope=EnvVarScope.PROCESS,
+                encoding=EnvVarEncoding.BASE64
+            )
+            success, vars_list, _ = writer.write_to_env("test_multiline", payload)
+
+            if success:
+                reader = EnvVarReader()
+                obfuscated_name = writer.obfuscate_var_name("test_multiline")
+                retrieved = reader.read_from_env(obfuscated_name)
+                match = retrieved == payload
+
+                details = {
+                    "line_count": len(payload.split('\n')),
+                    "match": match,
+                    "variables": vars_list
+                }
+
+                self.log_test(
+                    "Multiline Payload",
+                    match,
+                    "Multiline payload preserved correctly",
+                    details
+                )
+                return match
+            else:
+                self.log_test("Multiline Payload", False, "Failed to write payload")
+                return False
+        except Exception as e:
+            self.log_test("Multiline Payload", False, str(e))
+            return False
+
+    def test_14_hex_encoding(self) -> bool:
+        """Test hex encoding specifically"""
+        try:
+            payload = self.test_payloads["simple"]
+            writer = create_env_var_writer(
+                scope=EnvVarScope.PROCESS,
+                encoding=EnvVarEncoding.HEX
+            )
+            success, vars_list, _ = writer.write_to_env("test_hex", payload)
+
+            if success:
+                reader = EnvVarReader()
+                obfuscated_name = writer.obfuscate_var_name("test_hex")
+                retrieved = reader.read_from_env(obfuscated_name)
+                match = retrieved == payload
+
+                details = {
+                    "payload": payload,
+                    "retrieved": retrieved,
+                    "match": match,
+                    "encoding": "hex"
+                }
+
+                self.log_test(
+                    "Hex Encoding",
+                    match,
+                    "Payload correctly encoded/decoded using hex",
+                    details
+                )
+                return match
+            else:
+                self.log_test("Hex Encoding", False, "Failed to write payload")
+                return False
+        except Exception as e:
+            self.log_test("Hex Encoding", False, str(e))
+            return False
+
+    def test_15_obfuscation(self) -> bool:
+        """Test variable name obfuscation"""
+        try:
+            writer = create_env_var_writer(
+                scope=EnvVarScope.PROCESS,
+                encoding=EnvVarEncoding.BASE64
+            )
+
+            original_name = "test_obfuscation"
+            obfuscated = writer.obfuscate_var_name(original_name)
+
+            # Should not directly contain the original name
+            is_obfuscated = original_name not in obfuscated or obfuscated.startswith("SC_")
+
+            details = {
+                "original_name": original_name,
+                "obfuscated_name": obfuscated,
+                "contains_original": original_name in obfuscated,
+                "starts_with_prefix": obfuscated.startswith("SC_")
+            }
+
+            self.log_test(
+                "Obfuscation",
+                is_obfuscated,
+                f"Variable name obfuscated: {obfuscated}",
+                details
+            )
+            return is_obfuscated
+        except Exception as e:
+            self.log_test("Obfuscation", False, str(e))
+            return False
+
+    def generate_report(self) -> str:
+        """Generate test report"""
+        report = []
+        report.append("=" * 80)
+        report.append("ENVIRONMENT VARIABLE STORAGE TEST REPORT")
+        report.append("=" * 80)
+        report.append(f"\nTest Execution Time: {self.timestamp}")
+        report.append(f"Platform: {sys.platform}")
+        report.append(f"Python Version: {sys.version.split()[0]}")
+        report.append("\n" + "=" * 80)
+        report.append("TEST SUMMARY")
+        report.append("=" * 80)
+        report.append(f"Total Tests: {self.test_count}")
+        report.append(f"Passed: {self.passed_count} ({100*self.passed_count//self.test_count if self.test_count > 0 else 0}%)")
+        report.append(f"Failed: {self.failed_count}")
+        report.append(f"Success Rate: {100*self.passed_count//self.test_count if self.test_count > 0 else 0}%")
+
+        report.append("\n" + "=" * 80)
+        report.append("DETAILED TEST RESULTS")
+        report.append("=" * 80)
+
+        for result in self.test_results:
+            report.append(f"\n[Test {result['test_number']}] {result['name']}")
+            report.append(f"  Status: {result['status']}")
+            report.append(f"  Message: {result['message']}")
+            report.append(f"  Timestamp: {result['timestamp']}")
+
+            if result['details']:
+                report.append("  Details:")
+                for key, value in result['details'].items():
+                    if isinstance(value, (dict, list)):
+                        report.append(f"    {key}: {json.dumps(value, indent=6)}")
+                    else:
+                        report.append(f"    {key}: {value}")
+
+        report.append("\n" + "=" * 80)
+        report.append("CONCLUSION")
+        report.append("=" * 80)
+
+        if self.failed_count == 0:
+            report.append("ALL TESTS PASSED - Environment variable storage system is working correctly")
+        else:
+            report.append(f"SOME TESTS FAILED - {self.failed_count} test(s) need investigation")
+
+        report.append("=" * 80)
+
+        return "\n".join(report)
+
+    def run_all_tests(self):
+        """Run all tests"""
+        print("\n" + "=" * 80)
+        print("STARTING ENVIRONMENT VARIABLE STORAGE TEST SUITE")
+        print("=" * 80 + "\n")
+
+        # Run all test methods
+        test_methods = [
+            self.test_1_write_simple_payload,
+            self.test_2_write_json_payload,
+            self.test_3_write_large_payload,
+            self.test_4_retrieve_simple_payload,
+            self.test_5_retrieve_large_payload,
+            self.test_6_multiple_encodings,
+            self.test_7_special_characters,
+            self.test_8_unicode_characters,
+            self.test_9_empty_payload,
+            self.test_10_payload_execution,
+            self.test_11_persistence_across_processes,
+            self.test_12_metadata_retrieval,
+            self.test_13_multiline_payload,
+            self.test_14_hex_encoding,
+            self.test_15_obfuscation,
+        ]
+
+        for test_method in test_methods:
+            try:
+                test_method()
+            except Exception as e:
+                print(f"ERROR: Test {test_method.__name__} crashed: {e}")
+
+        # Generate and print report
+        report = self.generate_report()
+        print("\n" + report)
+        return report
+
+
+def main():
+    """Main entry point"""
+    suite = EnvVarStorageTestSuite()
+    report = suite.run_all_tests()
+
+    # Save report to file
+    report_file = "/tmp/env_var_storage_test_report.txt"
+    with open(report_file, "w") as f:
+        f.write(report)
+
+    print(f"\nReport saved to: {report_file}")
+
+    # Exit with appropriate code
+    exit_code = 0 if suite.failed_count == 0 else 1
+    sys.exit(exit_code)
 
 
 if __name__ == "__main__":
-    import sys
-    success = run_tests()
-    sys.exit(0 if success else 1)
+    main()

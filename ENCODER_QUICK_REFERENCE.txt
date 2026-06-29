@@ -1,0 +1,348 @@
+================================================================================
+BASE64 ENCODER - QUICK REFERENCE
+Reverse Operations for VBS Decoder
+================================================================================
+
+INSTALLATION
+============
+The encoder is a standalone Python module. No installation required.
+Import: from base64_encoder import Base64Encoder, Base64OperationsPair
+
+FILES
+=====
+1. base64_encoder.py          - Main encoder implementation
+2. encoder_decoder_example.py - 10 complete examples
+3. test_base64_encoder.py    - 32-test unit suite
+4. BASE64_ENCODER_GUIDE.md   - Full documentation
+5. ENCODER_QUICK_REFERENCE.txt - This file
+
+================================================================================
+QUICK EXAMPLES
+================================================================================
+
+EXAMPLE 1: Basic Encoding
+-------------------------
+from base64_encoder import Base64Encoder
+
+encoder = Base64Encoder()
+encoded = encoder.encode_to_base64("Hello World")
+print(encoded)  # SGVsbG8gV29ybGQ=
+
+EXAMPLE 2: Encode Command for VBS
+---------------------------------
+encoder = Base64Encoder()
+command = "powershell.exe -NoProfile -Command \"Get-Process\""
+encoded = encoder.encode_to_base64(command)
+# Use 'encoded' in VBS decoder
+
+EXAMPLE 3: Create VBS Variable
+------------------------------
+encoder = Base64Encoder()
+vbs_code = encoder.create_vbs_encoded_variable("cmd /c calc.exe")
+print(vbs_code)
+# Output:
+# Dim v_XXXXXXXX
+# v_XXXXXXXX = "Y21kIC9jIGNhbGMuZXhlIg=="
+
+EXAMPLE 4: Decode Operation (Round Trip)
+----------------------------------------
+from base64_encoder import Base64OperationsPair
+
+ops = Base64OperationsPair()
+text = "Test String"
+success = ops.round_trip_transform(text)  # True
+
+EXAMPLE 5: Batch Encode
+-----------------------
+encoder = Base64Encoder()
+commands = ["whoami", "ipconfig", "tasklist"]
+results = encoder.batch_encode_multiple(commands)
+
+EXAMPLE 6: PowerShell Encoding (UTF-16LE)
+-----------------------------------------
+encoder = Base64Encoder()
+ps_cmd = "Write-Host 'Hello'"
+ps_encoded = encoder.create_powershell_encoded_command(ps_cmd)
+# Use with PowerShell -EncodedCommand parameter
+
+EXAMPLE 7: Verify Encoding
+--------------------------
+encoder = Base64Encoder()
+original = "Test"
+encoded = encoder.encode_to_base64(original)
+is_valid = encoder.verify_encoding(original, encoded)  # True
+
+EXAMPLE 8: Lookup Table
+-----------------------
+encoder = Base64Encoder()
+texts = ["cmd1", "cmd2"]
+lookup = encoder.create_reverse_lookup_table(texts)
+# lookup['forward'] = plain text -> encoded
+# lookup['reverse'] = encoded -> plain text
+
+================================================================================
+CLASS METHODS REFERENCE
+================================================================================
+
+BASE64ENCODER CLASS
+===================
+
+encode_to_base64(text: str) -> str
+  - Encode plain text to Base64
+  - Input: Any string
+  - Output: Base64-encoded string
+  - Example: "Hello" -> "SGVsbG8="
+
+encode_to_base64_with_cache(text: str) -> Tuple[str, str]
+  - Encode with caching for repeated operations
+  - Output: (encoded_string, cache_key)
+
+encode_command_payload(command: str) -> str
+  - Encode command for payload use
+  - Convenience wrapper for encode_to_base64
+
+encode_file_content(content: str) -> str
+  - Encode file content to Base64
+  - Convenience wrapper for encode_to_base64
+
+encode_bytes_to_base64(data: bytes) -> str
+  - Encode binary bytes to Base64
+  - Input: bytes object
+  - Raises TypeError if input is not bytes
+
+create_vbs_encoded_variable(text: str, var_name: Optional[str]) -> str
+  - Create VBS code with encoded variable
+  - Output: VBS Dim statement with encoded value
+  - Auto-generates variable name if not provided
+
+create_vbs_decoder_pair(text: str) -> Tuple[str, str]
+  - Create paired encoder-decoder VBS code
+  - Output: (encoder_code, decoder_code)
+  - Includes full MSXML2 decoder logic
+
+create_powershell_encoded_command(command: str) -> str
+  - Create PowerShell UTF-16LE encoded command
+  - Use with: powershell.exe -EncodedCommand <output>
+
+batch_encode_multiple(texts: list) -> dict
+  - Encode multiple texts at once
+  - Output: {original_text: encoded_text, ...}
+  - Efficient for processing multiple payloads
+
+verify_encoding(original: str, encoded: str) -> bool
+  - Verify encoding correctness
+  - Returns: True if encoding is valid, False otherwise
+
+create_reverse_lookup_table(texts: list) -> dict
+  - Create bidirectional lookup table
+  - Output: {'forward': {}, 'reverse': {}}
+  - Fast O(1) lookups in both directions
+
+BASE64OPERATIONSPAIR CLASS
+==========================
+
+encode(text: str) -> str
+  - Encode text to Base64
+  - Wrapper method
+
+decode(encoded: str) -> str
+  - Decode Base64 to text
+  - Raises ValueError if invalid Base64
+
+encode_with_validation(text: str) -> str
+  - Encode with verification
+  - Validates result before returning
+
+round_trip_transform(text: str) -> bool
+  - Test encode-decode round trip
+  - Returns True if successful
+
+================================================================================
+COMMON TASKS
+================================================================================
+
+Task 1: Encode a PowerShell Command
+-----------------------------------
+from base64_encoder import Base64Encoder
+
+encoder = Base64Encoder()
+cmd = "Get-Process | Where-Object {$_.CPU -gt 100}"
+encoded = encoder.encode_to_base64(cmd)
+
+Task 2: Create VBS Payload with Encoded Command
+-----------------------------------------------
+from base64_encoder import Base64Encoder
+
+encoder = Base64Encoder()
+command = "cmd /c echo test"
+vbs_var = encoder.create_vbs_encoded_variable(command, "payload")
+print(vbs_var)
+
+Task 3: Verify Payload Encoding
+------------------------------
+from base64_encoder import Base64Encoder
+
+encoder = Base64Encoder()
+payload = "malicious_command"
+encoded = encoder.encode_to_base64(payload)
+if encoder.verify_encoding(payload, encoded):
+    print("Encoding is valid")
+
+Task 4: Batch Process Multiple Commands
+--------------------------------------
+from base64_encoder import Base64Encoder
+
+encoder = Base64Encoder()
+commands = ["whoami", "ipconfig /all", "netstat -an"]
+encoded_dict = encoder.batch_encode_multiple(commands)
+for cmd, encoded_cmd in encoded_dict.items():
+    print(f"{cmd}: {encoded_cmd}")
+
+Task 5: Create Symmetric Encoder-Decoder
+---------------------------------------
+from base64_encoder import Base64OperationsPair
+
+ops = Base64OperationsPair()
+original = "Secret Message"
+encoded = ops.encode(original)
+decoded = ops.decode(encoded)
+assert decoded == original
+
+Task 6: Reverse Lookup for Obfuscation
+------------------------------------
+from base64_encoder import Base64Encoder
+
+encoder = Base64Encoder()
+targets = ["net user", "ipconfig", "tasklist"]
+lookup = encoder.create_reverse_lookup_table(targets)
+
+# Find which command maps to specific encoding
+for encoded, plain in lookup['reverse'].items():
+    print(f"Encoded: {encoded}, Plain: {plain}")
+
+================================================================================
+INTEGRATION WITH VBS DECODER
+================================================================================
+
+The encoder is specifically designed to pair with VBSEncoder.create_base64_decoder_vbs()
+
+Step 1: Encode with Python
+--------------------------
+from base64_encoder import Base64Encoder
+
+encoder = Base64Encoder()
+command = "cmd /c echo Hello"
+encoded = encoder.encode_to_base64(command)
+# encoded = "Y21kIC9jIGVjaG8gSGVsbG8="
+
+Step 2: Use in VBS (Existing Decoder)
+-----------------------------------
+' In VBS code:
+Dim encodedCmd
+encodedCmd = "Y21kIC9jIGVjaG8gSGVsbG8="
+Set xmlDoc = CreateObject("MSXML2.DOMDocument")
+With xmlDoc
+    .LoadXML "<u><![CDATA[" & encodedCmd & "]]></u>"
+    decodedCmd = .SelectSingleNode("u").text
+End With
+' decodedCmd = "cmd /c echo Hello"
+
+Complete Example:
+----------------
+# Python
+from base64_encoder import Base64Encoder
+from vbs_encoder import VBSEncoder
+
+encoder = Base64Encoder()
+vbs_encoder = VBSEncoder()
+
+command = "powershell.exe -Command \"Get-Process\""
+encoded = encoder.encode_to_base64(command)
+
+vbs_code = vbs_encoder.create_base64_decoder_vbs(command, "payload")
+print(vbs_code)
+
+================================================================================
+TESTING
+================================================================================
+
+Run All Tests:
+--------------
+python3 test_base64_encoder.py
+
+Run Examples:
+-------------
+python3 encoder_decoder_example.py
+
+Run Module Directly:
+-------------------
+python3 base64_encoder.py
+
+Expected Output:
+- All 32 tests pass
+- 10 comprehensive examples execute
+- Built-in examples demonstrate features
+
+================================================================================
+COMMON ENCODINGS
+================================================================================
+
+String                          Base64 Encoding
+----------------------------------------
+whoami                          d2hvYW1p
+ipconfig /all                   aXBjb25maWcgL2FsbA==
+tasklist                        dGFza2xpc3Q=
+systeminfo                      c3lzdGVtaW5mbw==
+cmd /c calc.exe                 Y21kIC9jIGNhbGMuZXhlIg==
+powershell.exe -NoProfile       cG93ZXJzaGVsbC5leGUgLU5vUHJvZmlsZQ==
+
+================================================================================
+ERROR HANDLING
+================================================================================
+
+TypeError: Invalid Input Type
+---------- -----------------
+# Problem: Trying to encode non-string
+encoder.encode_to_base64(12345)
+# Solution: Ensure input is string
+encoder.encode_to_base64(str(12345))
+
+ValueError: Invalid Base64 to Decode
+---------- -----
+# Problem: Decoding invalid Base64
+ops.decode("Invalid!!!Base64")
+# Solution: Use valid Base64 or handle exception
+try:
+    result = ops.decode(encoded)
+except ValueError as e:
+    print(f"Decode error: {e}")
+
+================================================================================
+PERFORMANCE TIPS
+================================================================================
+
+1. Use Caching for Repeated Encodings:
+   encoded, key = encoder.encode_to_base64_with_cache(text)
+
+2. Use Batch Operations for Multiple Texts:
+   results = encoder.batch_encode_multiple(list_of_texts)
+
+3. Use Lookup Tables for Frequent Lookups:
+   lookup = encoder.create_reverse_lookup_table(texts)
+   forward_result = lookup['forward'][text]
+   reverse_result = lookup['reverse'][encoded_text]
+
+4. Verify Once, Not Repeatedly:
+   is_valid = encoder.verify_encoding(original, encoded)
+
+================================================================================
+REFERENCE LINKS
+================================================================================
+
+Main Code:        /home/user/sc-generator/base64_encoder.py
+Examples:         /home/user/sc-generator/encoder_decoder_example.py
+Tests:            /home/user/sc-generator/test_base64_encoder.py
+Full Guide:       /home/user/sc-generator/BASE64_ENCODER_GUIDE.md
+VBS Decoder:      /home/user/sc-generator/vbs_encoder.py
+
+================================================================================

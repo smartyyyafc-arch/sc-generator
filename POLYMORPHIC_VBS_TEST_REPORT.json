@@ -1,0 +1,200 @@
+{
+  "timestamp": "2026-06-29T16:29:32.284559",
+  "test_suite": "Polymorphic VBS Variant Validation",
+  "tests": [
+    {
+      "name": "Individual Encoding Methods",
+      "results": {
+        "base64": {
+          "status": "PASS",
+          "encoded_length": 16,
+          "strategy": "base64"
+        },
+        "hex": {
+          "status": "PASS",
+          "encoded_length": 24,
+          "strategy": "hex"
+        },
+        "xor": {
+          "status": "PASS",
+          "encoded_length": 24,
+          "strategy": "xor"
+        },
+        "array": {
+          "status": "PASS",
+          "encoded_length": 24,
+          "strategy": "array"
+        },
+        "reversed": {
+          "status": "PASS",
+          "encoded_length": 24,
+          "strategy": "reversed"
+        },
+        "chunk_rot": {
+          "status": "PASS",
+          "encoded_length": 24,
+          "strategy": "chunk_rot"
+        },
+        "bitshift": {
+          "status": "PASS",
+          "encoded_length": 24,
+          "strategy": "bitshift"
+        },
+        "nested_hybrid": {
+          "status": "PASS",
+          "encoded_length": 32,
+          "strategy": "nested_hybrid"
+        }
+      }
+    },
+    {
+      "name": "VBS Wrapper Generation",
+      "results": {
+        "Simple Echo": {
+          "status": "PASS",
+          "command": "echo test",
+          "iterations": 2,
+          "generated_size": 230,
+          "lines_of_code": 12,
+          "strategies_used": [
+            "bitshift",
+            "xor"
+          ],
+          "strategy_count": 2,
+          "has_option_explicit": true,
+          "has_createobject": true,
+          "has_shell_run": true
+        },
+        "PowerShell Command": {
+          "status": "PASS",
+          "command": "powershell.exe -Command Write-Host 'Test'",
+          "iterations": 3,
+          "generated_size": 577,
+          "lines_of_code": 24,
+          "strategies_used": [
+            "reversed",
+            "array",
+            "hex"
+          ],
+          "strategy_count": 3,
+          "has_option_explicit": true,
+          "has_createobject": true,
+          "has_shell_run": true
+        },
+        "Calc Execution": {
+          "status": "PASS",
+          "command": "calc.exe",
+          "iterations": 2,
+          "generated_size": 231,
+          "lines_of_code": 12,
+          "strategies_used": [
+            "chunk_rot",
+            "xor"
+          ],
+          "strategy_count": 2,
+          "has_option_explicit": true,
+          "has_createobject": true,
+          "has_shell_run": true
+        },
+        "Complex Command": {
+          "status": "PASS",
+          "command": "cmd.exe /c ipconfig",
+          "iterations": 3,
+          "generated_size": 258,
+          "lines_of_code": 14,
+          "strategies_used": [
+            "bitshift",
+            "xor",
+            "nested_hybrid"
+          ],
+          "strategy_count": 3,
+          "has_option_explicit": true,
+          "has_createobject": true,
+          "has_shell_run": true
+        }
+      }
+    },
+    {
+      "name": "Polymorphism & Diversity",
+      "results": {
+        "total_generations": 50,
+        "unique_strategies": 8,
+        "strategy_distribution": {
+          "xor": 10,
+          "array": 5,
+          "base64": 5,
+          "hex": 6,
+          "reversed": 6,
+          "chunk_rot": 11,
+          "nested_hybrid": 3,
+          "bitshift": 4
+        },
+        "minimum_strategies": 6,
+        "meets_requirement": true
+      }
+    },
+    {
+      "name": "Decoding Consistency",
+      "results": {
+        "echo test": {
+          "status": "PASS",
+          "variants_tested": 5,
+          "all_decode_correctly": true
+        },
+        "powershell.exe -Command Write-Host 'Test'": {
+          "status": "PASS",
+          "variants_tested": 5,
+          "all_decode_correctly": true
+        },
+        "calc.exe": {
+          "status": "PASS",
+          "variants_tested": 5,
+          "all_decode_correctly": true
+        },
+        "cmd.exe /c dir": {
+          "status": "PASS",
+          "variants_tested": 5,
+          "all_decode_correctly": true
+        }
+      }
+    },
+    {
+      "name": "VBS Syntax Validation",
+      "results": {
+        "option_explicit": 10,
+        "valid_dim_statements": 10,
+        "valid_functions": 2,
+        "valid_execution": 10
+      }
+    },
+    {
+      "name": "Multi-iteration Support",
+      "results": {
+        "1_iterations": {
+          "requested": 1,
+          "generated": 1,
+          "matches": true,
+          "vbs_size": 212
+        },
+        "3_iterations": {
+          "requested": 3,
+          "generated": 3,
+          "matches": true,
+          "vbs_size": 259
+        },
+        "5_iterations": {
+          "requested": 5,
+          "generated": 5,
+          "matches": true,
+          "vbs_size": 306
+        },
+        "10_iterations": {
+          "requested": 10,
+          "generated": 10,
+          "matches": true,
+          "vbs_size": 900
+        }
+      }
+    }
+  ]
+}

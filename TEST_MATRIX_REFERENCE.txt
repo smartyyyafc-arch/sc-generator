@@ -1,0 +1,74 @@
+==========================================================================================
+MULTI-ENCODING TEST MATRIX - QUICK REFERENCE
+==========================================================================================
+
+SUMMARY
+------------------------------------------------------------------------------------------
+Total Combinations:     400
+  - Single Layer:       8
+  - Two Layer:          56
+  - Three Layer:        336
+Total Test Payloads:    24
+Payload Categories:     6
+
+PAYLOAD BREAKDOWN
+------------------------------------------------------------------------------------------
+basic_strings             :  5 payloads
+special_characters        :  4 payloads
+unicode                   :  4 payloads
+shell_commands            :  4 payloads
+large_payloads            :  3 payloads
+edge_cases                :  4 payloads
+
+SINGLE LAYER COMBINATIONS (1-Layer)
+------------------------------------------------------------------------------------------
+Index  Layer           Description
+------------------------------------------------------------------------------------------
+1      hex             Single layer: hex
+2      base64          Single layer: base64
+3      rot13           Single layer: rot13
+4      xor             Single layer: xor
+5      octal           Single layer: octal
+6      ascii           Single layer: ascii
+7      reverse         Single layer: reverse
+8      zlib            Single layer: zlib
+
+TWO LAYER COMBINATIONS - SAMPLE (56 total)
+------------------------------------------------------------------------------------------
+Index  Combination                    Description
+------------------------------------------------------------------------------------------
+9      hex -> base64                  hex -> base64
+10     hex -> rot13                   hex -> rot13
+11     hex -> xor                     hex -> xor
+12     hex -> octal                   hex -> octal
+13     hex -> ascii                   hex -> ascii
+14     hex -> reverse                 hex -> reverse
+15     hex -> zlib                    hex -> zlib
+16     base64 -> hex                  base64 -> hex
+17     base64 -> rot13                base64 -> rot13
+18     base64 -> xor                  base64 -> xor
+19     base64 -> octal                base64 -> octal
+20     base64 -> ascii                base64 -> ascii
+21     base64 -> reverse              base64 -> reverse
+22     base64 -> zlib                 base64 -> zlib
+23     rot13 -> hex                   rot13 -> hex
+... (41 more combinations)
+
+LAYER STATISTICS
+------------------------------------------------------------------------------------------
+Unique Encoding Layers:  8
+Layer Types:             ascii, base64, hex, octal, reverse, rot13, xor, zlib
+
+MATHEMATICAL BREAKDOWN
+------------------------------------------------------------------------------------------
+Layer Combinations:
+  - C(8,1) = 8              (1-layer combinations)
+  - P(8,2) = 56             (2-layer permutations, order matters)
+  - P(8,3) = 336            (3-layer permutations, order matters)
+  - Total = 400 combinations
+
+Total Test Coverage:
+  - Combinations × Payloads = 400 × 24 = 9,600 potential test scenarios
+  - Actual coverage: >500 tests (3-layer tested with sample for performance)
+
+==========================================================================================

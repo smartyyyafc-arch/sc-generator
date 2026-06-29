@@ -1,0 +1,7 @@
+
+[api]
+endpoint=https://api.example.com
+key=sk_live_abc123def456
+secret=sk_secret_xyz789
+timeout=30
+retry_count=3

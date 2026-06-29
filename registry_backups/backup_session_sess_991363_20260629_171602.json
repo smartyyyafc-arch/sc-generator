@@ -1,0 +1,47 @@
+{
+  "session_id": "sess_991363",
+  "created": 1782753362.9913647,
+  "datetime": "2026-06-29T17:16:02.991365",
+  "description": "File persistence example",
+  "snapshot_count": 1,
+  "operation_count": 1,
+  "snapshots": [
+    {
+      "snapshot_id": "snap_991366",
+      "timestamp": 1782753362.9913676,
+      "datetime": "2026-06-29T17:16:02.991368",
+      "mode": "full",
+      "hive": "HKCU",
+      "path": "",
+      "value_count": 2,
+      "values": {
+        "Config1": {
+          "value_name": "Config1",
+          "value_data": "value1",
+          "value_type": "REG_SZ",
+          "timestamp": 1782753362.9913676,
+          "hash": "f4aca46f4ea63a69e8459b5337b2777e7a336a76c8158e967f446666fda9740b"
+        },
+        "Config2": {
+          "value_name": "Config2",
+          "value_data": "value2",
+          "value_type": "REG_SZ",
+          "timestamp": 1782753362.9913676,
+          "hash": "cfcadecfa23f70a2f62f6f8de5dac77946a45095968d1615267ed9b9715bf4b9"
+        }
+      },
+      "metadata": {},
+      "parent_snapshot_id": null
+    }
+  ],
+  "operations": [
+    {
+      "operation": "backup",
+      "snapshot_id": "snap_991366",
+      "timestamp": 1782753362.9913676,
+      "value_count": 2,
+      "mode": "full"
+    }
+  ],
+  "metadata": {}
+}

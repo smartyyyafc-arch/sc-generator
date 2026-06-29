@@ -1,0 +1,73 @@
+test_array_bounds (__main__.ArrayDecoderE2E.test_array_bounds)
+Test 14: Array bounds are correct ... ✓ Test 14 PASSED: Array bounds correct (size: 10, chunks: 11)
+ok
+test_array_decoder_generation (__main__.ArrayDecoderE2E.test_array_decoder_generation)
+Test 1: Array decoder VBS code generation ... ✓ Test 1 PASSED: Array decoder VBS structure is valid
+ok
+test_array_variable_names (__main__.ArrayDecoderE2E.test_array_variable_names)
+Test 9: Array variable names are properly generated ... ✓ Test 9 PASSED: Variable names generated (array: arr_DUo2kKJ_, loop: a_w8tCdT1N)
+ok
+test_chunk_hex_encoding (__main__.ArrayDecoderE2E.test_chunk_hex_encoding)
+Test 3: Hex encoding of chunks ... ✓ Test 3 PASSED: 2 chunks encoded to hex correctly
+ok
+test_concatenation_loop_logic (__main__.ArrayDecoderE2E.test_concatenation_loop_logic)
+Test 11: Inner hex-to-char conversion loop ... ✓ Test 11 PASSED: Hex-to-char loop logic validated
+ok
+test_execution_wrapper (__main__.ArrayDecoderE2E.test_execution_wrapper)
+Test 10: Execution wrapper present ... ✓ Test 10 PASSED: Execution wrapper validated (shell var: shell_OfCoE9fb)
+ok
+test_full_decoding_pipeline (__main__.ArrayDecoderE2E.test_full_decoding_pipeline)
+Test 5: Complete decode pipeline (all chunks) ... ✓ Test 5 PASSED: Complete pipeline decoded 4 chunks to original
+ok
+test_hex_to_chr_decoding (__main__.ArrayDecoderE2E.test_hex_to_chr_decoding)
+Test 4: Hex to character decoding simulation ... ✓ Test 4 PASSED: Hex '48656c6c6f' decoded to 'Hello' correctly
+ok
+test_multiple_payload_sizes (__main__.ArrayDecoderE2E.test_multiple_payload_sizes)
+Test 7: Various payload sizes ...   tiny: payload=1B, chunks=1, vbs=372B
+  small: payload=10B, chunks=1, vbs=390B
+  medium: payload=52B, chunks=4, vbs=537B
+  large: payload=164B, chunks=11, vbs=910B
+✓ Test 7 PASSED: Tested 4 payload sizes
+ok
+test_payload_reconstruction_integrity (__main__.ArrayDecoderE2E.test_payload_reconstruction_integrity)
+Test 13: Payload reconstruction from multiple chunks maintains integrity ... ✓ Test 13 PASSED: All 4 payloads maintain integrity
+ok
+test_payload_split_into_chunks (__main__.ArrayDecoderE2E.test_payload_split_into_chunks)
+Test 2: Payload splitting into 16-byte chunks ... ✓ Test 2 PASSED: Payload split into 4 chunks correctly
+ok
+test_performance_with_large_payload (__main__.ArrayDecoderE2E.test_performance_with_large_payload)
+Test 15: Performance with large payload ... ✓ Test 15 PASSED: Large payload (5KB+) generated in 0.0001s
+ok
+test_special_characters_encoding (__main__.ArrayDecoderE2E.test_special_characters_encoding)
+Test 8: Special characters in payload ... ✓ Test 8 PASSED: Special characters encoded/decoded correctly
+ok
+test_vbs_array_syntax_validity (__main__.ArrayDecoderE2E.test_vbs_array_syntax_validity)
+Test 6: Generated VBS array syntax is valid ... ✓ Test 6 PASSED: VBS syntax structure validated (array: arr_b_UWIWmp, 2 assignments)
+ok
+test_vbs_code_has_no_syntax_errors (__main__.ArrayDecoderE2E.test_vbs_code_has_no_syntax_errors)
+Test 12: Generated VBS code passes basic syntax checks ... ✓ Test 12 PASSED: All VBS syntax checks passed
+ok
+test_array_vs_other_decoders (__main__.ArrayDecoderIntegration.test_array_vs_other_decoders)
+Test 16: Array decoder produces different output than other methods ... ✓ Test 16 PASSED: Array decoder produces distinct code
+ok
+test_cache_effectiveness (__main__.ArrayDecoderIntegration.test_cache_effectiveness)
+Test 17: Encoder caching works efficiently ... ✓ Test 17 PASSED: Caching effective (first: 0.007ms, cached: 0.001ms)
+ok
+test_random_name_generation (__main__.ArrayDecoderIntegration.test_random_name_generation)
+Test 18: Random names are generated properly ... ✓ Test 18 PASSED: Generated 24 unique variable names
+ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.002s
+
+OK
+
+======================================================================
+ARRAY DECODER END-TO-END TEST SUMMARY
+======================================================================
+Tests Run: 18
+Successes: 18
+Failures: 0
+Errors: 0
+======================================================================
+✓ ALL TESTS PASSED

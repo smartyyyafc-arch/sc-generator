@@ -1,0 +1,192 @@
+
+================================================================================
+COMPREHENSIVE HEX DECODER TEST SUITE
+Testing: Edge Cases, Special Characters, Boundary Conditions
+================================================================================
+
+test_ascii_printable_range (__main__.TestHexEncodingBasics.test_ascii_printable_range)
+Test all printable ASCII characters ... ✓ ASCII printable range test passed: 94 chars encoded and decoded correctly
+ok
+test_control_characters (__main__.TestHexEncodingBasics.test_control_characters)
+Test control characters (tab, newline, carriage return) ... ✓ Control characters test passed: tab/newline/CR -> '090a0d'
+ok
+test_empty_string (__main__.TestHexEncodingBasics.test_empty_string)
+Test encoding/decoding empty string ... ✓ Empty string test passed: '' -> '' -> ''
+ok
+test_numeric_string (__main__.TestHexEncodingBasics.test_numeric_string)
+Test numeric string encoding ... ✓ Numeric string test passed: '0123456789' -> '30313233343536373839'
+ok
+test_single_character (__main__.TestHexEncodingBasics.test_single_character)
+Test single character encoding ... ✓ Single character test passed: 'A' -> '41'
+ok
+test_spaces_and_whitespace (__main__.TestHexEncodingBasics.test_spaces_and_whitespace)
+Test various whitespace characters ... ✓ Whitespace test passed: encoded and decoded correctly
+ok
+test_base64_like_content (__main__.TestHexSpecialCharacters.test_base64_like_content)
+Test Base64-like content ... ✓ Base64-like content test passed
+ok
+test_file_paths (__main__.TestHexSpecialCharacters.test_file_paths)
+Test file path patterns ... ✓ File path test passed
+ok
+test_hex_string_as_input (__main__.TestHexSpecialCharacters.test_hex_string_as_input)
+Test hex string being treated as regular text ... ✓ Hex string as input test passed (treats as text, not conversion)
+ok
+test_json_payload (__main__.TestHexSpecialCharacters.test_json_payload)
+Test JSON payload encoding ... ✓ JSON payload test passed
+ok
+test_powershell_syntax (__main__.TestHexSpecialCharacters.test_powershell_syntax)
+Test PowerShell-specific syntax ... ✓ PowerShell syntax test passed
+ok
+test_quotes_and_escapes (__main__.TestHexSpecialCharacters.test_quotes_and_escapes)
+Test various quote and escape combinations ... ✓ Quotes and escapes test passed
+ok
+test_registry_paths (__main__.TestHexSpecialCharacters.test_registry_paths)
+Test Windows registry path patterns ... ✓ Registry path test passed
+ok
+test_shell_special_chars (__main__.TestHexSpecialCharacters.test_shell_special_chars)
+Test shell special characters ... ✓ Shell special chars test passed: 'cmd.exe /c echo $PATH && dir || exit'
+ok
+test_sql_injection_pattern (__main__.TestHexSpecialCharacters.test_sql_injection_pattern)
+Test SQL injection-like pattern ... ✓ SQL pattern test passed
+ok
+test_unicode_escape_sequences (__main__.TestHexSpecialCharacters.test_unicode_escape_sequences)
+Test Unicode escape sequences ... ✓ Unicode escape sequences test passed
+ok
+test_url_encoding (__main__.TestHexSpecialCharacters.test_url_encoding)
+Test URL encoding patterns ... ✓ URL encoding test passed
+ok
+test_all_null_bytes (__main__.TestHexBoundaryConditions.test_all_null_bytes)
+Test all null bytes ... ✓ Null bytes test passed
+ok
+test_alternating_pattern (__main__.TestHexBoundaryConditions.test_alternating_pattern)
+Test alternating byte pattern ... ✓ Alternating pattern (1000 chars) test passed
+ok
+test_hex_string_case_insensitive (__main__.TestHexBoundaryConditions.test_hex_string_case_insensitive)
+Test that hex is case-insensitive ... ✓ Case-insensitive hex test passed
+ok
+test_hex_string_length_odd (__main__.TestHexBoundaryConditions.test_hex_string_length_odd)
+Test handling of odd-length hex strings (invalid) ... ✓ Odd-length hex string correctly raises ValueError: non-hexadecimal number found in fromhex() arg at position 11
+ok
+test_maximum_byte_value (__main__.TestHexBoundaryConditions.test_maximum_byte_value)
+Test maximum byte value (255) ... ✓ Maximum byte values test passed
+ok
+test_repeated_characters (__main__.TestHexBoundaryConditions.test_repeated_characters)
+Test repeated characters ... ✓ Repeated characters test passed for all chars
+ok
+test_single_byte_values (__main__.TestHexBoundaryConditions.test_single_byte_values)
+Test all single byte values (0-255) ... ✓ All single byte values (0-255) test passed
+ok
+test_very_long_string (__main__.TestHexBoundaryConditions.test_very_long_string)
+Test very long string encoding ... ✓ Very long string (10000 chars) test passed
+ok
+test_variants_empty_string (__main__.TestHexDecoderVariants.test_variants_empty_string)
+Test variants with empty string ... ✓ Variants empty string test passed
+ok
+test_variants_long_command (__main__.TestHexDecoderVariants.test_variants_long_command)
+Test variants with very long command ... ✓ Variants long command test passed (length: 862)
+ok
+test_variants_special_chars (__main__.TestHexDecoderVariants.test_variants_special_chars)
+Test variants with special characters ... ✓ Variants test passed for: echo 'test' && ls
+✓ Variants test passed for: cmd /c "echo test"
+✓ Variants test passed for: powershell -Command "Write-Host $env:PATH"
+✓ Variants test passed for: reg.exe query HKLM\Software\Microsoft
+✓ Variants test passed for: C:\Windows\System32\calc.exe
+ok
+test_hardened_binary_empty (__main__.TestHardenedHexDecoder.test_hardened_binary_empty)
+Test hardened binary decoder with minimal hex ... ✓ Hardened empty binary test passed
+ok
+test_hardened_binary_various (__main__.TestHardenedHexDecoder.test_hardened_binary_various)
+Test hardened binary decoder with various sizes ... ✓ Hardened binary test passed (size: 2 bytes)
+✓ Hardened binary test passed (size: 4 bytes)
+✓ Hardened binary test passed (size: 102 bytes)
+✓ Hardened binary test passed (size: 258 bytes)
+ok
+test_hardened_empty_command (__main__.TestHardenedHexDecoder.test_hardened_empty_command)
+Test hardened decoder with empty command ... ✓ Hardened empty command test passed
+ok
+test_hardened_obfuscation_layers (__main__.TestHardenedHexDecoder.test_hardened_obfuscation_layers)
+Test that hardened decoder includes obfuscation layers ... ✓ Hardened obfuscation layers verification passed (7 layers)
+ok
+test_hardened_protection_level (__main__.TestHardenedHexDecoder.test_hardened_protection_level)
+Test that hardened decoder has proper protection level ... ✓ Hardened protection level verification passed
+ok
+test_hardened_script_empty (__main__.TestHardenedHexDecoder.test_hardened_script_empty)
+Test hardened script decoder with empty script ... ✓ Hardened empty script test passed
+ok
+test_hardened_script_special_chars (__main__.TestHardenedHexDecoder.test_hardened_script_special_chars)
+Test hardened script decoder with special characters ... ✓ Hardened script test passed: WScript.Echo 'Hello World'
+✓ Hardened script test passed: Set objShell = CreateObject("WScript.She
+✓ Hardened script test passed: 'Comment line
+Dim x
+x = 123
+ok
+test_hardened_special_chars (__main__.TestHardenedHexDecoder.test_hardened_special_chars)
+Test hardened decoder with special characters ... ✓ Hardened command test passed: calc.exe
+✓ Hardened command test passed: cmd.exe /c whoami
+✓ Hardened command test passed: powershell.exe -NoProfile -Command "Write-Host 'Test'"
+✓ Hardened command test passed: C:\Windows\System32\notepad.exe C:\temp\file.txt
+ok
+test_all_printable_ascii (__main__.TestHexEncodingEdgeCases.test_all_printable_ascii)
+Test all printable ASCII combined ... ✓ All printable ASCII test passed (95 chars)
+ok
+test_command_with_pipes_and_redirects (__main__.TestHexEncodingEdgeCases.test_command_with_pipes_and_redirects)
+Test command with shell pipes and redirects ... ✓ Command with pipes and redirects test passed
+ok
+test_mixed_encodings_representation (__main__.TestHexEncodingEdgeCases.test_mixed_encodings_representation)
+Test mixed encoding representation (as text) ... ✓ Mixed encodings representation test passed
+ok
+test_null_bytes_in_command (__main__.TestHexEncodingEdgeCases.test_null_bytes_in_command)
+Test null bytes embedded in command ... ✓ Null bytes in command test passed
+ok
+test_repeated_special_sequence (__main__.TestHexEncodingEdgeCases.test_repeated_special_sequence)
+Test repeated special sequences ... ✓ Repeated special sequences test passed
+ok
+test_vbscript_syntax (__main__.TestHexEncodingEdgeCases.test_vbscript_syntax)
+Test VBScript syntax ... ✓ VBScript syntax test passed
+ok
+test_windows_batch_syntax (__main__.TestHexEncodingEdgeCases.test_windows_batch_syntax)
+Test Windows batch script syntax ... ✓ Windows batch syntax test passed
+ok
+test_decoder_generation_with_edge_inputs (__main__.TestHexEncodingIntegration.test_decoder_generation_with_edge_inputs)
+Test that decoder generation works with edge case inputs ... ✓ Decoder generation test passed: Empty command
+✓ Decoder generation test passed: Single character
+✓ Decoder generation test passed: Very long command
+✓ Decoder generation test passed: Special characters only
+✓ Decoder generation test passed: Control characters only
+ok
+test_hex_format_validation (__main__.TestHexEncodingIntegration.test_hex_format_validation)
+Test hex format is always lowercase alphanumeric ... ✓ Hex format validation test passed
+ok
+test_hex_length_doubling (__main__.TestHexEncodingIntegration.test_hex_length_doubling)
+Test that hex encoding doubles the character count for ASCII ... ✓ Hex length doubling test passed
+ok
+test_roundtrip_consistency (__main__.TestHexEncodingIntegration.test_roundtrip_consistency)
+Test that encoding-decoding roundtrip is consistent ... ✓ Roundtrip consistency test passed for 10 inputs
+ok
+test_hex_encoding_size_growth (__main__.TestPerformanceMetrics.test_hex_encoding_size_growth)
+Test hex encoding size growth pattern ... ✓ Size     1 bytes -> hex      2 bytes (2x growth)
+✓ Size    10 bytes -> hex     20 bytes (2x growth)
+✓ Size   100 bytes -> hex    200 bytes (2x growth)
+✓ Size  1000 bytes -> hex   2000 bytes (2x growth)
+✓ Size 10000 bytes -> hex  20000 bytes (2x growth)
+ok
+test_obfuscation_overhead (__main__.TestPerformanceMetrics.test_obfuscation_overhead)
+Test obfuscation adds expected overhead ... ✓ Obfuscation overhead: 129.6% for 'calc.exe'
+✓ Obfuscation overhead: 121.5% for 'cmd.exe /c whoami'
+✓ Obfuscation overhead: 123.6% for 'powershell -NoProfile -Command'
+ok
+
+----------------------------------------------------------------------
+Ran 49 tests in 0.002s
+
+OK
+
+================================================================================
+TEST SUMMARY
+================================================================================
+Tests run: 49
+Successes: 49
+Failures: 0
+Errors: 0
+================================================================================
+

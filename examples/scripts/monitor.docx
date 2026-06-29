@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# System monitoring script
+LOGFILE="/var/log/monitor.log"
+THRESHOLD=80
+
+check_disk_usage() {
+    usage=$(df / | awk 'NR==2 {print $5}' | cut -d'%' -f1)
+    if [ "$usage" -gt "$THRESHOLD" ]; then
+        echo "WARNING: Disk usage at $usage%" >> "$LOGFILE"
+    fi
+}
+
+check_memory() {
+    # Check system memory
+    free -h | grep Mem
+}
+
+main() {
+    check_disk_usage
+    check_memory
+}
+
+main "$@"

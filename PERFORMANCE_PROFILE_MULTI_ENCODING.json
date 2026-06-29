@@ -1,0 +1,123 @@
+{
+  "test_date": "2026-06-29 14:59:13",
+  "system_info": {
+    "python_version": "3.11.15",
+    "platform": "linux"
+  },
+  "test_summary": {
+    "total_tests": 3,
+    "successful_tests": 3,
+    "payload_sizes_kb": [
+      5,
+      10,
+      20
+    ],
+    "total_test_time_seconds": 0.1490354663328617
+  },
+  "detailed_results": [
+    {
+      "payload_size": 5120,
+      "payload_size_kb": 5,
+      "encode_time_ms": 26.306275333202695,
+      "decode_time_ms": 6.972944333028863,
+      "total_time_ms": 33.279219666231555,
+      "encoded_size": 274412,
+      "encoded_size_kb": 267.98046875,
+      "compression_ratio": 53.59609375,
+      "throughput_encode_mbps": 0.18561398138478066,
+      "throughput_decode_mbps": 0.7002511803903982,
+      "throughput_total_mbps": 0.1467225658825947,
+      "layer1_time_pct": 2.179758520821179,
+      "layer2_time_pct": 41.05474925028509,
+      "layer3_time_pct": 56.765492228893734,
+      "variant_used": 1,
+      "success": true
+    },
+    {
+      "payload_size": 10240,
+      "payload_size_kb": 10,
+      "encode_time_ms": 36.91431466692544,
+      "decode_time_ms": 12.839534333276484,
+      "total_time_ms": 49.753849000201924,
+      "encoded_size": 437964,
+      "encoded_size_kb": 427.69921875,
+      "compression_ratio": 42.769921875,
+      "throughput_encode_mbps": 0.2645484573698404,
+      "throughput_decode_mbps": 0.7605902789394963,
+      "throughput_total_mbps": 0.19627878438028717,
+      "layer1_time_pct": 2.026869299610418,
+      "layer2_time_pct": 36.666143514294355,
+      "layer3_time_pct": 61.30698718609523,
+      "variant_used": 2,
+      "success": true
+    },
+    {
+      "payload_size": 20480,
+      "payload_size_kb": 20,
+      "encode_time_ms": 43.28880166667659,
+      "decode_time_ms": 22.713595999751607,
+      "total_time_ms": 66.0023976664282,
+      "encoded_size": 656172,
+      "encoded_size_kb": 640.79296875,
+      "compression_ratio": 32.0396484375,
+      "throughput_encode_mbps": 0.4511848156571868,
+      "throughput_decode_mbps": 0.8598924626560053,
+      "throughput_total_mbps": 0.2959172801374529,
+      "layer1_time_pct": 2.9147897501895605,
+      "layer2_time_pct": 24.349662411162043,
+      "layer3_time_pct": 72.7355478386484,
+      "variant_used": 1,
+      "success": true
+    }
+  ],
+  "performance_summary": {
+    "fastest_payload_kb": 5,
+    "slowest_payload_kb": 20,
+    "average_encode_throughput_mbps": 0.30044908480393595,
+    "average_decode_throughput_mbps": 0.7735779739952999,
+    "average_compression_ratio": 42.80188802083333
+  },
+  "encoding_characteristics": {
+    "description": "Hardened Multi-Encoding with 3 layers: Base64, Polymorphic Hex, Shuffled Array",
+    "security_features": [
+      "HMAC-SHA256 integrity verification per layer",
+      "4 polymorphic hex encoding variants",
+      "Array shuffling with position tracking",
+      "Random noise injection in Base64 layer",
+      "Variant-based encryption in Hex layer",
+      "Cryptographic checksum validation"
+    ],
+    "layer_details": {
+      "layer_1": {
+        "name": "Base64 + HMAC",
+        "description": "Encodes with random padding and HMAC-SHA256 integrity verification"
+      },
+      "layer_2": {
+        "name": "Polymorphic Hex",
+        "description": "Converts to hex using one of 4 variants: bit-inversion, interleaved, reversed-offset, XOR-mask",
+        "variant_count": 4
+      },
+      "layer_3": {
+        "name": "Shuffled Array",
+        "description": "Shuffles hex pairs and encodes position map in JSON format"
+      }
+    }
+  },
+  "scaling_analysis": {
+    "payload_5kb": {
+      "encode_ms": 26.306275333202695,
+      "decode_ms": 6.972944333028863,
+      "throughput_mbps": 0.1467225658825947
+    },
+    "payload_10kb": {
+      "encode_ms": 36.91431466692544,
+      "decode_ms": 12.839534333276484,
+      "throughput_mbps": 0.19627878438028717
+    },
+    "payload_20kb": {
+      "encode_ms": 43.28880166667659,
+      "decode_ms": 22.713595999751607,
+      "throughput_mbps": 0.2959172801374529
+    }
+  }
+}

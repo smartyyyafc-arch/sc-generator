@@ -1,0 +1,26 @@
+{
+  "total_examples": 8,
+  "obfuscation_layers": 9,
+  "memory_protection_modes": 6,
+  "default_stealth_level": 10,
+  "features": [
+    "Interface Obfuscation",
+    "CLSID Polymorphism",
+    "Method Indirection",
+    "Reflection Blocking",
+    "Timing Jitter",
+    "Call Stack Spoofing",
+    "API Wrapping",
+    "Type Library Obfuscation",
+    "Dynamic Proxy Pattern"
+  ],
+  "detection_evasion": [
+    "Static CLSID Detection (High)",
+    "Interface Enumeration (Very High)",
+    "API Hooking (High)",
+    "Behavioral Detection (High)",
+    "Stack Analysis (High)",
+    "Type Library Analysis (Very High)",
+    "Direct Interface Access (Very High)"
+  ]
+}

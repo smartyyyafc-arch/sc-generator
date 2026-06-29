@@ -1,0 +1,4 @@
+
+def secret_function():
+    print("This is hidden Python code!")
+    return 42

@@ -1,0 +1,3928 @@
+{
+  "summary": {
+    "total_tests": 432,
+    "successful_tests": 356,
+    "failed_tests": 76,
+    "success_rate": 0.8240740740740741,
+    "overall_reliability": 0.792309027777778
+  },
+  "method_ratings": {
+    "CreateObject(ProgID)": 0.8509351851851855,
+    "CreateObject(CLSID)": 0.8309703703703704,
+    "GetObject(Running)": 0.893196296296296,
+    "GetObject(Moniker)": 0.7673981481481481,
+    "New Keyword": 0.8155370370370373,
+    "Remote DCOM": 0.6536018518518517,
+    "WMI Class": 0.8335481481481483,
+    "Registry Lookup": 0.6932851851851851
+  },
+  "version_ratings": {
+    "5.1": 0.7118541666666669,
+    "6.0": 0.8158055555555561,
+    "6.1": 0.8552222222222223,
+    "6.2": 0.791916666666667,
+    "10.0": 0.822972222222222,
+    "10.0.22000": 0.7560833333333336
+  },
+  "object_ratings": {
+    "Excel.Application": 0.7666874999999999,
+    "Word.Application": 0.7666874999999999,
+    "PowerPoint.Application": 0.6741562499999999,
+    "WScript.Shell": 0.8518749999999998,
+    "Shell.Application": 0.7490625,
+    "WScript.Network": 0.8518749999999998,
+    "WbemScripting.SWbemLocator": 0.8518749999999998,
+    "ADODB.Connection": 0.7666874999999999,
+    "MSXML2.DOMDocument": 0.8518749999999998
+  },
+  "detailed_results": [
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "Excel.Application",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.855,
+      "performance_impact": 0.3,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "Excel.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.8280000000000001,
+      "performance_impact": 0.3,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "Excel.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.855,
+      "performance_impact": 0.3,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "Excel.Application",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.81,
+      "performance_impact": 0.3,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "Excel.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.8280000000000001,
+      "performance_impact": 0.3,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "Excel.Application",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.765,
+      "performance_impact": 0.3,
+      "notes": "Requires application installation; Office compatibility enhanced"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "Word.Application",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.855,
+      "performance_impact": 0.3,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "Word.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.8280000000000001,
+      "performance_impact": 0.3,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "Word.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.855,
+      "performance_impact": 0.3,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "Word.Application",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.81,
+      "performance_impact": 0.3,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "Word.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.8280000000000001,
+      "performance_impact": 0.3,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "Word.Application",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.765,
+      "performance_impact": 0.3,
+      "notes": "Requires application installation; Office compatibility enhanced"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "5.1",
+      "success": false,
+      "reliability_score": 0.2565,
+      "performance_impact": 0.3,
+      "notes": "Not officially supported on this version; Requires application installation"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.8280000000000001,
+      "performance_impact": 0.3,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.855,
+      "performance_impact": 0.3,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.81,
+      "performance_impact": 0.3,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.8280000000000001,
+      "performance_impact": 0.3,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.765,
+      "performance_impact": 0.3,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "WScript.Shell",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.95,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "WScript.Shell",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.92,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "WScript.Shell",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.95,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "WScript.Shell",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.9,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "WScript.Shell",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.92,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "WScript.Shell",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.85,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "Shell.Application",
+      "windows_version": "5.1",
+      "success": false,
+      "reliability_score": 0.285,
+      "performance_impact": 0.3,
+      "notes": "Not officially supported on this version"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "Shell.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.92,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "Shell.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.95,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "Shell.Application",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.9,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "Shell.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.92,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "Shell.Application",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.85,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "WScript.Network",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.95,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "WScript.Network",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.92,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "WScript.Network",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.95,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "WScript.Network",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.9,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "WScript.Network",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.92,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "WScript.Network",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.85,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.95,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.92,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.95,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.9,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.92,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.85,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "ADODB.Connection",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.855,
+      "performance_impact": 0.3,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "ADODB.Connection",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.8280000000000001,
+      "performance_impact": 0.3,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "ADODB.Connection",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.855,
+      "performance_impact": 0.3,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "ADODB.Connection",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.81,
+      "performance_impact": 0.3,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "ADODB.Connection",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.8280000000000001,
+      "performance_impact": 0.3,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "ADODB.Connection",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.765,
+      "performance_impact": 0.3,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.95,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.92,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.95,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.9,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.92,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(ProgID)",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.85,
+      "performance_impact": 0.3,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "Excel.Application",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.8280000000000001,
+      "performance_impact": 0.2,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "Excel.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.81,
+      "performance_impact": 0.2,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "Excel.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.8370000000000001,
+      "performance_impact": 0.2,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "Excel.Application",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.792,
+      "performance_impact": 0.2,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "Excel.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.81,
+      "performance_impact": 0.2,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "Excel.Application",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.747,
+      "performance_impact": 0.2,
+      "notes": "Requires application installation; Office compatibility enhanced"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "Word.Application",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.8280000000000001,
+      "performance_impact": 0.2,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "Word.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.81,
+      "performance_impact": 0.2,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "Word.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.8370000000000001,
+      "performance_impact": 0.2,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "Word.Application",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.792,
+      "performance_impact": 0.2,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "Word.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.81,
+      "performance_impact": 0.2,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "Word.Application",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.747,
+      "performance_impact": 0.2,
+      "notes": "Requires application installation; Office compatibility enhanced"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "5.1",
+      "success": false,
+      "reliability_score": 0.24840000000000004,
+      "performance_impact": 0.2,
+      "notes": "Not officially supported on this version; Requires application installation"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.81,
+      "performance_impact": 0.2,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.8370000000000001,
+      "performance_impact": 0.2,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.792,
+      "performance_impact": 0.2,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.81,
+      "performance_impact": 0.2,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.747,
+      "performance_impact": 0.2,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "WScript.Shell",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.92,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "WScript.Shell",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.9,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "WScript.Shell",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.93,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "WScript.Shell",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.88,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "WScript.Shell",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.9,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "WScript.Shell",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.83,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "Shell.Application",
+      "windows_version": "5.1",
+      "success": false,
+      "reliability_score": 0.276,
+      "performance_impact": 0.2,
+      "notes": "Not officially supported on this version"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "Shell.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.9,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "Shell.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.93,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "Shell.Application",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.88,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "Shell.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.9,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "Shell.Application",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.83,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "WScript.Network",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.92,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "WScript.Network",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.9,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "WScript.Network",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.93,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "WScript.Network",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.88,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "WScript.Network",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.9,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "WScript.Network",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.83,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.92,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.9,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.93,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.88,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.9,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.83,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "ADODB.Connection",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.8280000000000001,
+      "performance_impact": 0.2,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "ADODB.Connection",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.81,
+      "performance_impact": 0.2,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "ADODB.Connection",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.8370000000000001,
+      "performance_impact": 0.2,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "ADODB.Connection",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.792,
+      "performance_impact": 0.2,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "ADODB.Connection",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.81,
+      "performance_impact": 0.2,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "ADODB.Connection",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.747,
+      "performance_impact": 0.2,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.92,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.9,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.93,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.88,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.9,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "CreateObject(CLSID)",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.83,
+      "performance_impact": 0.2,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "Excel.Application",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.882,
+      "performance_impact": 0.1,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "Excel.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.864,
+      "performance_impact": 0.1,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "Excel.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.873,
+      "performance_impact": 0.1,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "Excel.Application",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.855,
+      "performance_impact": 0.1,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "Excel.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.864,
+      "performance_impact": 0.1,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "Excel.Application",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.846,
+      "performance_impact": 0.1,
+      "notes": "Requires application installation; Office compatibility enhanced"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "Word.Application",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.882,
+      "performance_impact": 0.1,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "Word.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.864,
+      "performance_impact": 0.1,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "Word.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.873,
+      "performance_impact": 0.1,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "Word.Application",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.855,
+      "performance_impact": 0.1,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "Word.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.864,
+      "performance_impact": 0.1,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "Word.Application",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.846,
+      "performance_impact": 0.1,
+      "notes": "Requires application installation; Office compatibility enhanced"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "5.1",
+      "success": false,
+      "reliability_score": 0.2646,
+      "performance_impact": 0.1,
+      "notes": "Not officially supported on this version; Requires application installation"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.864,
+      "performance_impact": 0.1,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.873,
+      "performance_impact": 0.1,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.855,
+      "performance_impact": 0.1,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.864,
+      "performance_impact": 0.1,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.846,
+      "performance_impact": 0.1,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "WScript.Shell",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.98,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "WScript.Shell",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.96,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "WScript.Shell",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.97,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "WScript.Shell",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.95,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "WScript.Shell",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.96,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "WScript.Shell",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.94,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "Shell.Application",
+      "windows_version": "5.1",
+      "success": false,
+      "reliability_score": 0.294,
+      "performance_impact": 0.1,
+      "notes": "Not officially supported on this version"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "Shell.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.96,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "Shell.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.97,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "Shell.Application",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.95,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "Shell.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.96,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "Shell.Application",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.94,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "WScript.Network",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.98,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "WScript.Network",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.96,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "WScript.Network",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.97,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "WScript.Network",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.95,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "WScript.Network",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.96,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "WScript.Network",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.94,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.98,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.96,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.97,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.95,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.96,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.94,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "ADODB.Connection",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.882,
+      "performance_impact": 0.1,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "ADODB.Connection",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.864,
+      "performance_impact": 0.1,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "ADODB.Connection",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.873,
+      "performance_impact": 0.1,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "ADODB.Connection",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.855,
+      "performance_impact": 0.1,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "ADODB.Connection",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.864,
+      "performance_impact": 0.1,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "ADODB.Connection",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.846,
+      "performance_impact": 0.1,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.98,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.96,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.97,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.95,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.96,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Running)",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.94,
+      "performance_impact": 0.1,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "Excel.Application",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.765,
+      "performance_impact": 0.4,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "Excel.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.738,
+      "performance_impact": 0.4,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "Excel.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.783,
+      "performance_impact": 0.4,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "Excel.Application",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.7200000000000001,
+      "performance_impact": 0.4,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "Excel.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.747,
+      "performance_impact": 0.4,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "Excel.Application",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.7020000000000001,
+      "performance_impact": 0.4,
+      "notes": "Requires application installation; Office compatibility enhanced"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "Word.Application",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.765,
+      "performance_impact": 0.4,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "Word.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.738,
+      "performance_impact": 0.4,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "Word.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.783,
+      "performance_impact": 0.4,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "Word.Application",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.7200000000000001,
+      "performance_impact": 0.4,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "Word.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.747,
+      "performance_impact": 0.4,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "Word.Application",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.7020000000000001,
+      "performance_impact": 0.4,
+      "notes": "Requires application installation; Office compatibility enhanced"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "5.1",
+      "success": false,
+      "reliability_score": 0.2295,
+      "performance_impact": 0.4,
+      "notes": "Not officially supported on this version; Requires application installation"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.738,
+      "performance_impact": 0.4,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.783,
+      "performance_impact": 0.4,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.7200000000000001,
+      "performance_impact": 0.4,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.747,
+      "performance_impact": 0.4,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.7020000000000001,
+      "performance_impact": 0.4,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "WScript.Shell",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.85,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "WScript.Shell",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.82,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "WScript.Shell",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.87,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "WScript.Shell",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.8,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "WScript.Shell",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.83,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "WScript.Shell",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.78,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "Shell.Application",
+      "windows_version": "5.1",
+      "success": false,
+      "reliability_score": 0.255,
+      "performance_impact": 0.4,
+      "notes": "Not officially supported on this version"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "Shell.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.82,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "Shell.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.87,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "Shell.Application",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.8,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "Shell.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.83,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "Shell.Application",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.78,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "WScript.Network",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.85,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "WScript.Network",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.82,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "WScript.Network",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.87,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "WScript.Network",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.8,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "WScript.Network",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.83,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "WScript.Network",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.78,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.85,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.82,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.87,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.8,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.83,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.78,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "ADODB.Connection",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.765,
+      "performance_impact": 0.4,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "ADODB.Connection",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.738,
+      "performance_impact": 0.4,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "ADODB.Connection",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.783,
+      "performance_impact": 0.4,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "ADODB.Connection",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.7200000000000001,
+      "performance_impact": 0.4,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "ADODB.Connection",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.747,
+      "performance_impact": 0.4,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "ADODB.Connection",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.7020000000000001,
+      "performance_impact": 0.4,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.85,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.82,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.87,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.8,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.83,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "GetObject(Moniker)",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.78,
+      "performance_impact": 0.4,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "Excel.Application",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.81,
+      "performance_impact": 0.15,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "Excel.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.792,
+      "performance_impact": 0.15,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "Excel.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.8280000000000001,
+      "performance_impact": 0.15,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "Excel.Application",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.774,
+      "performance_impact": 0.15,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "Excel.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.801,
+      "performance_impact": 0.15,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "Excel.Application",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.7290000000000001,
+      "performance_impact": 0.15,
+      "notes": "Requires application installation; Office compatibility enhanced"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "Word.Application",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.81,
+      "performance_impact": 0.15,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "Word.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.792,
+      "performance_impact": 0.15,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "Word.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.8280000000000001,
+      "performance_impact": 0.15,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "Word.Application",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.774,
+      "performance_impact": 0.15,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "Word.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.801,
+      "performance_impact": 0.15,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "Word.Application",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.7290000000000001,
+      "performance_impact": 0.15,
+      "notes": "Requires application installation; Office compatibility enhanced"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "5.1",
+      "success": false,
+      "reliability_score": 0.24300000000000002,
+      "performance_impact": 0.15,
+      "notes": "Not officially supported on this version; Requires application installation"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.792,
+      "performance_impact": 0.15,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.8280000000000001,
+      "performance_impact": 0.15,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.774,
+      "performance_impact": 0.15,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.801,
+      "performance_impact": 0.15,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.7290000000000001,
+      "performance_impact": 0.15,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "WScript.Shell",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.9,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "WScript.Shell",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.88,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "WScript.Shell",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.92,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "WScript.Shell",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.86,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "WScript.Shell",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.89,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "WScript.Shell",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.81,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "Shell.Application",
+      "windows_version": "5.1",
+      "success": false,
+      "reliability_score": 0.27,
+      "performance_impact": 0.15,
+      "notes": "Not officially supported on this version"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "Shell.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.88,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "Shell.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.92,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "Shell.Application",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.86,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "Shell.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.89,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "Shell.Application",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.81,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "WScript.Network",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.9,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "WScript.Network",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.88,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "WScript.Network",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.92,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "WScript.Network",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.86,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "WScript.Network",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.89,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "WScript.Network",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.81,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.9,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.88,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.92,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.86,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.89,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.81,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "ADODB.Connection",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.81,
+      "performance_impact": 0.15,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "ADODB.Connection",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.792,
+      "performance_impact": 0.15,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "ADODB.Connection",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.8280000000000001,
+      "performance_impact": 0.15,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "ADODB.Connection",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.774,
+      "performance_impact": 0.15,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "ADODB.Connection",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.801,
+      "performance_impact": 0.15,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "ADODB.Connection",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.7290000000000001,
+      "performance_impact": 0.15,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.9,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.88,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.92,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.86,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.89,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "New Keyword",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.81,
+      "performance_impact": 0.15,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "Excel.Application",
+      "windows_version": "5.1",
+      "success": false,
+      "reliability_score": 0.675,
+      "performance_impact": 0.8,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "Excel.Application",
+      "windows_version": "6.0",
+      "success": false,
+      "reliability_score": 0.63,
+      "performance_impact": 0.8,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "Excel.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.7200000000000001,
+      "performance_impact": 0.8,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "Excel.Application",
+      "windows_version": "6.2",
+      "success": false,
+      "reliability_score": 0.5850000000000001,
+      "performance_impact": 0.8,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "Excel.Application",
+      "windows_version": "10.0",
+      "success": false,
+      "reliability_score": 0.648,
+      "performance_impact": 0.8,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "Excel.Application",
+      "windows_version": "10.0.22000",
+      "success": false,
+      "reliability_score": 0.54,
+      "performance_impact": 0.8,
+      "notes": "Requires application installation; Office compatibility enhanced"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "Word.Application",
+      "windows_version": "5.1",
+      "success": false,
+      "reliability_score": 0.675,
+      "performance_impact": 0.8,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "Word.Application",
+      "windows_version": "6.0",
+      "success": false,
+      "reliability_score": 0.63,
+      "performance_impact": 0.8,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "Word.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.7200000000000001,
+      "performance_impact": 0.8,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "Word.Application",
+      "windows_version": "6.2",
+      "success": false,
+      "reliability_score": 0.5850000000000001,
+      "performance_impact": 0.8,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "Word.Application",
+      "windows_version": "10.0",
+      "success": false,
+      "reliability_score": 0.648,
+      "performance_impact": 0.8,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "Word.Application",
+      "windows_version": "10.0.22000",
+      "success": false,
+      "reliability_score": 0.54,
+      "performance_impact": 0.8,
+      "notes": "Requires application installation; Office compatibility enhanced"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "5.1",
+      "success": false,
+      "reliability_score": 0.20249999999999999,
+      "performance_impact": 0.8,
+      "notes": "Not officially supported on this version; Requires application installation"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "6.0",
+      "success": false,
+      "reliability_score": 0.63,
+      "performance_impact": 0.8,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.7200000000000001,
+      "performance_impact": 0.8,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "6.2",
+      "success": false,
+      "reliability_score": 0.5850000000000001,
+      "performance_impact": 0.8,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "10.0",
+      "success": false,
+      "reliability_score": 0.648,
+      "performance_impact": 0.8,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "10.0.22000",
+      "success": false,
+      "reliability_score": 0.54,
+      "performance_impact": 0.8,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "WScript.Shell",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.75,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "WScript.Shell",
+      "windows_version": "6.0",
+      "success": false,
+      "reliability_score": 0.7,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "WScript.Shell",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.8,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "WScript.Shell",
+      "windows_version": "6.2",
+      "success": false,
+      "reliability_score": 0.65,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "WScript.Shell",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.72,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "WScript.Shell",
+      "windows_version": "10.0.22000",
+      "success": false,
+      "reliability_score": 0.6,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "Shell.Application",
+      "windows_version": "5.1",
+      "success": false,
+      "reliability_score": 0.22499999999999998,
+      "performance_impact": 0.8,
+      "notes": "Not officially supported on this version"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "Shell.Application",
+      "windows_version": "6.0",
+      "success": false,
+      "reliability_score": 0.7,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "Shell.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.8,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "Shell.Application",
+      "windows_version": "6.2",
+      "success": false,
+      "reliability_score": 0.65,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "Shell.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.72,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "Shell.Application",
+      "windows_version": "10.0.22000",
+      "success": false,
+      "reliability_score": 0.6,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "WScript.Network",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.75,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "WScript.Network",
+      "windows_version": "6.0",
+      "success": false,
+      "reliability_score": 0.7,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "WScript.Network",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.8,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "WScript.Network",
+      "windows_version": "6.2",
+      "success": false,
+      "reliability_score": 0.65,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "WScript.Network",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.72,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "WScript.Network",
+      "windows_version": "10.0.22000",
+      "success": false,
+      "reliability_score": 0.6,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.75,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "6.0",
+      "success": false,
+      "reliability_score": 0.7,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.8,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "6.2",
+      "success": false,
+      "reliability_score": 0.65,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.72,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "10.0.22000",
+      "success": false,
+      "reliability_score": 0.6,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "ADODB.Connection",
+      "windows_version": "5.1",
+      "success": false,
+      "reliability_score": 0.675,
+      "performance_impact": 0.8,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "ADODB.Connection",
+      "windows_version": "6.0",
+      "success": false,
+      "reliability_score": 0.63,
+      "performance_impact": 0.8,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "ADODB.Connection",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.7200000000000001,
+      "performance_impact": 0.8,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "ADODB.Connection",
+      "windows_version": "6.2",
+      "success": false,
+      "reliability_score": 0.5850000000000001,
+      "performance_impact": 0.8,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "ADODB.Connection",
+      "windows_version": "10.0",
+      "success": false,
+      "reliability_score": 0.648,
+      "performance_impact": 0.8,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "ADODB.Connection",
+      "windows_version": "10.0.22000",
+      "success": false,
+      "reliability_score": 0.54,
+      "performance_impact": 0.8,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.75,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "6.0",
+      "success": false,
+      "reliability_score": 0.7,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.8,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "6.2",
+      "success": false,
+      "reliability_score": 0.65,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.72,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Remote DCOM",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "10.0.22000",
+      "success": false,
+      "reliability_score": 0.6,
+      "performance_impact": 0.8,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "Excel.Application",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.792,
+      "performance_impact": 0.5,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "Excel.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.81,
+      "performance_impact": 0.5,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "Excel.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.8280000000000001,
+      "performance_impact": 0.5,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "Excel.Application",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.801,
+      "performance_impact": 0.5,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "Excel.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.8190000000000001,
+      "performance_impact": 0.5,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "Excel.Application",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.783,
+      "performance_impact": 0.5,
+      "notes": "Requires application installation; Office compatibility enhanced"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "Word.Application",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.792,
+      "performance_impact": 0.5,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "Word.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.81,
+      "performance_impact": 0.5,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "Word.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.8280000000000001,
+      "performance_impact": 0.5,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "Word.Application",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.801,
+      "performance_impact": 0.5,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "Word.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.8190000000000001,
+      "performance_impact": 0.5,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "Word.Application",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.783,
+      "performance_impact": 0.5,
+      "notes": "Requires application installation; Office compatibility enhanced"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "5.1",
+      "success": false,
+      "reliability_score": 0.2376,
+      "performance_impact": 0.5,
+      "notes": "Not officially supported on this version; Requires application installation"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.81,
+      "performance_impact": 0.5,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.8280000000000001,
+      "performance_impact": 0.5,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.801,
+      "performance_impact": 0.5,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.8190000000000001,
+      "performance_impact": 0.5,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.783,
+      "performance_impact": 0.5,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "WScript.Shell",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.88,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "WScript.Shell",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.9,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "WScript.Shell",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.92,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "WScript.Shell",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.89,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "WScript.Shell",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.91,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "WScript.Shell",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.87,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "Shell.Application",
+      "windows_version": "5.1",
+      "success": false,
+      "reliability_score": 0.264,
+      "performance_impact": 0.5,
+      "notes": "Not officially supported on this version"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "Shell.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.9,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "Shell.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.92,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "Shell.Application",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.89,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "Shell.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.91,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "Shell.Application",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.87,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "WScript.Network",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.88,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "WScript.Network",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.9,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "WScript.Network",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.92,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "WScript.Network",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.89,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "WScript.Network",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.91,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "WScript.Network",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.87,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.88,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.9,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.92,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.89,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.91,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.87,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "ADODB.Connection",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.792,
+      "performance_impact": 0.5,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "ADODB.Connection",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.81,
+      "performance_impact": 0.5,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "ADODB.Connection",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.8280000000000001,
+      "performance_impact": 0.5,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "ADODB.Connection",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.801,
+      "performance_impact": 0.5,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "ADODB.Connection",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.8190000000000001,
+      "performance_impact": 0.5,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "ADODB.Connection",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.783,
+      "performance_impact": 0.5,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.88,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.9,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.92,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "6.2",
+      "success": true,
+      "reliability_score": 0.89,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.91,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "WMI Class",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "10.0.22000",
+      "success": true,
+      "reliability_score": 0.87,
+      "performance_impact": 0.5,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "Excel.Application",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.738,
+      "performance_impact": 0.6,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "Excel.Application",
+      "windows_version": "6.0",
+      "success": false,
+      "reliability_score": 0.675,
+      "performance_impact": 0.6,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "Excel.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.7200000000000001,
+      "performance_impact": 0.6,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "Excel.Application",
+      "windows_version": "6.2",
+      "success": false,
+      "reliability_score": 0.63,
+      "performance_impact": 0.6,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "Excel.Application",
+      "windows_version": "10.0",
+      "success": false,
+      "reliability_score": 0.684,
+      "performance_impact": 0.6,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "Excel.Application",
+      "windows_version": "10.0.22000",
+      "success": false,
+      "reliability_score": 0.5850000000000001,
+      "performance_impact": 0.6,
+      "notes": "Requires application installation; Registry paths may be virtualized; Office compatibility enhanced"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "Word.Application",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.738,
+      "performance_impact": 0.6,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "Word.Application",
+      "windows_version": "6.0",
+      "success": false,
+      "reliability_score": 0.675,
+      "performance_impact": 0.6,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "Word.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.7200000000000001,
+      "performance_impact": 0.6,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "Word.Application",
+      "windows_version": "6.2",
+      "success": false,
+      "reliability_score": 0.63,
+      "performance_impact": 0.6,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "Word.Application",
+      "windows_version": "10.0",
+      "success": false,
+      "reliability_score": 0.684,
+      "performance_impact": 0.6,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "Word.Application",
+      "windows_version": "10.0.22000",
+      "success": false,
+      "reliability_score": 0.5850000000000001,
+      "performance_impact": 0.6,
+      "notes": "Requires application installation; Registry paths may be virtualized; Office compatibility enhanced"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "5.1",
+      "success": false,
+      "reliability_score": 0.22139999999999999,
+      "performance_impact": 0.6,
+      "notes": "Not officially supported on this version; Requires application installation"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "6.0",
+      "success": false,
+      "reliability_score": 0.675,
+      "performance_impact": 0.6,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.7200000000000001,
+      "performance_impact": 0.6,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "6.2",
+      "success": false,
+      "reliability_score": 0.63,
+      "performance_impact": 0.6,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "10.0",
+      "success": false,
+      "reliability_score": 0.684,
+      "performance_impact": 0.6,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "PowerPoint.Application",
+      "windows_version": "10.0.22000",
+      "success": false,
+      "reliability_score": 0.5850000000000001,
+      "performance_impact": 0.6,
+      "notes": "Requires application installation; Registry paths may be virtualized"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "WScript.Shell",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.82,
+      "performance_impact": 0.6,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "WScript.Shell",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.75,
+      "performance_impact": 0.6,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "WScript.Shell",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.8,
+      "performance_impact": 0.6,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "WScript.Shell",
+      "windows_version": "6.2",
+      "success": false,
+      "reliability_score": 0.7,
+      "performance_impact": 0.6,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "WScript.Shell",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.76,
+      "performance_impact": 0.6,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "WScript.Shell",
+      "windows_version": "10.0.22000",
+      "success": false,
+      "reliability_score": 0.65,
+      "performance_impact": 0.6,
+      "notes": "Registry paths may be virtualized"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "Shell.Application",
+      "windows_version": "5.1",
+      "success": false,
+      "reliability_score": 0.24599999999999997,
+      "performance_impact": 0.6,
+      "notes": "Not officially supported on this version"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "Shell.Application",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.75,
+      "performance_impact": 0.6,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "Shell.Application",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.8,
+      "performance_impact": 0.6,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "Shell.Application",
+      "windows_version": "6.2",
+      "success": false,
+      "reliability_score": 0.7,
+      "performance_impact": 0.6,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "Shell.Application",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.76,
+      "performance_impact": 0.6,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "Shell.Application",
+      "windows_version": "10.0.22000",
+      "success": false,
+      "reliability_score": 0.65,
+      "performance_impact": 0.6,
+      "notes": "Registry paths may be virtualized"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "WScript.Network",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.82,
+      "performance_impact": 0.6,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "WScript.Network",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.75,
+      "performance_impact": 0.6,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "WScript.Network",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.8,
+      "performance_impact": 0.6,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "WScript.Network",
+      "windows_version": "6.2",
+      "success": false,
+      "reliability_score": 0.7,
+      "performance_impact": 0.6,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "WScript.Network",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.76,
+      "performance_impact": 0.6,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "WScript.Network",
+      "windows_version": "10.0.22000",
+      "success": false,
+      "reliability_score": 0.65,
+      "performance_impact": 0.6,
+      "notes": "Registry paths may be virtualized"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.82,
+      "performance_impact": 0.6,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.75,
+      "performance_impact": 0.6,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.8,
+      "performance_impact": 0.6,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "6.2",
+      "success": false,
+      "reliability_score": 0.7,
+      "performance_impact": 0.6,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.76,
+      "performance_impact": 0.6,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "WbemScripting.SWbemLocator",
+      "windows_version": "10.0.22000",
+      "success": false,
+      "reliability_score": 0.65,
+      "performance_impact": 0.6,
+      "notes": "Registry paths may be virtualized"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "ADODB.Connection",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.738,
+      "performance_impact": 0.6,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "ADODB.Connection",
+      "windows_version": "6.0",
+      "success": false,
+      "reliability_score": 0.675,
+      "performance_impact": 0.6,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "ADODB.Connection",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.7200000000000001,
+      "performance_impact": 0.6,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "ADODB.Connection",
+      "windows_version": "6.2",
+      "success": false,
+      "reliability_score": 0.63,
+      "performance_impact": 0.6,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "ADODB.Connection",
+      "windows_version": "10.0",
+      "success": false,
+      "reliability_score": 0.684,
+      "performance_impact": 0.6,
+      "notes": "Requires application installation"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "ADODB.Connection",
+      "windows_version": "10.0.22000",
+      "success": false,
+      "reliability_score": 0.5850000000000001,
+      "performance_impact": 0.6,
+      "notes": "Requires application installation; Registry paths may be virtualized"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "5.1",
+      "success": true,
+      "reliability_score": 0.82,
+      "performance_impact": 0.6,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "6.0",
+      "success": true,
+      "reliability_score": 0.75,
+      "performance_impact": 0.6,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "6.1",
+      "success": true,
+      "reliability_score": 0.8,
+      "performance_impact": 0.6,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "6.2",
+      "success": false,
+      "reliability_score": 0.7,
+      "performance_impact": 0.6,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "10.0",
+      "success": true,
+      "reliability_score": 0.76,
+      "performance_impact": 0.6,
+      "notes": "Compatible"
+    },
+    {
+      "method": "Registry Lookup",
+      "com_object": "MSXML2.DOMDocument",
+      "windows_version": "10.0.22000",
+      "success": false,
+      "reliability_score": 0.65,
+      "performance_impact": 0.6,
+      "notes": "Registry paths may be virtualized"
+    }
+  ]
+}

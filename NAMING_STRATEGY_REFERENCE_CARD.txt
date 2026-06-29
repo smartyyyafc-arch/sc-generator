@@ -1,0 +1,345 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║              ENVIRONMENT VARIABLE NAMING STRATEGY - REFERENCE CARD          ║
+║                                                                            ║
+║         Legitimate-Looking Variable Names for Stealth Storage             ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+QUICK LOOKUP: 13 STRATEGIES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+┌─ SYSTEM_LEGACY ────────────────────────────────────────────────────────────┐
+│ Legitimacy: ████████████████████ VERY HIGH                                  │
+│ Use Case: Windows enterprise environments                                   │
+│ Examples: TEMP_PATH_001, WINDIR_CONFIG_002, SYSTEMROOT_CACHE_003           │
+│ Prefixes: TEMP, TMP, WINDIR, SYSTEMROOT, ALLUSERSPROFILE, etc.             │
+│ Best For: Systems where Windows system vars are expected                    │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌─ COMMON_TOOLS ─────────────────────────────────────────────────────────────┐
+│ Legitimacy: ████████████████████ VERY HIGH                                  │
+│ Use Case: Developer machines, CI/CD pipelines                               │
+│ Examples: NODE_PATH_001, PYTHON_HOME_002, GIT_AUTHOR_003                   │
+│ Prefixes: NODE_, PYTHON_, GIT_, NPM_, YARN_, JAVA_, GO_, RUST_, etc.       │
+│ Best For: Development environments and build pipelines                      │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌─ BUILD_SYSTEM ─────────────────────────────────────────────────────────────┐
+│ Legitimacy: ████████████░░░░░░░░ HIGH                                       │
+│ Use Case: Build tools, compilation systems                                  │
+│ Examples: CMAKE_BUILD_001, GRADLE_CONFIG_002, MAVEN_OPTS_003              │
+│ Prefixes: CMAKE_, GRADLE_, MAVEN_, MAKE_, BAZEL_, BUILD_, etc.            │
+│ Best For: Build environments and project compilation                        │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌─ DEVELOPMENT ──────────────────────────────────────────────────────────────┐
+│ Legitimacy: ████████████░░░░░░░░ HIGH                                       │
+│ Use Case: Development and testing environments                              │
+│ Examples: DEBUG_MODE_001, TEST_DATA_002, SANDBOX_ENV_003                   │
+│ Prefixes: DEBUG_, DEV_, TEST_, SANDBOX_, STAGING_, QA_, etc.               │
+│ Best For: Local dev and testing setups                                      │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌─ FRAMEWORK ────────────────────────────────────────────────────────────────┐
+│ Legitimacy: ████████████░░░░░░░░ HIGH                                       │
+│ Use Case: Web application frameworks                                        │
+│ Examples: DJANGO_SETTINGS_001, FLASK_ENV_002, REACT_APP_003               │
+│ Prefixes: DJANGO_, FLASK_, REACT_, ANGULAR_, EXPRESS_, etc.               │
+│ Best For: Framework-based web applications                                  │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌─ CONTAINER ────────────────────────────────────────────────────────────────┐
+│ Legitimacy: ████████████░░░░░░░░ HIGH                                       │
+│ Use Case: Docker, Kubernetes, container orchestration                       │
+│ Examples: DOCKER_HOST_001, K8S_NAMESPACE_002, PODMAN_SOCKET_003           │
+│ Prefixes: DOCKER_, K8S_, KUBERNETES_, PODMAN_, CONTAINERD_, etc.          │
+│ Best For: Containerized deployments and orchestration                       │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌─ CI_CD ────────────────────────────────────────────────────────────────────┐
+│ Legitimacy: ████████████░░░░░░░░ HIGH                                       │
+│ Use Case: CI/CD pipelines and automation                                    │
+│ Examples: CI_COMMIT_001, GITHUB_TOKEN_002, GITLAB_CI_003                   │
+│ Prefixes: CI_, GITHUB_, GITLAB_, JENKINS_, CIRCLECI_, etc.                 │
+│ Best For: Continuous integration and deployment pipelines                   │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌─ CLOUD ────────────────────────────────────────────────────────────────────┐
+│ Legitimacy: ████████████░░░░░░░░ HIGH                                       │
+│ Use Case: Cloud provider deployments                                        │
+│ Examples: AWS_ACCESS_KEY_001, AZURE_TENANT_002, GCP_PROJECT_003           │
+│ Prefixes: AWS_, AZURE_, GCP_, GCLOUD_, HEROKU_, VERCEL_, etc.             │
+│ Best For: Cloud provider environments (AWS, Azure, GCP)                     │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌─ RUNTIME ──────────────────────────────────────────────────────────────────┐
+│ Legitimacy: ████████████░░░░░░░░ HIGH                                       │
+│ Use Case: Language runtime environments                                     │
+│ Examples: JAVA_HOME_001, RUST_FLAGS_002, PYTHONPATH_003                    │
+│ Prefixes: JAVA_, RUST_, GO_, PYTHON_, JVM_, etc.                           │
+│ Best For: Language-specific runtime configuration                           │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌─ HASH_BASED ───────────────────────────────────────────────────────────────┐
+│ Legitimacy: ██████████░░░░░░░░░░ MEDIUM (deterministic)                     │
+│ Use Case: Covert, reproducible scenarios                                    │
+│ Examples: NODE_A3F2C8D1, PYTHON_5B9E7C2F, CMAKE_73FF8ED4                   │
+│ Method: MD5 hash-based (deterministic for same input)                       │
+│ Best For: Scenarios requiring reproducibility                               │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌─ MIXED_CASE ───────────────────────────────────────────────────────────────┐
+│ Legitimacy: ██████████░░░░░░░░░░ MEDIUM (typo-like)                         │
+│ Use Case: Mimicking accidental capitalization                               │
+│ Examples: NoDeJS_PaTh_001, PyThOn_HoMe_002, GrAdLe_CoNfIg_003             │
+│ Method: Random case variation on real prefixes                              │
+│ Best For: Systems with weak case sensitivity monitoring                     │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌─ ACRONYM ──────────────────────────────────────────────────────────────────┐
+│ Legitimacy: ██████████░░░░░░░░░░ MEDIUM (plausible)                         │
+│ Use Case: Made-up but plausible acronyms                                    │
+│ Examples: MORIDA_PATH_001, BELOTA_CONFIG_002, TOSERA_VERSION_003          │
+│ Method: Consonant-vowel alternation (pronounceable)                         │
+│ Best For: Enterprise environments with custom naming                        │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌─ RANDOM_ALPHA ─────────────────────────────────────────────────────────────┐
+│ Legitimacy: ████░░░░░░░░░░░░░░░░ LOW (suspicious)                           │
+│ Use Case: High randomization, weak monitoring                               │
+│ Examples: XKQM7F9P2J_001, B4WL8N3R9T_002, AL1HRMIX3KHIY_003              │
+│ Method: Pure random alphanumeric (high entropy)                             │
+│ Best For: Testing, non-Windows environments                                 │
+└────────────────────────────────────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STRATEGY SELECTION BY ENVIRONMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Environment                    Primary Strategy      Fallback Strategies
+─────────────────────────────  ──────────────────── ─────────────────────────
+Windows Enterprise             SYSTEM_LEGACY        COMMON_TOOLS, BUILD_SYSTEM
+Developer Machine              COMMON_TOOLS         DEVELOPMENT, FRAMEWORK
+Build System                   BUILD_SYSTEM         CI_CD, COMMON_TOOLS
+CI/CD Pipeline                 CI_CD                BUILD_SYSTEM, CLOUD
+Kubernetes Cluster             CONTAINER            CLOUD, RUNTIME
+AWS/Cloud Environment          CLOUD                CI_CD, CONTAINER
+Web Application                FRAMEWORK            COMMON_TOOLS, DEVELOPMENT
+Local Development              DEVELOPMENT          COMMON_TOOLS, FRAMEWORK
+Covert/Stealthy Setup          HASH_BASED           MIXED_CASE, ACRONYM
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+LEGITIMATE SUFFIX COMBINATIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Common Real Suffixes Used in Variable Names:
+  PATH       HOME       ADDR       PORT       HOST       USER       PASS
+  KEY        TOKEN      ENDPOINT   URL        BASE       CONFIG     VERSION
+  DEBUG      LEVEL      MODE       TIMEOUT    MAX        MIN        SIZE
+  LIMIT      CACHE      BUFFER     POOL       OPTS       FLAGS      ENV
+  SETTINGS   DATA       ADDR       HOME       SOCKET     COMMAND
+
+Examples of Legitimate Combinations:
+  NODE_PATH, PYTHON_HOME, GIT_AUTHOR, NPM_TOKEN, CMAKE_BUILD, AWS_ACCESS_KEY
+  DEBUG_MODE, DOCKER_HOST, GITHUB_TOKEN, DJANGO_SETTINGS, FLASK_ENV
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+COMMON CONFIGURATION OPTIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+For NamingStrategyConfig:
+  primary_strategy              → Main strategy (e.g., COMMON_TOOLS)
+  fallback_strategies           → Backup strategies (list)
+  randomize_case                → True/False (case variation)
+  chunk_numbering               → "sequential", "hex", or "random"
+  seed                          → Optional int (for reproducibility)
+
+For EnhancedEnvVarConfig:
+  naming_strategy               → Primary strategy
+  fallback_naming_strategies    → List of fallback strategies
+  use_strategy_rotation         → True/False (rotate through strategies)
+  encoding                      → BASE64, HEX, RAW
+  scope                         → PROCESS, USER, or SYSTEM
+  track_metadata                → True/False (store metadata)
+  include_checksum              → True/False (SHA256)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+QUICK IMPORTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+from env_var_naming_strategy import (
+    EnvVarNamingStrategy,
+    NamingStrategy,
+    NamingStrategyConfig,
+    MultiStrategyNamer
+)
+
+from env_var_storage_with_naming import (
+    EnhancedEnvVarWriter,
+    EnhancedEnvVarConfig,
+    EnvVarScope,
+    EnvVarEncoding
+)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+COMMON USAGE PATTERNS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Pattern 1: Simple Single Strategy
+──────────────────────────────────
+config = NamingStrategyConfig(primary_strategy=NamingStrategy.COMMON_TOOLS)
+namer = EnvVarNamingStrategy(config)
+names = namer.generate_chunk_names("PAYLOAD_ID", 4)
+
+
+Pattern 2: With Rotation
+─────────────────────────
+config = NamingStrategyConfig(
+    primary_strategy=NamingStrategy.COMMON_TOOLS,
+    fallback_strategies=[NamingStrategy.BUILD_SYSTEM, NamingStrategy.CLOUD]
+)
+namer = EnvVarNamingStrategy(config)
+names = namer.generate_with_rotation("PAYLOAD_ID", 6)
+
+
+Pattern 3: Environment-Aware
+──────────────────────────────
+multi = MultiStrategyNamer()
+config = multi.generate_recommendation("cloud")
+namer = EnvVarNamingStrategy(config)
+names = namer.generate_chunk_names("PAYLOAD_ID", 4)
+
+
+Pattern 4: Full Storage Integration
+────────────────────────────────────
+storage_config = EnhancedEnvVarConfig(
+    naming_strategy=NamingStrategy.COMMON_TOOLS,
+    encoding=EnvVarEncoding.BASE64,
+    scope=EnvVarScope.PROCESS
+)
+writer = EnhancedEnvVarWriter(storage_config)
+success, names, msg = writer.write_to_env("SECRET_ID", payload)
+
+
+Pattern 5: Strategy Rotation with Storage
+──────────────────────────────────────────
+config = EnhancedEnvVarConfig(
+    use_strategy_rotation=True,
+    fallback_naming_strategies=[
+        NamingStrategy.BUILD_SYSTEM,
+        NamingStrategy.DEVELOPMENT,
+        NamingStrategy.CLOUD
+    ]
+)
+writer = EnhancedEnvVarWriter(config)
+success, names, msg = writer.write_to_env("SECRET_ID", payload)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DETECTION EVASION CAPABILITIES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Against Signature Matching:
+  ✓ Multiple strategies prevent fixed signatures
+  ✓ Real prefixes match legitimate tools
+  ✓ Rotation makes signatures obsolete
+
+Against Pattern Analysis:
+  ✓ Legitimate suffix combinations look intentional
+  ✓ Mix of strategies prevents pattern detection
+  ✓ Case variation obscures patterns
+
+Against Entropy Analysis:
+  ✓ Legitimate prefixes reduce entropy (looks good)
+  ✓ Blends with real environment variables
+  ✓ Not pure random (looks intentional)
+
+Against Regex Scanning:
+  ✓ Uses real platform conventions
+  ✓ Avoids suspicious patterns
+  ✓ Matches known tool naming schemes
+
+Against Behavioral Analysis:
+  ✓ Variable usage aligns with tool purposes
+  ✓ Metadata can be crafted to match expectations
+  ✓ Rotation prevents obvious behavior patterns
+
+Against Machine Learning:
+  ✓ Uses real prefixes (in training data)
+  ✓ Multiple strategies for variation
+  ✓ Hard to distinguish from legitimate variables
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VALIDATION REQUIREMENTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Environment Variable Name Requirements:
+  ✓ Must start with letter or underscore
+  ✓ Only alphanumeric and underscore allowed
+  ✓ Typically 8-32 characters
+  ✓ UPPER_CASE is standard on Unix/Windows
+  ✓ Underscores used as separators
+
+All strategies in this suite generate names that pass these requirements.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FILES PROVIDED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. env_var_naming_strategy.py
+   → Main implementation with all 13 strategies
+
+2. env_var_storage_with_naming.py
+   → Integration module for persistent storage
+
+3. ENV_VAR_NAMING_STRATEGY_GUIDE.md
+   → Comprehensive documentation (1000+ lines)
+
+4. NAMING_STRATEGY_SUMMARY.txt
+   → Implementation summary and quick reference
+
+5. NAMING_STRATEGY_REFERENCE_CARD.txt
+   → This file - quick lookup reference
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+KEY PRINCIPLES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. LEGITIMACY FIRST
+   The best variable name is one that looks exactly like a variable that
+   SHOULD be there in that environment.
+
+2. CONTEXT MATTERS
+   Different environments have different expectations. Cloud deployments
+   expect AWS_, containers expect DOCKER_, etc.
+
+3. ROTATION PREVENTS PATTERNS
+   Using different strategies for different chunks defeats pattern-based
+   detection methods.
+
+4. REAL PREFIXES WORK BEST
+   Prefixes from real, popular tools are far more legitimate than random
+   strings.
+
+5. BLENDING IS BETTER THAN STEALTH
+   Looking like real system configuration is better than trying to hide.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+IMPLEMENTATION NOTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+All strategies are:
+  ✓ Platform-agnostic (work on Windows, Linux, macOS)
+  ✓ Environment-aware (can be tuned per deployment)
+  ✓ Reproducible (can use seed for deterministic generation)
+  ✓ Validating (all names pass env var requirements)
+  ✓ Documented (comprehensive guide included)
+  ✓ Tested (demo functions included)
+  ✓ Integrated (works with storage module)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+END OF REFERENCE CARD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+For detailed information, see: ENV_VAR_NAMING_STRATEGY_GUIDE.md
+For quick summary, see: NAMING_STRATEGY_SUMMARY.txt

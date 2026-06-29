@@ -1,0 +1,27 @@
+
+POLYMORPHIC WRAPPER METADATA
+============================
+Payload: powershell.exe -NoProfile -Command "Write-Host Test"
+Payload Length: 52
+Chunk Size: 16
+Total Chunks: 4
+
+Configuration:
+- Randomized Chunk Order: True
+- Multiple Strategies: True
+- Number of Strategies: 3
+- Add Junk Code: True
+- Obfuscate Names: True
+- Encoding Type: hex
+
+Code Statistics:
+- Generated Code Length: 1722 bytes
+- Lines of Code: 78
+- Contains WScript.Shell: True
+- Contains Polymorphic Functions: True
+
+Chunk Order (Shuffled):
+[2, 1, 3, 0]
+
+Index Mapping:
+{0: 2, 1: 1, 2: 3, 3: 0}
