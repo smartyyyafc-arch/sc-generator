@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-
-const API_BASE = 'http://localhost:5000/api';
+import React, { useState, useEffect, useRef } from 'react';
+import apiService from '../services/apiService';
 
 export default function PersistencePayload({ uploadedFile, loading, onGenerate }) {
   const [methods, setMethods] = useState({});
@@ -10,50 +8,78 @@ export default function PersistencePayload({ uploadedFile, loading, onGenerate }
   const [obfuscation, setObfuscation] = useState('high');
   const [payload, setPayload] = useState(null);
   const [generating, setGenerating] = useState(false);
+  const [error, setError] = useState(null);
+  const abortControllerRef = useRef(new AbortController());
 
   useEffect(() => {
     fetchMethods();
+    return () => {
+      abortControllerRef.current.abort();
+    };
   }, []);
 
   const fetchMethods = async () => {
     try {
-      const response = await axios.get(`${API_BASE}/persistence-methods`);
-      setMethods(response.data.methods);
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
+      const response = await apiService.fetchPersistenceMethods(controller.signal);
+      if (response.success) {
+        setMethods(response.data || {});
+      } else {
+        console.error('Failed to fetch persistence methods:', response.error);
+        setError('Failed to load persistence methods');
+      }
     } catch (err) {
-      console.error('Failed to fetch persistence methods', err);
+      if (err.code !== 'ERR_CANCELED') {
+        console.error('Failed to fetch persistence methods', err);
+        setError('Failed to load persistence methods');
+      }
     }
   };
 
   const handleGenerate = async () => {
     if (!uploadedFile) {
-      alert('Please upload a file first');
+      setError('Please upload a file first');
       return;
     }
 
     setGenerating(true);
+    setError(null);
 
     try {
-      const response = await axios.post(`${API_BASE}/generate-persistent`, {
-        file_id: uploadedFile.id,
-        persistence_method: selectedMethod,
-        technique: technique,
-        obfuscation: obfuscation,
-      });
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
 
-      setPayload({
-        id: response.data.output_id,
-        content: response.data.payload,
-        size: response.data.size,
-        method: response.data.persistence_method,
-        methodName: response.data.method_name,
-        windowsVersions: response.data.windows_versions,
-        survivalRate: response.data.survival_rate,
-        advantages: response.data.advantages,
-      });
+      const response = await apiService.generatePersistent(
+        {
+          file_id: uploadedFile.id,
+          persistence_method: selectedMethod,
+          technique: technique,
+          obfuscation: obfuscation,
+        },
+        controller.signal
+      );
 
-      onGenerate?.(response.data);
+      if (response.success) {
+        setPayload({
+          id: response.data.output_id,
+          content: response.data.payload,
+          size: response.data.size,
+          method: response.data.persistence_method,
+          methodName: response.data.method_name,
+          windowsVersions: response.data.windows_versions,
+          survivalRate: response.data.survival_rate,
+          advantages: response.data.advantages,
+        });
+        onGenerate?.(response.data);
+      } else {
+        setError(response.error?.error || 'Generation failed');
+      }
     } catch (err) {
-      alert(err.response?.data?.error || 'Generation failed');
+      if (err.code !== 'ERR_CANCELED') {
+        setError('Unexpected error during generation');
+        console.error('Generation failed:', err);
+      }
     } finally {
       setGenerating(false);
     }
@@ -63,19 +89,27 @@ export default function PersistencePayload({ uploadedFile, loading, onGenerate }
     if (!payload?.id) return;
 
     try {
-      const response = await axios.get(`${API_BASE}/download/${payload.id}`, {
-        responseType: 'blob',
-      });
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
 
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `persistent_${payload.id}.vbs`);
-      document.body.appendChild(link);
-      link.click();
-      link.parentElement.removeChild(link);
+      const response = await apiService.downloadFile(payload.id, controller.signal);
+
+      if (response.success) {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `persistent_${payload.id}.vbs`);
+        document.body.appendChild(link);
+        link.click();
+        link.parentElement.removeChild(link);
+      } else {
+        setError('Download failed: ' + response.error?.error);
+      }
     } catch (err) {
-      console.error('Download failed:', err);
+      if (err.code !== 'ERR_CANCELED') {
+        console.error('Download failed:', err);
+        setError('Download failed');
+      }
     }
   };
 
@@ -93,6 +127,21 @@ export default function PersistencePayload({ uploadedFile, loading, onGenerate }
       <p style={{ color: '#a0a0a0', marginBottom: '1rem', fontSize: '0.9rem' }}>
         <strong>Survives reboots on all Windows versions (XP through 11)</strong>
       </p>
+      {error && (
+        <div
+          style={{
+            marginBottom: '1rem',
+            padding: '0.8rem',
+            backgroundColor: 'rgba(255, 107, 107, 0.1)',
+            border: '1px solid rgba(255, 107, 107, 0.3)',
+            borderRadius: '4px',
+            color: '#ff6b6b',
+            fontSize: '0.9rem',
+          }}
+        >
+          {error}
+        </div>
+      )}
 
       <div className="form-group">
         <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

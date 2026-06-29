@@ -1,45 +1,133 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 export default function OutputDisplay({ payload, loading }) {
   const [copied, setCopied] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const [previewing, setPreviewing] = useState(false);
+  const [downloadError, setDownloadError] = useState(null);
+  const [previewError, setPreviewError] = useState(null);
+  const blobUrlsRef = React.useRef([]);
 
-  const handleCopy = () => {
-    if (payload?.content) {
-      navigator.clipboard.writeText(payload.content);
+  // Cleanup blob URLs on component unmount
+  useEffect(() => {
+    return () => {
+      blobUrlsRef.current.forEach(url => {
+        try {
+          window.URL.revokeObjectURL(url);
+        } catch (err) {
+          console.warn('Failed to revoke blob URL:', err);
+        }
+      });
+      blobUrlsRef.current = [];
+    };
+  }, []);
+
+  const handleCopy = async () => {
+    if (!payload?.content) return;
+
+    try {
+      await navigator.clipboard.writeText(payload.content);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Copy failed:', err);
+      setDownloadError('Failed to copy to clipboard');
+      setTimeout(() => setDownloadError(null), 3000);
     }
   };
 
   const handleDownload = async () => {
     if (!payload?.id) return;
 
+    setDownloading(true);
+    setDownloadError(null);
+
+    let blobUrl = null;
     try {
       const response = await axios.get(`http://localhost:5000/api/download/${payload.id}`, {
         responseType: 'blob',
+        timeout: 30000, // 30 second timeout
       });
 
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      if (!response.data || response.data.size === 0) {
+        throw new Error('Empty response received from server');
+      }
+
+      blobUrl = window.URL.createObjectURL(new Blob([response.data]));
+      blobUrlsRef.current.push(blobUrl);
+
       const link = document.createElement('a');
-      link.href = url;
+      link.href = blobUrl;
       link.setAttribute('download', `payload_${payload.id}.vbs`);
       document.body.appendChild(link);
+
       link.click();
-      link.parentElement.removeChild(link);
+
+      // Clean up DOM element
+      document.body.removeChild(link);
+
+      // Revoke blob URL after a short delay to ensure download completes
+      setTimeout(() => {
+        if (blobUrl) {
+          window.URL.revokeObjectURL(blobUrl);
+          blobUrlsRef.current = blobUrlsRef.current.filter(url => url !== blobUrl);
+        }
+      }, 500);
     } catch (err) {
       console.error('Download failed:', err);
+      const errorMsg = err.response?.status === 404
+        ? 'Payload not found'
+        : err.response?.status === 500
+        ? 'Server error during download'
+        : err.message === 'Network Error'
+        ? 'Network error - check your connection'
+        : 'Failed to download payload';
+      setDownloadError(errorMsg);
+
+      // Revoke blob URL immediately on error
+      if (blobUrl) {
+        window.URL.revokeObjectURL(blobUrl);
+        blobUrlsRef.current = blobUrlsRef.current.filter(url => url !== blobUrl);
+      }
+
+      setTimeout(() => setDownloadError(null), 4000);
+    } finally {
+      setDownloading(false);
     }
   };
 
   const handleViewSource = async () => {
     if (!payload?.id) return;
 
+    setPreviewing(true);
+    setPreviewError(null);
+
     try {
-      const response = await axios.get(`http://localhost:5000/api/preview/${payload.id}`);
+      const response = await axios.get(`http://localhost:5000/api/preview/${payload.id}`, {
+        timeout: 30000, // 30 second timeout
+      });
+
+      if (!response.data?.content) {
+        throw new Error('Invalid preview response');
+      }
+
       alert('Payload Preview:\n\n' + response.data.content.substring(0, 500) + '...');
     } catch (err) {
       console.error('Preview failed:', err);
+      const errorMsg = err.response?.status === 404
+        ? 'Payload not found'
+        : err.response?.status === 500
+        ? 'Server error during preview'
+        : err.message === 'Network Error'
+        ? 'Network error - check your connection'
+        : 'Failed to load preview';
+      setPreviewError(errorMsg);
+      alert(`Preview Error: ${errorMsg}`);
+
+      setTimeout(() => setPreviewError(null), 4000);
+    } finally {
+      setPreviewing(false);
     }
   };
 
@@ -61,15 +149,71 @@ export default function OutputDisplay({ payload, loading }) {
 
       {!loading && payload && (
         <>
+          {downloadError && (
+            <div
+              style={{
+                padding: '0.8rem',
+                marginBottom: '1rem',
+                backgroundColor: 'rgba(244, 67, 54, 0.1)',
+                border: '1px solid rgba(244, 67, 54, 0.3)',
+                borderRadius: '6px',
+                color: '#ef5350',
+                fontSize: '0.85rem',
+              }}
+            >
+              ❌ {downloadError}
+            </div>
+          )}
+
+          {previewError && (
+            <div
+              style={{
+                padding: '0.8rem',
+                marginBottom: '1rem',
+                backgroundColor: 'rgba(255, 183, 77, 0.1)',
+                border: '1px solid rgba(255, 183, 77, 0.3)',
+                borderRadius: '6px',
+                color: '#ffb74d',
+                fontSize: '0.85rem',
+              }}
+            >
+              ⚠️ {previewError}
+            </div>
+          )}
+
           <div className="output-controls">
-            <button className="btn-primary" onClick={handleCopy}>
+            <button
+              className="btn-primary"
+              onClick={handleCopy}
+              disabled={downloading || previewing}
+              style={{
+                opacity: downloading || previewing ? 0.6 : 1,
+                cursor: downloading || previewing ? 'not-allowed' : 'pointer',
+              }}
+            >
               {copied ? '✓ Copied!' : '📋 Copy Payload'}
             </button>
-            <button className="btn-primary" onClick={handleDownload}>
-              💾 Download
+            <button
+              className="btn-primary"
+              onClick={handleDownload}
+              disabled={downloading || previewing}
+              style={{
+                opacity: downloading || previewing ? 0.6 : 1,
+                cursor: downloading || previewing ? 'not-allowed' : 'pointer',
+              }}
+            >
+              {downloading ? '⏳ Downloading...' : '💾 Download'}
             </button>
-            <button className="btn-secondary" onClick={handleViewSource}>
-              👁️ Preview
+            <button
+              className="btn-secondary"
+              onClick={handleViewSource}
+              disabled={downloading || previewing}
+              style={{
+                opacity: downloading || previewing ? 0.6 : 1,
+                cursor: downloading || previewing ? 'not-allowed' : 'pointer',
+              }}
+            >
+              {previewing ? '⏳ Loading...' : '👁️ Preview'}
             </button>
           </div>
 

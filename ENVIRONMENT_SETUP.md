@@ -1,6 +1,10 @@
-# Environment Configuration Guide
+# SC-Generator Environment Configuration Guide
 
-This guide explains how to properly configure the SC-Generator application using environment variables.
+## Configuration Fix #2: Environment Variable Validation at Startup
+
+This comprehensive guide explains how to properly configure the SC-Generator application with validated environment variables.
+
+**Key Improvement:** The application now validates all required environment variables exist and are valid before starting, with secure defaults and clear error messages.
 
 ## Quick Start
 

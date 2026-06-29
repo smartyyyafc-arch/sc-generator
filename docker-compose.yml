@@ -1,21 +1,111 @@
+# ============================================================================
+# Docker Compose Configuration - Security Hardened
+# SECURITY FIX #3: Non-root user, resource limits, security options
+# ============================================================================
+
 version: '3.8'
 
 services:
   sc-generator:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: sc-generator
+
+    # ========================================================================
+    # SECURITY: Non-root user and read-only settings
+    # ========================================================================
+    user: scgen:scgen
+    read_only: false  # Set to true if application doesn't need write access
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+
+    # ========================================================================
+    # SECURITY: Resource limits to prevent DoS
+    # ========================================================================
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '1'
+          memory: 512M
+
+    # ========================================================================
+    # SECURITY: Network configuration
+    # ========================================================================
     ports:
       - "5000:5000"
       - "3000:3000"
+    networks:
+      - sc-network
+
+    # ========================================================================
+    # SECURITY: Environment variables with secure defaults
+    # ========================================================================
     environment:
       FLASK_ENV: production
-      FLASK_DEBUG: "False"
+      FLASK_DEBUG: "false"
+      PYTHONUNBUFFERED: "1"
+      PYTHONDONTWRITEBYTECODE: "1"
+
+      # Required environment variables (must be set in .env or docker-compose override)
+      # See .env.example for all available variables
+      SECRET_KEY: ${SECRET_KEY:-CHANGE_THIS_IN_PRODUCTION}
+      FLASK_APP: app.py
+
+      # File upload/output directories (enforced permissions in container)
+      UPLOAD_FOLDER: /tmp/sc-uploads
+      OUTPUT_FOLDER: /tmp/sc-outputs
+      MAX_FILE_SIZE_MB: ${MAX_FILE_SIZE_MB:-100}
+      ALLOWED_EXTENSIONS: ${ALLOWED_EXTENSIONS:-msi,exe,dll,bat,cmd,vbs}
+
+      # Timeout configuration (in seconds)
+      REQUEST_TIMEOUT_SECONDS: ${REQUEST_TIMEOUT_SECONDS:-30}
+      UPLOAD_TIMEOUT_SECONDS: ${UPLOAD_TIMEOUT_SECONDS:-300}
+      GENERATE_TIMEOUT_SECONDS: ${GENERATE_TIMEOUT_SECONDS:-120}
+      DOWNLOAD_TIMEOUT_SECONDS: ${DOWNLOAD_TIMEOUT_SECONDS:-60}
+
+      # Rate limiting
+      RATE_LIMIT_ENABLED: ${RATE_LIMIT_ENABLED:-true}
+      RATE_LIMIT_PER_IP: ${RATE_LIMIT_PER_IP:-100}
+      RATE_LIMIT_GLOBAL: ${RATE_LIMIT_GLOBAL:-1000}
+
+      # Logging configuration
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      LOG_FILE: /var/log/sc-generator/app.log
+
+      # Security configuration
+      CORS_ENABLED: ${CORS_ENABLED:-true}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
+      MAX_JSON_SIZE: ${MAX_JSON_SIZE:-16777216}
+
+    # ========================================================================
+    # SECURITY: Volume mounts with restrictions
+    # ========================================================================
     volumes:
-      - /tmp/sc-uploads:/tmp/sc-uploads
-      - /tmp/sc-outputs:/tmp/sc-outputs
-      - /tmp/sc-fingerprints:/tmp/sc-fingerprints
-      - /tmp/sc-logs:/tmp/sc-logs
+      # Application data directories (read/write)
+      - sc-uploads:/tmp/sc-uploads:rw
+      - sc-outputs:/tmp/sc-outputs:rw
+      - sc-fingerprints:/tmp/sc-fingerprints:rw
+      - sc-logs:/var/log/sc-generator:rw
+
+      # Optional: mount .env file for configuration (use for prod, not in dev)
+      # - .env:/app/.env:ro
+
+    # ========================================================================
+    # SECURITY: Restart policy
+    # ========================================================================
     restart: unless-stopped
+
+    # ========================================================================
+    # SECURITY: Health check
+    # ========================================================================
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
       interval: 30s
@@ -23,8 +113,37 @@ services:
       retries: 3
       start_period: 40s
 
+    # ========================================================================
+    # SECURITY: Logging configuration
+    # ========================================================================
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service=sc-generator"
+
+    depends_on:
+      - sc-network
+
+# ============================================================================
+# Named networks for service isolation
+# ============================================================================
+networks:
+  sc-network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: "br-scgen"
+
+# ============================================================================
+# Named volumes for data persistence
+# ============================================================================
 volumes:
   sc-uploads:
+    driver: local
   sc-outputs:
+    driver: local
   sc-fingerprints:
+    driver: local
   sc-logs:
+    driver: local

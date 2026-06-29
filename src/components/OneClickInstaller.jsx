@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-
-const API_BASE = 'http://localhost:5000/api';
+import React, { useState, useEffect, useRef } from 'react';
+import apiService from '../services/apiService';
 
 export default function OneClickInstaller({ uploadedFile, loading, onGenerate }) {
   const [styles, setStyles] = useState([]);
@@ -10,46 +8,74 @@ export default function OneClickInstaller({ uploadedFile, loading, onGenerate })
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [payload, setPayload] = useState(null);
   const [generating, setGenerating] = useState(false);
+  const [error, setError] = useState(null);
+  const abortControllerRef = useRef(new AbortController());
 
   useEffect(() => {
     fetchStyles();
+    return () => {
+      abortControllerRef.current.abort();
+    };
   }, []);
 
   const fetchStyles = async () => {
     try {
-      const response = await axios.get(`${API_BASE}/one-click-styles`);
-      setStyles(response.data.styles);
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
+      const response = await apiService.fetchOneClickStyles(controller.signal);
+      if (response.success) {
+        setStyles(response.data || {});
+      } else {
+        console.error('Failed to fetch styles:', response.error);
+        setError('Failed to load styles');
+      }
     } catch (err) {
-      console.error('Failed to fetch styles', err);
+      if (err.code !== 'ERR_CANCELED') {
+        console.error('Failed to fetch styles', err);
+        setError('Failed to load styles');
+      }
     }
   };
 
   const handleGenerate = async () => {
     if (!uploadedFile) {
-      alert('Please upload a file first');
+      setError('Please upload a file first');
       return;
     }
 
     setGenerating(true);
+    setError(null);
 
     try {
-      const response = await axios.post(`${API_BASE}/generate-one-click`, {
-        file_id: uploadedFile.id,
-        obfuscation_style: selectedStyle,
-        file_type: fileType,
-      });
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
 
-      setPayload({
-        id: response.data.output_id,
-        filename: response.data.filename,
-        content: response.data.payload,
-        instructions: response.data.instructions,
-        size: response.data.size,
-      });
+      const response = await apiService.generateOneClick(
+        {
+          file_id: uploadedFile.id,
+          obfuscation_style: selectedStyle,
+          file_type: fileType,
+        },
+        controller.signal
+      );
 
-      onGenerate?.(response.data);
+      if (response.success) {
+        setPayload({
+          id: response.data.output_id,
+          filename: response.data.filename,
+          content: response.data.payload,
+          instructions: response.data.instructions,
+          size: response.data.size,
+        });
+        onGenerate?.(response.data);
+      } else {
+        setError(response.error?.error || 'Generation failed');
+      }
     } catch (err) {
-      alert(err.response?.data?.error || 'Generation failed');
+      if (err.code !== 'ERR_CANCELED') {
+        setError('Unexpected error during generation');
+        console.error('Generation failed:', err);
+      }
     } finally {
       setGenerating(false);
     }
@@ -59,19 +85,27 @@ export default function OneClickInstaller({ uploadedFile, loading, onGenerate })
     if (!payload?.id) return;
 
     try {
-      const response = await axios.get(`${API_BASE}/download/${payload.id}`, {
-        responseType: 'blob',
-      });
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
 
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', payload.filename);
-      document.body.appendChild(link);
-      link.click();
-      link.parentElement.removeChild(link);
+      const response = await apiService.downloadFile(payload.id, controller.signal);
+
+      if (response.success) {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', payload.filename);
+        document.body.appendChild(link);
+        link.click();
+        link.parentElement.removeChild(link);
+      } else {
+        setError('Download failed: ' + response.error?.error);
+      }
     } catch (err) {
-      console.error('Download failed:', err);
+      if (err.code !== 'ERR_CANCELED') {
+        console.error('Download failed:', err);
+        setError('Download failed');
+      }
     }
   };
 
@@ -113,6 +147,21 @@ export default function OneClickInstaller({ uploadedFile, loading, onGenerate })
       <p style={{ color: '#a0a0a0', fontSize: '0.9rem', margin: '0 0 1rem 0' }}>
         Silent, automatic installation - no user interaction required
       </p>
+      {error && (
+        <div
+          style={{
+            marginBottom: '1rem',
+            padding: '0.8rem',
+            backgroundColor: 'rgba(255, 107, 107, 0.1)',
+            border: '1px solid rgba(255, 107, 107, 0.3)',
+            borderRadius: '4px',
+            color: '#ff6b6b',
+            fontSize: '0.9rem',
+          }}
+        >
+          {error}
+        </div>
+      )}
 
       <div className="form-group">
         <label style={{ marginBottom: '0.8rem' }}>
