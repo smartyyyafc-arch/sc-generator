@@ -1,0 +1,82 @@
+VERSION COMPATIBILITY MATRIX
+=============================
+
+PROJECT: sc-generator
+Generated: 2026-06-29
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║ NPM PACKAGES                                                              ║
+╠════════════════════════╦══════════╦══════════╦══════════╦════════════════╣
+║ Package                ║ Current  ║ Wanted   ║ Latest   ║ Status         ║
+╠════════════════════════╬══════════╬══════════╬══════════╬════════════════╣
+║ react                  ║ 18.2.0   ║ 18.3.1   ║ 19.2.7   ║ 1 patch behind ║
+║ react-dom              ║ 18.2.0   ║ 18.3.1   ║ 19.2.7   ║ 1 patch behind ║
+║ axios                  ║ 1.6.0    ║ 1.18.1   ║ 1.18.1   ║ 12 minor ver * ║
+║ react-icons            ║ 5.0.0    ║ 5.6.0    ║ 5.6.0    ║ 6 minor ver    ║
+║ react-scripts          ║ 5.0.1    ║ 5.0.1    ║ 5.0.1    ║ CURRENT        ║
+╚════════════════════════╩══════════╩══════════╩══════════╩════════════════╝
+
+* = CRITICAL - Major version gap, significant features/fixes
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║ PYTHON PACKAGES                                                           ║
+╠════════════════════════╦══════════╦══════════╦══════════╦════════════════╣
+║ Package                ║ Current  ║ Latest   ║ Released ║ Status         ║
+╠════════════════════════╬══════════╬══════════╬══════════╬════════════════╣
+║ Flask                  ║ 2.3.3    ║ 3.0.3    ║ 2023-08  ║ MAJOR UPDATE * ║
+║ Flask-CORS             ║ 4.0.0    ║ 4.0.x    ║ 2024     ║ MINOR OUTDATED ║
+║ Werkzeug               ║ 2.3.7    ║ 3.0.3    ║ 2023-08  ║ MAJOR UPDATE * ║
+║ python-dotenv          ║ 1.0.0    ║ 1.0.1    ║ 2023     ║ PATCH AVAILABLE║
+╚════════════════════════╩══════════╩══════════╩══════════╩════════════════╝
+
+COMPATIBILITY NOTES:
+====================
+
+NPM Ecosystem:
+- react 18.2.0 → 18.3.1: ✓ Drop-in upgrade (patch level)
+- react 18.x → 19.x: ⚠ Requires testing (major version bump)
+- axios 1.6.0 → 1.18.1: ⚠ Large gap, test thoroughly
+- react-scripts 5.0.1: ✓ Stable, compatible with React 18.3.1
+
+Python Ecosystem:
+- Flask 2.3.3 → 3.0.3: ⚠ BREAKING CHANGES - review code
+  * Blueprint prefixes changed
+  * JSON provider changed
+  * Config handling updated
+  
+- Werkzeug 2.3.7 → 3.0.3: ⚠ Dependency of Flask, must align
+  * Header handling changes
+  * Security improvements
+  
+- Flask-CORS 4.0.0: ✓ Compatible with Flask 3.0.3
+
+LOCK FILES MISSING - MAJOR ISSUE:
+=================================
+- No package-lock.json found
+- No pip freeze output saved
+- Risk: npm install / pip install could pull different versions
+- Recommendation: Commit lock files to version control
+
+DEPENDENCY TREE ANALYSIS:
+=========================
+
+NPM:
+  react@18.2.0
+  ├─ react-dom@18.2.0 (MUST match react version)
+  ├─ axios@1.6.0 (HTTP client)
+  ├─ react-icons@5.0.0 (UI icons)
+  └─ react-scripts@5.0.1 (build tool)
+     ├─ webpack
+     ├─ babel
+     └─ jest (testing)
+
+Python:
+  Flask@2.3.3
+  ├─ Werkzeug@2.3.7
+  ├─ Jinja2 (templating, auto-installed)
+  ├─ click (CLI, auto-installed)
+  ├─ itsdangerous (security, auto-installed)
+  ├─ python-dotenv@1.0.0 (env vars)
+  └─ Flask-CORS@4.0.0 (cross-origin support)
+
+NO DETECTED REDUNDANCY - All dependencies serve specific purposes

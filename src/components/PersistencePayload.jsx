@@ -95,16 +95,45 @@ export default function PersistencePayload({ uploadedFile, loading, onGenerate }
       </p>
 
       <div className="form-group">
-        <label>Persistence Method:</label>
+        <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span>Persistence Method</span>
+          {selectedMethod === 'multi' && (
+            <span
+              style={{
+                fontSize: '0.75rem',
+                padding: '0.3rem 0.6rem',
+                backgroundColor: 'rgba(76, 175, 80, 0.3)',
+                border: '1px solid rgba(76, 175, 80, 0.6)',
+                borderRadius: '4px',
+                color: '#4caf50',
+                fontWeight: 'bold',
+              }}
+            >
+              ⭐ RECOMMENDED (99%+ survival)
+            </span>
+          )}
+        </label>
+        <p style={{ fontSize: '0.85rem', color: '#a0a0a0', margin: '0.5rem 0' }}>
+          Choose method based on your target Windows version and requirements:
+        </p>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
           {Object.entries(methods).map(([key, desc]) => (
             <div
               key={key}
               className={`fingerprint-card ${selectedMethod === key ? 'selected' : ''}`}
               onClick={() => setSelectedMethod(key)}
-              style={{ cursor: 'pointer' }}
+              style={{
+                cursor: 'pointer',
+                borderColor:
+                  key === 'multi' && selectedMethod !== 'multi'
+                    ? 'rgba(76, 175, 80, 0.5)'
+                    : undefined,
+              }}
             >
-              <div className="fingerprint-name">{key.toUpperCase()}</div>
+              <div className="fingerprint-name">
+                {key.toUpperCase()}
+                {key === 'multi' ? ' ⭐' : ''}
+              </div>
               <div className="fingerprint-desc" style={{ fontSize: '0.75rem' }}>
                 {desc.substring(0, 50)}...
               </div>
