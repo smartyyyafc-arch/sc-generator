@@ -7,7 +7,6 @@ export default function OneClickInstaller({ uploadedFile, loading, onGenerate })
   const [styles, setStyles] = useState([]);
   const [selectedStyle, setSelectedStyle] = useState('polymorphic');
   const [fileType, setFileType] = useState('vbs');
-  const [showAdvanced, setShowAdvanced] = useState(false);
   const [payload, setPayload] = useState(null);
   const [generating, setGenerating] = useState(false);
 
