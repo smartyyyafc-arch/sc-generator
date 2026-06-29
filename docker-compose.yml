@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  sc-generator:
+    build: .
+    container_name: sc-generator
+    ports:
+      - "5000:5000"
+      - "3000:3000"
+    environment:
+      FLASK_ENV: production
+      FLASK_DEBUG: "False"
+    volumes:
+      - /tmp/sc-uploads:/tmp/sc-uploads
+      - /tmp/sc-outputs:/tmp/sc-outputs
+      - /tmp/sc-fingerprints:/tmp/sc-fingerprints
+      - /tmp/sc-logs:/tmp/sc-logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  sc-uploads:
+  sc-outputs:
+  sc-fingerprints:
+  sc-logs:
