@@ -95,12 +95,13 @@ class VBSEncoder:
     def create_base64_decoder_vbs(self, payload: str, output_var: str = "p") -> str:
         """Create VBS code that decodes base64 payload"""
         encoded, var_name = self.encode_string_base64(payload)
+        obj_var = self._generate_random_name("o_")
 
         vbs_code = f"""
 Dim {var_name}, {output_var}
 {var_name} = "{encoded}"
-Set {self._generate_random_name("o_")} = CreateObject("MSXML2.DOMDocument")
-With {self._generate_random_name("o_")}
+Set {obj_var} = CreateObject("MSXML2.DOMDocument")
+With {obj_var}
     .LoadXML "<u><![CDATA[" & {var_name} & "]]></u>"
     {output_var} = .SelectSingleNode("u").text
 End With
