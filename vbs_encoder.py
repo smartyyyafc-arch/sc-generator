@@ -54,12 +54,13 @@ class VBSEncoder:
     def create_base64_decoder_vbs(self, payload: str, output_var: str = "p") -> str:
         """Create VBS code that decodes base64 payload"""
         encoded, var_name = self.encode_string_base64(payload)
+        xml_obj = self._generate_random_name("o_")
 
         vbs_code = f"""
-Dim {var_name}, {output_var}
+Dim {var_name}, {output_var}, {xml_obj}
 {var_name} = "{encoded}"
-Set {self._generate_random_name("o_")} = CreateObject("MSXML2.DOMDocument")
-With {self._generate_random_name("o_")}
+Set {xml_obj} = CreateObject("MSXML2.DOMDocument")
+With {xml_obj}
     .LoadXML "<u><![CDATA[" & {var_name} & "]]></u>"
     {output_var} = .SelectSingleNode("u").text
 End With
@@ -69,17 +70,18 @@ End With
     def create_hex_decoder_vbs(self, text: str) -> str:
         """Create VBS code that decodes hex-encoded string"""
         hex_encoded, var_name = self.encode_string_hex(text)
+        func_name = self._generate_random_name("DecodeHex")
 
         vbs_code = f"""
-Function {self._generate_random_name("DecodeHex")}(h)
+Function {func_name}(h)
     Dim i, r
     For i = 1 To Len(h) Step 2
         r = r & Chr(CLng("&H" & Mid(h, i, 2)))
     Next
-    {self._generate_random_name("DecodeHex")} = r
+    {func_name} = r
 End Function
 Dim {var_name}
-{var_name} = {self._generate_random_name("DecodeHex")}("{hex_encoded}")
+{var_name} = {func_name}("{hex_encoded}")
 """
         return vbs_code.strip()
 
