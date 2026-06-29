@@ -6,6 +6,7 @@ import FingerprintSelector from './components/FingerprintSelector';
 import ProxyManager from './components/ProxyManager';
 import OutputDisplay from './components/OutputDisplay';
 import OneClickInstaller from './components/OneClickInstaller';
+import PersistencePayload from './components/PersistencePayload';
 import './App.css';
 
 const API_BASE = 'http://localhost:5000/api';
@@ -26,7 +27,7 @@ export default function App() {
     add_comments: false,
     add_noise: false,
   });
-  const [mode, setMode] = useState('standard');  // 'standard' or 'one-click'
+  const [mode, setMode] = useState('standard');  // 'standard', 'one-click', or 'persistent'
 
   useEffect(() => {
     fetchTechniques();
@@ -175,12 +176,13 @@ export default function App() {
 
               <section className="panel">
                 <h2>⚙️ Mode Selection</h2>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.8rem' }}>
                   <button
                     className={`btn-secondary ${mode === 'standard' ? 'active' : ''}`}
                     onClick={() => setMode('standard')}
                     style={{
                       backgroundColor: mode === 'standard' ? 'rgba(0, 212, 255, 0.3)' : 'rgba(0, 212, 255, 0.05)',
+                      fontSize: '0.9rem',
                     }}
                   >
                     🎯 Standard
@@ -190,9 +192,20 @@ export default function App() {
                     onClick={() => setMode('one-click')}
                     style={{
                       backgroundColor: mode === 'one-click' ? 'rgba(0, 212, 255, 0.3)' : 'rgba(0, 212, 255, 0.05)',
+                      fontSize: '0.9rem',
                     }}
                   >
                     ⚡ One-Click
+                  </button>
+                  <button
+                    className={`btn-secondary ${mode === 'persistent' ? 'active' : ''}`}
+                    onClick={() => setMode('persistent')}
+                    style={{
+                      backgroundColor: mode === 'persistent' ? 'rgba(0, 212, 255, 0.3)' : 'rgba(0, 212, 255, 0.05)',
+                      fontSize: '0.9rem',
+                    }}
+                  >
+                    🔐 Persistent
                   </button>
                 </div>
               </section>
@@ -256,6 +269,23 @@ export default function App() {
                         filename: result.filename,
                         size: result.size,
                         technique: 'one-click',
+                      });
+                    }}
+                  />
+                </section>
+              )}
+
+              {mode === 'persistent' && (
+                <section className="panel">
+                  <PersistencePayload
+                    uploadedFile={uploadedFile}
+                    loading={loading}
+                    onGenerate={(result) => {
+                      setPayload({
+                        id: result.output_id,
+                        content: result.payload,
+                        size: result.size,
+                        technique: 'persistent',
                       });
                     }}
                   />
