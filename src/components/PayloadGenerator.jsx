@@ -13,7 +13,6 @@ export default function PayloadGenerator({
   onOptionsChange,
 }) {
   const [metadata, setMetadata] = useState({});
-  const [showTechniqueInfo, setShowTechniqueInfo] = useState(false);
 
   useEffect(() => {
     fetchTechniqueMetadata();

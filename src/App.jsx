@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import axios from 'axios';
 import FileUpload from './components/FileUpload';
 import PayloadGenerator from './components/PayloadGenerator';
 import FingerprintSelector from './components/FingerprintSelector';
 import ProxyManager from './components/ProxyManager';
 import OutputDisplay from './components/OutputDisplay';
-import OneClickInstaller from './components/OneClickInstaller';
-import PersistencePayload from './components/PersistencePayload';
 import RecommendationCard from './components/RecommendationCard';
 import './App.css';
+
+// Lazy load components that may not be immediately needed
+const OneClickInstaller = lazy(() => import('./components/OneClickInstaller'));
+const PersistencePayload = lazy(() => import('./components/PersistencePayload'));
 
 const API_BASE = 'http://localhost:5000/api';
 
@@ -265,19 +267,21 @@ export default function App() {
                 <>
                   <RecommendationCard mode="one-click" />
                   <section className="panel">
-                    <OneClickInstaller
-                      uploadedFile={uploadedFile}
-                      loading={loading}
-                      onGenerate={(result) => {
-                        setPayload({
-                          id: result.output_id,
-                          content: result.payload,
-                          filename: result.filename,
-                          size: result.size,
-                          technique: 'one-click',
-                        });
-                      }}
-                    />
+                    <Suspense fallback={<div style={{ textAlign: 'center', padding: '1rem', color: '#a0a0a0' }}>Loading...</div>}>
+                      <OneClickInstaller
+                        uploadedFile={uploadedFile}
+                        loading={loading}
+                        onGenerate={(result) => {
+                          setPayload({
+                            id: result.output_id,
+                            content: result.payload,
+                            filename: result.filename,
+                            size: result.size,
+                            technique: 'one-click',
+                          });
+                        }}
+                      />
+                    </Suspense>
                   </section>
                 </>
               )}
@@ -286,18 +290,20 @@ export default function App() {
                 <>
                   <RecommendationCard mode="persistent" />
                   <section className="panel">
-                    <PersistencePayload
-                      uploadedFile={uploadedFile}
-                      loading={loading}
-                      onGenerate={(result) => {
-                        setPayload({
-                          id: result.output_id,
-                          content: result.payload,
-                          size: result.size,
-                          technique: 'persistent',
-                        });
-                      }}
-                    />
+                    <Suspense fallback={<div style={{ textAlign: 'center', padding: '1rem', color: '#a0a0a0' }}>Loading...</div>}>
+                      <PersistencePayload
+                        uploadedFile={uploadedFile}
+                        loading={loading}
+                        onGenerate={(result) => {
+                          setPayload({
+                            id: result.output_id,
+                            content: result.payload,
+                            size: result.size,
+                            technique: 'persistent',
+                          });
+                        }}
+                      />
+                    </Suspense>
                   </section>
                 </>
               )}
