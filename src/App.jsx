@@ -5,6 +5,7 @@ import PayloadGenerator from './components/PayloadGenerator';
 import FingerprintSelector from './components/FingerprintSelector';
 import ProxyManager from './components/ProxyManager';
 import OutputDisplay from './components/OutputDisplay';
+import OneClickInstaller from './components/OneClickInstaller';
 import './App.css';
 
 const API_BASE = 'http://localhost:5000/api';
@@ -25,6 +26,7 @@ export default function App() {
     add_comments: false,
     add_noise: false,
   });
+  const [mode, setMode] = useState('standard');  // 'standard' or 'one-click'
 
   useEffect(() => {
     fetchTechniques();
@@ -172,45 +174,93 @@ export default function App() {
               </section>
 
               <section className="panel">
-                <h2>🎯 Encoding Technique</h2>
-                <PayloadGenerator
-                  techniques={techniques}
-                  selectedTechnique={selectedTechnique}
-                  onTechniqueChange={setSelectedTechnique}
-                  obfuscationLevel={obfuscationLevel}
-                  onObfuscationChange={setObfuscationLevel}
-                  options={options}
-                  onOptionsChange={setOptions}
-                />
+                <h2>⚙️ Mode Selection</h2>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
+                  <button
+                    className={`btn-secondary ${mode === 'standard' ? 'active' : ''}`}
+                    onClick={() => setMode('standard')}
+                    style={{
+                      backgroundColor: mode === 'standard' ? 'rgba(0, 212, 255, 0.3)' : 'rgba(0, 212, 255, 0.05)',
+                    }}
+                  >
+                    🎯 Standard
+                  </button>
+                  <button
+                    className={`btn-secondary ${mode === 'one-click' ? 'active' : ''}`}
+                    onClick={() => setMode('one-click')}
+                    style={{
+                      backgroundColor: mode === 'one-click' ? 'rgba(0, 212, 255, 0.3)' : 'rgba(0, 212, 255, 0.05)',
+                    }}
+                  >
+                    ⚡ One-Click
+                  </button>
+                </div>
               </section>
 
-              <section className="panel">
-                <h2>🔑 Fingerprinting</h2>
-                <FingerprintSelector
-                  fingerprints={fingerprints}
-                  selectedFingerprint={selectedFingerprint}
-                  onSelectFingerprint={setSelectedFingerprint}
-                  onCreateFingerprint={handleCreateFingerprint}
-                />
-              </section>
+              {mode === 'standard' && (
+                <section className="panel">
+                  <h2>🎯 Encoding Technique</h2>
+                  <PayloadGenerator
+                    techniques={techniques}
+                    selectedTechnique={selectedTechnique}
+                    onTechniqueChange={setSelectedTechnique}
+                    obfuscationLevel={obfuscationLevel}
+                    onObfuscationChange={setObfuscationLevel}
+                    options={options}
+                    onOptionsChange={setOptions}
+                  />
+                </section>
+              )}
 
-              <section className="panel">
-                <h2>🌐 Proxy Settings</h2>
-                <ProxyManager
-                  proxies={proxies}
-                  selectedProxy={selectedProxy}
-                  onSelectProxy={setSelectedProxy}
-                  onAddProxy={handleAddProxy}
-                />
-              </section>
+              {mode === 'standard' && (
+                <>
+                  <section className="panel">
+                    <h2>🔑 Fingerprinting</h2>
+                    <FingerprintSelector
+                      fingerprints={fingerprints}
+                      selectedFingerprint={selectedFingerprint}
+                      onSelectFingerprint={setSelectedFingerprint}
+                      onCreateFingerprint={handleCreateFingerprint}
+                    />
+                  </section>
 
-              <button
-                className="btn-generate"
-                onClick={handleGeneratePayload}
-                disabled={!uploadedFile || loading}
-              >
-                {loading ? '⏳ Generating...' : '✨ Generate Payload'}
-              </button>
+                  <section className="panel">
+                    <h2>🌐 Proxy Settings</h2>
+                    <ProxyManager
+                      proxies={proxies}
+                      selectedProxy={selectedProxy}
+                      onSelectProxy={setSelectedProxy}
+                      onAddProxy={handleAddProxy}
+                    />
+                  </section>
+
+                  <button
+                    className="btn-generate"
+                    onClick={handleGeneratePayload}
+                    disabled={!uploadedFile || loading}
+                  >
+                    {loading ? '⏳ Generating...' : '✨ Generate Payload'}
+                  </button>
+                </>
+              )}
+
+              {mode === 'one-click' && (
+                <section className="panel">
+                  <OneClickInstaller
+                    uploadedFile={uploadedFile}
+                    loading={loading}
+                    onGenerate={(result) => {
+                      setPayload({
+                        id: result.output_id,
+                        content: result.payload,
+                        filename: result.filename,
+                        size: result.size,
+                        technique: 'one-click',
+                      });
+                    }}
+                  />
+                </section>
+              )}
             </div>
 
             <div className="main-content">
