@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
-const API_BASE = 'http://localhost:5000/api';
+import { API_BASE } from '../config';
 
 export default function OneClickInstaller({ uploadedFile, loading, onGenerate }) {
   const [styles, setStyles] = useState([]);
@@ -9,6 +8,13 @@ export default function OneClickInstaller({ uploadedFile, loading, onGenerate })
   const [fileType, setFileType] = useState('vbs');
   const [payload, setPayload] = useState(null);
   const [generating, setGenerating] = useState(false);
+  const [statusMessage, setStatusMessage] = useState(null);
+  const [copySuccess, setCopySuccess] = useState(false);
+
+  const showStatus = (message, type = 'info') => {
+    setStatusMessage({ message, type });
+    setTimeout(() => setStatusMessage(null), 4000);
+  };
 
   useEffect(() => {
     fetchStyles();
@@ -25,11 +31,12 @@ export default function OneClickInstaller({ uploadedFile, loading, onGenerate })
 
   const handleGenerate = async () => {
     if (!uploadedFile) {
-      alert('Please upload a file first');
+      showStatus('Please upload a file first.', 'error');
       return;
     }
 
     setGenerating(true);
+    setStatusMessage(null);
 
     try {
       const response = await axios.post(`${API_BASE}/generate-one-click`, {
@@ -48,7 +55,7 @@ export default function OneClickInstaller({ uploadedFile, loading, onGenerate })
 
       onGenerate?.(response.data);
     } catch (err) {
-      alert(err.response?.data?.error || 'Generation failed');
+      showStatus(err.response?.data?.error || 'Generation failed.', 'error');
     } finally {
       setGenerating(false);
     }
@@ -69,15 +76,18 @@ export default function OneClickInstaller({ uploadedFile, loading, onGenerate })
       document.body.appendChild(link);
       link.click();
       link.parentElement.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch (err) {
       console.error('Download failed:', err);
+      showStatus('Download failed. Please try again.', 'error');
     }
   };
 
   const handleCopy = () => {
     if (payload?.content) {
       navigator.clipboard.writeText(payload.content);
-      alert('Copied to clipboard!');
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
     }
   };
 
@@ -112,6 +122,12 @@ export default function OneClickInstaller({ uploadedFile, loading, onGenerate })
       <p style={{ color: '#a0a0a0', fontSize: '0.9rem', margin: '0 0 1rem 0' }}>
         Silent, automatic installation - no user interaction required
       </p>
+
+      {statusMessage && (
+        <div className={`status-message ${statusMessage.type}`} style={{ marginBottom: '1rem' }}>
+          {statusMessage.message}
+        </div>
+      )}
 
       <div className="form-group">
         <label style={{ marginBottom: '0.8rem' }}>
@@ -269,7 +285,7 @@ export default function OneClickInstaller({ uploadedFile, loading, onGenerate })
               💾 Download Installer
             </button>
             <button className="btn-secondary" onClick={handleCopy}>
-              📋 Copy Code
+              {copySuccess ? '✓ Copied!' : '📋 Copy Code'}
             </button>
           </div>
         </div>

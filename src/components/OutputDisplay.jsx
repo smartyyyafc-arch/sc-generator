@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { API_BASE } from '../config';
 
 export default function OutputDisplay({ payload, loading }) {
   const [copied, setCopied] = useState(false);
+  const [statusMessage, setStatusMessage] = useState(null);
+
+  const showStatus = (message, type = 'info') => {
+    setStatusMessage({ message, type });
+    setTimeout(() => setStatusMessage(null), 4000);
+  };
 
   const handleCopy = () => {
     if (payload?.content) {
@@ -16,7 +23,7 @@ export default function OutputDisplay({ payload, loading }) {
     if (!payload?.id) return;
 
     try {
-      const response = await axios.get(`http://localhost:5000/api/download/${payload.id}`, {
+      const response = await axios.get(`${API_BASE}/download/${payload.id}`, {
         responseType: 'blob',
       });
 
@@ -27,8 +34,10 @@ export default function OutputDisplay({ payload, loading }) {
       document.body.appendChild(link);
       link.click();
       link.parentElement.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch (err) {
       console.error('Download failed:', err);
+      showStatus('Download failed. Please try again.', 'error');
     }
   };
 
@@ -36,15 +45,25 @@ export default function OutputDisplay({ payload, loading }) {
     if (!payload?.id) return;
 
     try {
-      const response = await axios.get(`http://localhost:5000/api/preview/${payload.id}`);
-      alert('Payload Preview:\n\n' + response.data.content.substring(0, 500) + '...');
+      const response = await axios.get(`${API_BASE}/preview/${payload.id}`);
+      showStatus('Preview loaded successfully.', 'success');
+      setPreviewContent(response.data.content.substring(0, 500) + '...');
     } catch (err) {
       console.error('Preview failed:', err);
+      showStatus('Preview failed. Please try again.', 'error');
     }
   };
 
+  const [previewContent, setPreviewContent] = useState(null);
+
   return (
     <div className="output-container">
+      {statusMessage && (
+        <div className={`status-message ${statusMessage.type}`}>
+          {statusMessage.message}
+        </div>
+      )}
+
       {loading && (
         <div style={{ textAlign: 'center', padding: '2rem' }}>
           <div className="spinner"></div>
@@ -72,6 +91,34 @@ export default function OutputDisplay({ payload, loading }) {
               👁️ Preview
             </button>
           </div>
+
+          {previewContent && (
+            <div
+              style={{
+                padding: '1rem',
+                marginBottom: '1rem',
+                backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                borderRadius: '6px',
+                fontSize: '0.85rem',
+                whiteSpace: 'pre-wrap',
+                color: '#a0a0a0',
+                maxHeight: '300px',
+                overflowY: 'auto',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                <strong style={{ color: '#00d4ff' }}>Payload Preview:</strong>
+                <button
+                  className="btn-secondary"
+                  onClick={() => setPreviewContent(null)}
+                  style={{ padding: '0.2rem 0.5rem', fontSize: '0.75rem' }}
+                >
+                  Close
+                </button>
+              </div>
+              {previewContent}
+            </div>
+          )}
 
           <div
             style={{

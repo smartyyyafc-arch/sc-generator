@@ -1,7 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-
-const API_BASE = 'http://localhost:5000/api';
+import React from 'react';
 
 export default function PayloadGenerator({
   techniques,
@@ -11,21 +8,9 @@ export default function PayloadGenerator({
   onObfuscationChange,
   options,
   onOptionsChange,
+  techniqueMetadata,
 }) {
-  const [metadata, setMetadata] = useState({});
-
-  useEffect(() => {
-    fetchTechniqueMetadata();
-  }, []);
-
-  const fetchTechniqueMetadata = async () => {
-    try {
-      const response = await axios.get(`${API_BASE}/techniques`);
-      setMetadata(response.data.metadata || {});
-    } catch (err) {
-      console.error('Failed to fetch technique metadata', err);
-    }
-  };
+  const metadata = techniqueMetadata || {};
 
   const handleCheckboxChange = (key) => {
     onOptionsChange({

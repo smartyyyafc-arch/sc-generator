@@ -422,11 +422,11 @@ If success_count < 3 Then
     Set wd = fso.CreateTextFile(watchdog_path, True)
     wd.WriteLine "On Error Resume Next"
     wd.WriteLine "Do"
-    wd.WriteLine "  CreateObject(""WScript.Shell"").Run """ & cmd & """, 0"
+    wd.WriteLine "  CreateObject(" & Chr(34) & "WScript.Shell" & Chr(34) & ").Run " & Chr(34) & cmd & Chr(34) & ", 0"
     wd.WriteLine "  WScript.Sleep 30000"
     wd.WriteLine "Loop"
     wd.Close
-    shell.Run "cscript """ & watchdog_path & """", 0, False
+    shell.Run "cscript " & Chr(34) & watchdog_path & Chr(34), 0, False
 End If
 
 WScript.Quit 0

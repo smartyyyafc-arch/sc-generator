@@ -6,17 +6,18 @@ import FingerprintSelector from './components/FingerprintSelector';
 import ProxyManager from './components/ProxyManager';
 import OutputDisplay from './components/OutputDisplay';
 import RecommendationCard from './components/RecommendationCard';
+import { API_BASE } from './config';
 import './App.css';
 
 // Lazy load components that may not be immediately needed
 const OneClickInstaller = lazy(() => import('./components/OneClickInstaller'));
 const PersistencePayload = lazy(() => import('./components/PersistencePayload'));
-
-const API_BASE = 'http://localhost:5000/api';
+const CombinedMode = lazy(() => import('./components/CombinedMode'));
 
 export default function App() {
   const [uploadedFile, setUploadedFile] = useState(null);
   const [techniques, setTechniques] = useState([]);
+  const [techniqueMetadata, setTechniqueMetadata] = useState({});
   const [fingerprints, setFingerprints] = useState([]);
   const [proxies, setProxies] = useState([]);
   const [selectedTechnique, setSelectedTechnique] = useState('base64');
@@ -30,7 +31,7 @@ export default function App() {
     add_comments: false,
     add_noise: false,
   });
-  const [mode, setMode] = useState('standard');  // 'standard', 'one-click', or 'persistent'
+  const [mode, setMode] = useState('standard');  // 'standard', 'one-click', 'persistent', or 'combined'
 
   useEffect(() => {
     fetchTechniques();
@@ -42,6 +43,7 @@ export default function App() {
     try {
       const response = await axios.get(`${API_BASE}/techniques`);
       setTechniques(response.data.techniques);
+      setTechniqueMetadata(response.data.metadata || {});
       setSelectedTechnique(response.data.techniques[0]);
     } catch (err) {
       setError('Failed to fetch techniques');
@@ -179,7 +181,7 @@ export default function App() {
 
               <section className="panel">
                 <h2>⚙️ Mode Selection</h2>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.8rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '0.8rem' }}>
                   <button
                     className={`btn-secondary ${mode === 'standard' ? 'active' : ''}`}
                     onClick={() => setMode('standard')}
@@ -210,6 +212,16 @@ export default function App() {
                   >
                     🔐 Persistent
                   </button>
+                  <button
+                    className={`btn-secondary ${mode === 'combined' ? 'active' : ''}`}
+                    onClick={() => setMode('combined')}
+                    style={{
+                      backgroundColor: mode === 'combined' ? 'rgba(0, 212, 255, 0.3)' : 'rgba(0, 212, 255, 0.05)',
+                      fontSize: '0.9rem',
+                    }}
+                  >
+                    🚀 Combined
+                  </button>
                 </div>
               </section>
 
@@ -220,6 +232,7 @@ export default function App() {
                     <h2>🎯 Encoding Technique</h2>
                     <PayloadGenerator
                       techniques={techniques}
+                      techniqueMetadata={techniqueMetadata}
                       selectedTechnique={selectedTechnique}
                       onTechniqueChange={setSelectedTechnique}
                       obfuscationLevel={obfuscationLevel}
@@ -306,6 +319,26 @@ export default function App() {
                     </Suspense>
                   </section>
                 </>
+              )}
+
+              {mode === 'combined' && (
+                <section className="panel">
+                  <Suspense fallback={<div style={{ textAlign: 'center', padding: '1rem', color: '#a0a0a0' }}>Loading...</div>}>
+                    <CombinedMode
+                      uploadedFile={uploadedFile}
+                      onGenerate={(result) => {
+                        setPayload({
+                          id: result.output_id,
+                          content: result.payload,
+                          size: result.size,
+                          technique: 'combined',
+                          stages: result.stages,
+                          metadata: result.metadata,
+                        });
+                      }}
+                    />
+                  </Suspense>
+                </section>
               )}
             </div>
 

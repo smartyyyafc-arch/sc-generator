@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
-const API_BASE = 'http://localhost:5000/api';
+import { API_BASE } from '../config';
 
 export default function PersistencePayload({ uploadedFile, loading, onGenerate }) {
   const [methods, setMethods] = useState({});
@@ -10,6 +9,13 @@ export default function PersistencePayload({ uploadedFile, loading, onGenerate }
   const [obfuscation, setObfuscation] = useState('high');
   const [payload, setPayload] = useState(null);
   const [generating, setGenerating] = useState(false);
+  const [statusMessage, setStatusMessage] = useState(null);
+  const [copySuccess, setCopySuccess] = useState(false);
+
+  const showStatus = (message, type = 'info') => {
+    setStatusMessage({ message, type });
+    setTimeout(() => setStatusMessage(null), 4000);
+  };
 
   useEffect(() => {
     fetchMethods();
@@ -26,11 +32,12 @@ export default function PersistencePayload({ uploadedFile, loading, onGenerate }
 
   const handleGenerate = async () => {
     if (!uploadedFile) {
-      alert('Please upload a file first');
+      showStatus('Please upload a file first.', 'error');
       return;
     }
 
     setGenerating(true);
+    setStatusMessage(null);
 
     try {
       const response = await axios.post(`${API_BASE}/generate-persistent`, {
@@ -53,7 +60,7 @@ export default function PersistencePayload({ uploadedFile, loading, onGenerate }
 
       onGenerate?.(response.data);
     } catch (err) {
-      alert(err.response?.data?.error || 'Generation failed');
+      showStatus(err.response?.data?.error || 'Generation failed.', 'error');
     } finally {
       setGenerating(false);
     }
@@ -74,15 +81,18 @@ export default function PersistencePayload({ uploadedFile, loading, onGenerate }
       document.body.appendChild(link);
       link.click();
       link.parentElement.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch (err) {
       console.error('Download failed:', err);
+      showStatus('Download failed. Please try again.', 'error');
     }
   };
 
   const handleCopy = () => {
     if (payload?.content) {
       navigator.clipboard.writeText(payload.content);
-      alert('Copied to clipboard!');
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
     }
   };
 
@@ -93,6 +103,12 @@ export default function PersistencePayload({ uploadedFile, loading, onGenerate }
       <p style={{ color: '#a0a0a0', marginBottom: '1rem', fontSize: '0.9rem' }}>
         <strong>Survives reboots on all Windows versions (XP through 11)</strong>
       </p>
+
+      {statusMessage && (
+        <div className={`status-message ${statusMessage.type}`} style={{ marginBottom: '1rem' }}>
+          {statusMessage.message}
+        </div>
+      )}
 
       <div className="form-group">
         <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -254,7 +270,7 @@ export default function PersistencePayload({ uploadedFile, loading, onGenerate }
               💾 Download Payload
             </button>
             <button className="btn-secondary" onClick={handleCopy}>
-              📋 Copy Code
+              {copySuccess ? '✓ Copied!' : '📋 Copy Code'}
             </button>
           </div>
         </div>

