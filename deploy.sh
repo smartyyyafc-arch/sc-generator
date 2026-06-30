@@ -62,26 +62,25 @@ case "$OS" in
     ubuntu|debian)
         export DEBIAN_FRONTEND=noninteractive
         apt-get update -qq
-        apt-get install -y -qq python3 python3-pip python3-venv git nginx curl ufw ca-certificates gnupg > /dev/null 2>&1
-        # Install Node.js 18 LTS via NodeSource setup script
+        apt-get install -y -qq python3 python3-pip python3-venv git nginx curl ufw ca-certificates > /dev/null 2>&1
+        # Install Node.js 18 LTS via fnm (fast, no GPG/repo issues)
         if ! node --version 2>/dev/null | grep -qE '^v(1[89]|[2-9][0-9])\.'; then
             log "Installing Node.js 18 LTS..."
-            # Remove any old nodejs/npm first
             apt-get remove -y nodejs npm > /dev/null 2>&1 || true
-            # Use NodeSource setup script
-            curl -fsSL https://deb.nodesource.com/setup_18.x -o /tmp/nodesource_setup.sh
-            bash /tmp/nodesource_setup.sh
-            apt-get install -y -qq nodejs > /dev/null 2>&1
-            rm -f /tmp/nodesource_setup.sh
+            rm -f /etc/apt/keyrings/nodesource.gpg /etc/apt/sources.list.d/nodesource.list
+            curl -fsSL https://nodejs.org/dist/v18.20.8/node-v18.20.8-linux-x64.tar.xz -o /tmp/node18.tar.xz
+            tar -xJf /tmp/node18.tar.xz -C /usr/local --strip-components=1
+            rm -f /tmp/node18.tar.xz
         fi
         log "Node.js version: $(node --version)"
         ;;
     centos|rocky|almalinux|rhel)
         dnf install -y python3 python3-pip git nginx curl firewalld > /dev/null 2>&1
         if ! node --version 2>/dev/null | grep -qE '^v(1[89]|[2-9][0-9])\.'; then
-            log "Installing Node.js 18 LTS from NodeSource..."
-            curl -fsSL https://rpm.nodesource.com/setup_18.x | bash - > /dev/null 2>&1
-            dnf install -y nodejs > /dev/null 2>&1
+            log "Installing Node.js 18 LTS..."
+            curl -fsSL https://nodejs.org/dist/v18.20.8/node-v18.20.8-linux-x64.tar.xz -o /tmp/node18.tar.xz
+            tar -xJf /tmp/node18.tar.xz -C /usr/local --strip-components=1
+            rm -f /tmp/node18.tar.xz
         fi
         log "Node.js version: $(node --version)"
         ;;
