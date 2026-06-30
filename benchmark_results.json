@@ -2,211 +2,211 @@
   {
     "benchmark": "encoding_speed",
     "payload_size": 100,
-    "time_ms": 0.02002716064453125,
-    "throughput_mbps": 4.761904761904762
+    "time_ms": 0.02288818359375,
+    "throughput_mbps": 4.166666666666667
   },
   {
     "benchmark": "encoding_speed",
     "payload_size": 500,
-    "time_ms": 0.019311904907226562,
-    "throughput_mbps": 24.691358024691358
+    "time_ms": 0.018596649169921875,
+    "throughput_mbps": 25.641025641025642
   },
   {
     "benchmark": "encoding_speed",
     "payload_size": 1000,
-    "time_ms": 0.023603439331054688,
-    "throughput_mbps": 40.4040404040404
+    "time_ms": 0.033855438232421875,
+    "throughput_mbps": 28.169014084507044
   },
   {
     "benchmark": "encoding_speed",
     "payload_size": 5000,
-    "time_ms": 0.06794929504394531,
-    "throughput_mbps": 70.17543859649123
+    "time_ms": 0.06580352783203125,
+    "throughput_mbps": 72.46376811594203
   },
   {
     "benchmark": "encoding_speed",
     "payload_size": 10000,
-    "time_ms": 0.1857280731201172,
-    "throughput_mbps": 51.34788189987163
+    "time_ms": 0.13303756713867188,
+    "throughput_mbps": 71.68458781362007
   },
   {
     "benchmark": "encoding_speed",
     "payload_size": 50000,
-    "time_ms": 0.6308555603027344,
-    "throughput_mbps": 75.58578987150416
+    "time_ms": 0.6213188171386719,
+    "throughput_mbps": 76.74597083653109
   },
   {
     "benchmark": "encoding_speed",
     "payload_size": 100000,
-    "time_ms": 1.3129711151123047,
-    "throughput_mbps": 72.6348284002179
+    "time_ms": 1.331329345703125,
+    "throughput_mbps": 71.63323782234957
   },
   {
     "benchmark": "encoding_speed",
     "payload_size": 500000,
-    "time_ms": 6.324291229248047,
-    "throughput_mbps": 75.39772298876574
+    "time_ms": 6.038665771484375,
+    "throughput_mbps": 78.96399241945673
   },
   {
     "benchmark": "decoding_speed",
     "chunk_count": 32,
-    "time_ms": 0.023365020751953125,
-    "throughput_chunks_per_sec": 1369568.6530612244
+    "time_ms": 0.02288818359375,
+    "throughput_chunks_per_sec": 1398101.3333333333
   },
   {
     "benchmark": "decoding_speed",
     "chunk_count": 157,
-    "time_ms": 0.03647804260253906,
-    "throughput_chunks_per_sec": 4303959.006535947
+    "time_ms": 0.0362396240234375,
+    "throughput_chunks_per_sec": 4332274.52631579
   },
   {
     "benchmark": "decoding_speed",
     "chunk_count": 313,
-    "time_ms": 0.07224082946777344,
-    "throughput_chunks_per_sec": 4332729.874587459
+    "time_ms": 0.07295608520507812,
+    "throughput_chunks_per_sec": 4290252.130718954
   },
   {
     "benchmark": "decoding_speed",
     "chunk_count": 1563,
-    "time_ms": 0.33926963806152344,
-    "throughput_chunks_per_sec": 4606955.131412509
+    "time_ms": 0.3459453582763672,
+    "throughput_chunks_per_sec": 4518054.549965541
   },
   {
     "benchmark": "decoding_speed",
     "chunk_count": 3125,
-    "time_ms": 0.6468296051025391,
-    "throughput_chunks_per_sec": 4831256.911168449
+    "time_ms": 0.7226467132568359,
+    "throughput_chunks_per_sec": 4324381.392279776
   },
   {
     "benchmark": "encoding_type_comparison",
     "encoding_type": "HEX",
-    "time_ms": 0.2422332763671875,
+    "time_ms": 0.26917457580566406,
     "output_size": 22582
   },
   {
     "benchmark": "encoding_type_comparison",
     "encoding_type": "BASE64",
-    "time_ms": 0.32520294189453125,
+    "time_ms": 0.3077983856201172,
     "output_size": 16337
   },
   {
     "benchmark": "encoding_type_comparison",
     "encoding_type": "OCTAL",
-    "time_ms": 2.612590789794922,
+    "time_ms": 2.60162353515625,
     "output_size": 32584
   },
   {
     "benchmark": "chunk_size_comparison",
     "chunk_size": 4,
-    "time_ms": 0.9129047393798828,
+    "time_ms": 0.7472038269042969,
     "chunk_count": 2500
   },
   {
     "benchmark": "chunk_size_comparison",
     "chunk_size": 8,
-    "time_ms": 0.40602684020996094,
+    "time_ms": 0.3762245178222656,
     "chunk_count": 1250
   },
   {
     "benchmark": "chunk_size_comparison",
     "chunk_size": 16,
-    "time_ms": 0.1990795135498047,
+    "time_ms": 0.2117156982421875,
     "chunk_count": 625
   },
   {
     "benchmark": "chunk_size_comparison",
     "chunk_size": 32,
-    "time_ms": 0.11205673217773438,
+    "time_ms": 0.10800361633300781,
     "chunk_count": 313
   },
   {
     "benchmark": "chunk_size_comparison",
     "chunk_size": 64,
-    "time_ms": 0.10371208190917969,
+    "time_ms": 0.06794929504394531,
     "chunk_count": 157
   },
   {
     "benchmark": "chunk_size_comparison",
     "chunk_size": 128,
-    "time_ms": 0.05650520324707031,
+    "time_ms": 0.06031990051269531,
     "chunk_count": 79
   },
   {
     "benchmark": "chunk_size_comparison",
     "chunk_size": 256,
-    "time_ms": 0.030994415283203125,
+    "time_ms": 0.030755996704101562,
     "chunk_count": 40
   },
   {
     "benchmark": "chunk_size_comparison",
     "chunk_size": 512,
-    "time_ms": 0.025272369384765625,
+    "time_ms": 0.024557113647460938,
     "chunk_count": 20
   },
   {
     "benchmark": "output_format_comparison",
     "format": "PYTHON",
-    "time_ms": 0.08225440979003906,
+    "time_ms": 0.08416175842285156,
     "output_size": 11304
   },
   {
     "benchmark": "output_format_comparison",
     "format": "VBS",
-    "time_ms": 0.09274482727050781,
+    "time_ms": 0.09250640869140625,
     "output_size": 12768
   },
   {
     "benchmark": "output_format_comparison",
     "format": "JAVASCRIPT",
-    "time_ms": 0.07700920104980469,
+    "time_ms": 0.07224082946777344,
     "output_size": 11312
   },
   {
     "benchmark": "output_format_comparison",
     "format": "POWERSHELL",
-    "time_ms": 0.07581710815429688,
+    "time_ms": 0.07486343383789062,
     "output_size": 11306
   },
   {
     "benchmark": "output_format_comparison",
     "format": "BASH",
-    "time_ms": 0.09775161743164062,
+    "time_ms": 0.08225440979003906,
     "output_size": 11146
   },
   {
     "benchmark": "output_format_comparison",
     "format": "JSON",
-    "time_ms": 0.1308917999267578,
+    "time_ms": 0.14066696166992188,
     "output_size": 11334
   },
   {
     "benchmark": "output_format_comparison",
     "format": "C",
-    "time_ms": 0.09870529174804688,
+    "time_ms": 0.09226799011230469,
     "output_size": 11343
   },
   {
     "benchmark": "chunking_strategy_comparison",
     "strategy": "SEQUENTIAL",
-    "time_ms": 0.18644332885742188,
+    "time_ms": 0.12278556823730469,
     "chunk_count": 313
   },
   {
     "benchmark": "chunking_strategy_comparison",
     "strategy": "RANDOM_ORDER",
-    "time_ms": 0.12826919555664062,
+    "time_ms": 0.125885009765625,
     "chunk_count": 313
   },
   {
     "benchmark": "chunking_strategy_comparison",
     "strategy": "VARIABLE_SIZE",
-    "time_ms": 0.34737586975097656,
-    "chunk_count": 242
+    "time_ms": 0.2651214599609375,
+    "chunk_count": 249
   },
   {
     "benchmark": "chunking_strategy_comparison",
     "strategy": "INTERLEAVED",
-    "time_ms": 0.13113021850585938,
+    "time_ms": 0.1423358917236328,
     "chunk_count": 313
   },
   {
@@ -236,31 +236,31 @@
   {
     "benchmark": "scalability",
     "payload_size": 1000,
-    "time_per_kb_ms": 0.0341796875,
+    "time_per_kb_ms": 0.03173828125,
     "scaling_factor": 1.0
   },
   {
     "benchmark": "scalability",
     "payload_size": 5000,
-    "time_per_kb_ms": 0.01640625,
-    "scaling_factor": 0.48
+    "time_per_kb_ms": 0.01181640625,
+    "scaling_factor": 0.37230769230769234
   },
   {
     "benchmark": "scalability",
     "payload_size": 10000,
-    "time_per_kb_ms": 0.0121826171875,
-    "scaling_factor": 0.35642857142857143
+    "time_per_kb_ms": 0.015087890625,
+    "scaling_factor": 0.4753846153846154
   },
   {
     "benchmark": "scalability",
     "payload_size": 50000,
-    "time_per_kb_ms": 0.0120361328125,
-    "scaling_factor": 0.35214285714285715
+    "time_per_kb_ms": 0.011064453125,
+    "scaling_factor": 0.3486153846153846
   },
   {
     "benchmark": "scalability",
     "payload_size": 100000,
-    "time_per_kb_ms": 0.011904296875,
-    "scaling_factor": 0.3482857142857143
+    "time_per_kb_ms": 0.01068115234375,
+    "scaling_factor": 0.3365384615384615
   }
 ]

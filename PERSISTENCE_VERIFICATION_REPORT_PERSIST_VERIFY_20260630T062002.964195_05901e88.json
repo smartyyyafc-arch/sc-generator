@@ -1,0 +1,128 @@
+{
+  "report_id": "PERSIST_VERIFY_20260630T062002.964195_05901e88",
+  "timestamp": "2026-06-30T06:20:02.975796",
+  "platform": "Linux",
+  "test_results": [
+    {
+      "test_name": "Windows Registry HKCU Write/Read",
+      "status": "SKIP",
+      "message": "Not on Windows platform",
+      "timestamp": "2026-06-30T06:20:02.964583",
+      "duration_ms": 0.0,
+      "details": {},
+      "error": null
+    },
+    {
+      "test_name": "Windows Registry HKLM Write/Read",
+      "status": "SKIP",
+      "message": "Not on Windows platform",
+      "timestamp": "2026-06-30T06:20:02.964593",
+      "duration_ms": 0.0,
+      "details": {},
+      "error": null
+    },
+    {
+      "test_name": "Registry HKCU\u2192HKLM Fallback",
+      "status": "SKIP",
+      "message": "Not on Windows platform",
+      "timestamp": "2026-06-30T06:20:02.964598",
+      "duration_ms": 0.0,
+      "details": {},
+      "error": null
+    },
+    {
+      "test_name": "Environment Variable USER Write/Read",
+      "status": "PASS",
+      "message": "Environment variable written and read successfully",
+      "timestamp": "2026-06-30T06:20:02.964622",
+      "duration_ms": 0.017642974853515625,
+      "details": {
+        "scope": "USER",
+        "var_name": "TEST_ENV_USER_64108a9d",
+        "written": "TestPayload_Simple",
+        "read": "TestPayload_Simple",
+        "match": true,
+        "platform": "Linux"
+      },
+      "error": null
+    },
+    {
+      "test_name": "Environment Variable Persistence (Subprocess)",
+      "status": "PASS",
+      "message": "Environment variable persisted across subprocess",
+      "timestamp": "2026-06-30T06:20:02.975673",
+      "duration_ms": 11.042118072509766,
+      "details": {
+        "var_name": "TEST_ENV_PERSIST_614e91ab",
+        "written": "TestPayload_Simple",
+        "read_from_subprocess": "TestPayload_Simple",
+        "match": true,
+        "subprocess_returncode": 0
+      },
+      "error": null
+    },
+    {
+      "test_name": "Chunked Payload Registry Persistence",
+      "status": "SKIP",
+      "message": "Not on Windows platform",
+      "timestamp": "2026-06-30T06:20:02.975700",
+      "duration_ms": 0.0,
+      "details": {},
+      "error": null
+    },
+    {
+      "test_name": "Multiple Encodings Registry Persistence",
+      "status": "SKIP",
+      "message": "Not on Windows platform",
+      "timestamp": "2026-06-30T06:20:02.975706",
+      "duration_ms": 0.0,
+      "details": {},
+      "error": null
+    },
+    {
+      "test_name": "Cross-Persistence Registry\u2194EnvVar",
+      "status": "SKIP",
+      "message": "Not on Windows platform",
+      "timestamp": "2026-06-30T06:20:02.975716",
+      "duration_ms": 0.0,
+      "details": {},
+      "error": null
+    },
+    {
+      "test_name": "Fallback Chain Registry\u2192EnvVar\u2192File",
+      "status": "PASS",
+      "message": "Data stored in ENV_VAR",
+      "timestamp": "2026-06-30T06:20:02.975747",
+      "duration_ms": 0.022172927856445312,
+      "details": {
+        "primary_attempted": false,
+        "secondary_attempted": true,
+        "tertiary_attempted": true,
+        "stored_location": "ENV_VAR"
+      },
+      "error": null
+    },
+    {
+      "test_name": "Special Characters Persistence",
+      "status": "PASS",
+      "message": "Tested 5 special character patterns",
+      "timestamp": "2026-06-30T06:20:02.975775",
+      "duration_ms": 0.02193450927734375,
+      "details": {
+        "patterns_tested": 5,
+        "all_success": true
+      },
+      "error": null
+    }
+  ],
+  "summary": {
+    "total": 10,
+    "passed": 4,
+    "failed": 0,
+    "skipped": 6,
+    "partial": 0
+  },
+  "recommendations": [
+    "Run on Windows platform for complete registry testing (6 tests skipped)"
+  ]
+}

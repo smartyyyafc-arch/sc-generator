@@ -1,0 +1,186 @@
+{
+  "test_report": {
+    "timestamp": "2026-06-30T06:43:00Z",
+    "overall_status": "REGRESSION_DETECTED",
+    "javascript_tests": {
+      "status": "PASSED",
+      "total": 38,
+      "passed": 38,
+      "failed": 0,
+      "skipped": 0,
+      "pass_rate": 100.0,
+      "duration_seconds": 31.467,
+      "categories": {
+        "user_navigation_interaction": 3,
+        "file_upload_management": 3,
+        "technique_selection_configuration": 4,
+        "payload_generation": 3,
+        "payload_export_download": 3,
+        "payload_execution": 3,
+        "user_metrics_analytics": 3,
+        "advanced_workflows": 4,
+        "error_handling_edge_cases": 3,
+        "performance_stress_tests": 3,
+        "data_integrity": 2,
+        "accessibility_ux": 2,
+        "end_to_end_integration": 2
+      }
+    },
+    "python_tests": {
+      "status": "MIXED_WITH_FAILURES",
+      "total_files": 75,
+      "completed_files": 50,
+      "issues_detected": 8,
+      "critical_issues": 1,
+      "high_issues": 1,
+      "medium_issues": 6,
+      "pass_rate_completed": 85.0
+    },
+    "critical_issues": [
+      {
+        "id": "CRITICAL-1",
+        "file": "test_hardened_com_security.py",
+        "type": "Security Issue",
+        "title": "String Obfuscation Security Failure",
+        "description": "String obfuscation test FAILED - exposed sensitive patterns",
+        "exposed_patterns": ["WScript\\.Shell", "Get-Process"],
+        "severity": "CRITICAL",
+        "impact": "Security posture degradation",
+        "recommendation": "Immediate review and fix required"
+      }
+    ],
+    "high_issues": [
+      {
+        "id": "HIGH-1",
+        "file": "test_command_chunking_reassembler.py",
+        "type": "Dependency Error",
+        "title": "Missing pytest Module",
+        "description": "ModuleNotFoundError: No module named 'pytest'",
+        "severity": "HIGH",
+        "impact": "Test infrastructure broken",
+        "recommendation": "Install pytest module"
+      }
+    ],
+    "medium_issues": [
+      {
+        "id": "MEDIUM-1",
+        "file": "test_payload_watchdog.py",
+        "type": "Test Failure",
+        "title": "Payload Watchdog Timing Issue",
+        "description": "2 out of 30 tests failed - AssertionError: 0 not greater than 0 in test_full_lifecycle",
+        "pass_rate": 93.3,
+        "severity": "MEDIUM",
+        "recommendation": "Review payload watchdog timing logic"
+      },
+      {
+        "id": "MEDIUM-2",
+        "file": "test_multi_encoding_complete.py",
+        "type": "Test Failure",
+        "title": "Multi-Encoding Implementation Regression",
+        "description": "7 out of 23 tests failed - core encoding logic appears broken",
+        "pass_rate": 69.6,
+        "severity": "MEDIUM",
+        "recommendation": "Debug and fix multi-encoding implementation"
+      },
+      {
+        "id": "MEDIUM-3",
+        "file": "test_oneclick_variants.py",
+        "type": "Test Failure",
+        "title": "One-Click Variants Feature Regression",
+        "description": "3 out of 22 tests failed - variant generation logic appears broken",
+        "pass_rate": 86.4,
+        "severity": "MEDIUM",
+        "recommendation": "Review and debug variant generation"
+      },
+      {
+        "id": "MEDIUM-4",
+        "file": "test_http_https_protocol.py",
+        "type": "Network Issue",
+        "title": "HTTP/HTTPS Protocol Test Failures",
+        "description": "Network connectivity issues - 0/2 success for both HTTP and HTTPS",
+        "severity": "MEDIUM",
+        "recommendation": "Investigate network connectivity requirements"
+      },
+      {
+        "id": "MEDIUM-5",
+        "file": "test_array_comprehensive_payloads.py",
+        "type": "Test Execution Error",
+        "title": "Array Payload Test Errors",
+        "description": "Test infrastructure error during execution",
+        "severity": "MEDIUM",
+        "recommendation": "Review test configuration and timeouts"
+      },
+      {
+        "id": "MEDIUM-6",
+        "file": "test_array_edge_cases_integration.py",
+        "type": "Test Execution Error",
+        "title": "Array Edge Cases Test Errors",
+        "description": "Test infrastructure error during execution",
+        "severity": "MEDIUM",
+        "recommendation": "Review test configuration and timeouts"
+      }
+    ],
+    "tests_passing": [
+      "test_base64_encoder.py",
+      "test_base64_hardened_decoder.py",
+      "test_base64_comprehensive.py",
+      "test_base64_e2e_execution.py",
+      "test_com_object_variants.py",
+      "test_com_polymorphic_loader.py",
+      "test_com_windows_version_variants.py",
+      "test_command_obfuscation_comprehensive.py",
+      "test_command_string_obfuscator.py",
+      "test_dcom_rce_executor.py",
+      "test_encoder_decoder_integration.py",
+      "test_enhanced_proxy_system.py",
+      "test_file_disguiser.py",
+      "test_file_writer_variants.py",
+      "test_hex_comprehensive.py",
+      "test_hex_decoder_variants.py",
+      "test_log_tampering.py",
+      "test_multi_encoding.py",
+      "test_multi_encoding_key_derivation.py",
+      "test_obfuscator.py",
+      "test_payload_file_writer.py",
+      "test_polymorphic_engine.py",
+      "test_polymorphic_variants.py",
+      "test_polymorphic_wrapper.py",
+      "test_proxy_auth_handler.py",
+      "test_proxy_fallback_handler.py",
+      "test_registry_backup_restore.py",
+      "test_registry_obfuscator.py",
+      "test_registry_storage.py",
+      "test_advanced_persistence.py"
+    ],
+    "recommendations": {
+      "immediate_actions": [
+        "Fix string obfuscation security issue (CRITICAL-1)",
+        "Install pytest module dependency (HIGH-1)",
+        "Debug multi-encoding implementation (MEDIUM-2)",
+        "Review one-click variants feature (MEDIUM-3)"
+      ],
+      "short_term_actions": [
+        "Optimize test execution times (currently 31s JS + 90s+ Python)",
+        "Add better logging to timeout-prone tests",
+        "Verify payload watchdog timing logic",
+        "Test network connectivity requirements"
+      ],
+      "long_term_improvements": [
+        "Reduce overall test suite runtime",
+        "Implement CI with proper timeout management",
+        "Add regression test benchmarking",
+        "Document expected test runtime per module"
+      ]
+    },
+    "summary": {
+      "status": "REGRESSION_DETECTED",
+      "total_test_files": 75,
+      "completed_tests": 38,
+      "failed_tests_detected": 8,
+      "critical_count": 1,
+      "high_count": 1,
+      "medium_count": 6,
+      "action_required": true
+    }
+  }
+}

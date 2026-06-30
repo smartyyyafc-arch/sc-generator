@@ -1,0 +1,249 @@
+{
+  "timestamp": "2026-06-30T06:26:38.941894",
+  "protocol_tests": [
+    {
+      "url": "http://example.com",
+      "protocol": "HTTP",
+      "scheme": "http",
+      "status": "ERROR",
+      "status_code": 403,
+      "ssl_verification": "N/A (HTTP)",
+      "certificate_info": null,
+      "warnings": [],
+      "errors": [
+        "HTTP Error 403: Forbidden"
+      ],
+      "response_time_ms": 0,
+      "content_hash": null,
+      "headers": {}
+    },
+    {
+      "url": "https://example.com",
+      "protocol": "HTTPS",
+      "scheme": "https",
+      "status": "ERROR",
+      "status_code": null,
+      "ssl_verification": "ENABLED",
+      "certificate_info": {},
+      "warnings": [],
+      "errors": [
+        "URL Error: Tunnel connection failed: 403 Forbidden"
+      ],
+      "response_time_ms": 0,
+      "content_hash": null,
+      "headers": {},
+      "tls_version": null,
+      "cipher_suite": null
+    },
+    {
+      "url": "http://www.google.com",
+      "protocol": "HTTP",
+      "scheme": "http",
+      "status": "ERROR",
+      "status_code": 403,
+      "ssl_verification": "N/A (HTTP)",
+      "certificate_info": null,
+      "warnings": [],
+      "errors": [
+        "HTTP Error 403: Forbidden"
+      ],
+      "response_time_ms": 0,
+      "content_hash": null,
+      "headers": {}
+    },
+    {
+      "url": "https://www.google.com",
+      "protocol": "HTTPS",
+      "scheme": "https",
+      "status": "ERROR",
+      "status_code": null,
+      "ssl_verification": "ENABLED",
+      "certificate_info": {},
+      "warnings": [],
+      "errors": [
+        "URL Error: Tunnel connection failed: 403 Forbidden"
+      ],
+      "response_time_ms": 0,
+      "content_hash": null,
+      "headers": {},
+      "tls_version": null,
+      "cipher_suite": null
+    }
+  ],
+  "ssl_tls_warnings": [
+    {
+      "test": "SSL Certificate Validation",
+      "status": "ENABLED",
+      "details": "urllib.request uses certifi CA bundle by default",
+      "severity": "CRITICAL",
+      "warning": null
+    },
+    {
+      "test": "Hostname Verification",
+      "status": "ENABLED",
+      "details": "Default SSL context enables hostname checking",
+      "severity": "CRITICAL",
+      "warning": null
+    },
+    {
+      "test": "Weak SSL/TLS Versions",
+      "status": "PROTECTED",
+      "details": "Python 3.10+ disables SSLv2, SSLv3, TLSv1, TLSv1.1",
+      "severity": "HIGH",
+      "warning": "Python version 3.11 - check TLS support"
+    },
+    {
+      "test": "urllib SSL Verification",
+      "status": "ENABLED",
+      "details": "urllib.request verifies certificates against certifi CA bundle",
+      "severity": "CRITICAL",
+      "warning": null
+    },
+    {
+      "test": "HSTS Support",
+      "status": "SUPPORTED",
+      "details": "HSTS headers enforce HTTPS-only communication",
+      "severity": "MEDIUM",
+      "warning": "HSTS not enforced by urllib - use requests library for automatic HSTS"
+    }
+  ],
+  "certificate_tests": [
+    {
+      "hostname": "example.com",
+      "port": 443,
+      "status": "SSL_ERROR",
+      "certificate": {
+        "subject": null,
+        "issuer": null,
+        "version": null,
+        "serial_number": null,
+        "not_before": null,
+        "not_after": null,
+        "algorithm": null
+      },
+      "chain_validation": {
+        "valid": false,
+        "chain_length": 0,
+        "warnings": [
+          "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1016)"
+        ]
+      },
+      "ssl_tls_info": {
+        "protocol_version": null,
+        "cipher_suite": null,
+        "bits": null
+      },
+      "warnings": [],
+      "errors": [
+        "SSL Error: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1016)"
+      ]
+    },
+    {
+      "hostname": "www.google.com",
+      "port": 443,
+      "status": "SSL_ERROR",
+      "certificate": {
+        "subject": null,
+        "issuer": null,
+        "version": null,
+        "serial_number": null,
+        "not_before": null,
+        "not_after": null,
+        "algorithm": null
+      },
+      "chain_validation": {
+        "valid": false,
+        "chain_length": 0,
+        "warnings": [
+          "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1016)"
+        ]
+      },
+      "ssl_tls_info": {
+        "protocol_version": null,
+        "cipher_suite": null,
+        "bits": null
+      },
+      "warnings": [],
+      "errors": [
+        "SSL Error: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1016)"
+      ]
+    },
+    {
+      "hostname": "github.com",
+      "port": 443,
+      "status": "SSL_ERROR",
+      "certificate": {
+        "subject": null,
+        "issuer": null,
+        "version": null,
+        "serial_number": null,
+        "not_before": null,
+        "not_after": null,
+        "algorithm": null
+      },
+      "chain_validation": {
+        "valid": false,
+        "chain_length": 0,
+        "warnings": [
+          "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1016)"
+        ]
+      },
+      "ssl_tls_info": {
+        "protocol_version": null,
+        "cipher_suite": null,
+        "bits": null
+      },
+      "warnings": [],
+      "errors": [
+        "SSL Error: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1016)"
+      ]
+    },
+    {
+      "hostname": "httpbin.org",
+      "port": 443,
+      "status": "SSL_ERROR",
+      "certificate": {
+        "subject": null,
+        "issuer": null,
+        "version": null,
+        "serial_number": null,
+        "not_before": null,
+        "not_after": null,
+        "algorithm": null
+      },
+      "chain_validation": {
+        "valid": false,
+        "chain_length": 0,
+        "warnings": [
+          "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1016)"
+        ]
+      },
+      "ssl_tls_info": {
+        "protocol_version": null,
+        "cipher_suite": null,
+        "bits": null
+      },
+      "warnings": [],
+      "errors": [
+        "SSL Error: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self-signed certificate in certificate chain (_ssl.c:1016)"
+      ]
+    }
+  ],
+  "summary": {
+    "total_tests": 4,
+    "passed": 0,
+    "failed": 4,
+    "warnings": 2,
+    "ssl_errors": 4,
+    "protocol_comparison": {
+      "http": {
+        "success": 0,
+        "failure": 2
+      },
+      "https": {
+        "success": 0,
+        "failure": 2
+      }
+    }
+  }
+}
