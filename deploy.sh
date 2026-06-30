@@ -63,14 +63,16 @@ case "$OS" in
         export DEBIAN_FRONTEND=noninteractive
         apt-get update -qq
         apt-get install -y -qq python3 python3-pip python3-venv git nginx curl ufw ca-certificates gnupg > /dev/null 2>&1
-        # Install Node.js 18 LTS from NodeSource (apt default is too old)
+        # Install Node.js 18 LTS via NodeSource setup script
         if ! node --version 2>/dev/null | grep -qE '^v(1[89]|[2-9][0-9])\.'; then
-            log "Installing Node.js 18 LTS from NodeSource..."
-            mkdir -p /etc/apt/keyrings
-            curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-            echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_18.x nodistro main" > /etc/apt/sources.list.d/nodesource.list
-            apt-get update -qq
+            log "Installing Node.js 18 LTS..."
+            # Remove any old nodejs/npm first
+            apt-get remove -y nodejs npm > /dev/null 2>&1 || true
+            # Use NodeSource setup script
+            curl -fsSL https://deb.nodesource.com/setup_18.x -o /tmp/nodesource_setup.sh
+            bash /tmp/nodesource_setup.sh
             apt-get install -y -qq nodejs > /dev/null 2>&1
+            rm -f /tmp/nodesource_setup.sh
         fi
         log "Node.js version: $(node --version)"
         ;;
