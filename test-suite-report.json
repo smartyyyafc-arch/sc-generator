@@ -3,7 +3,7 @@
   "failed": 0,
   "skipped": 0,
   "total": 38,
-  "duration": 31467,
+  "duration": 31457,
   "suites": [
     {
       "name": "User Navigation & Interaction",
@@ -19,7 +19,7 @@
           "name": "should handle multi-step user journey",
           "suiteName": "User Navigation & Interaction",
           "status": "passed",
-          "duration": 352,
+          "duration": 351,
           "error": null
         },
         {
@@ -40,21 +40,21 @@
           "name": "should upload file successfully",
           "suiteName": "File Upload & Management",
           "status": "passed",
-          "duration": 200,
+          "duration": 201,
           "error": null
         },
         {
           "name": "should handle multiple file uploads",
           "suiteName": "File Upload & Management",
           "status": "passed",
-          "duration": 401,
+          "duration": 402,
           "error": null
         },
         {
           "name": "should validate file state after upload",
           "suiteName": "File Upload & Management",
           "status": "passed",
-          "duration": 201,
+          "duration": 200,
           "error": null
         }
       ],
@@ -82,14 +82,14 @@
           "name": "should combine technique with obfuscation level",
           "suiteName": "Technique Selection & Configuration",
           "status": "passed",
-          "duration": 102,
+          "duration": 101,
           "error": null
         },
         {
           "name": "should select and combine fingerprints",
           "suiteName": "Technique Selection & Configuration",
           "status": "passed",
-          "duration": 101,
+          "duration": 100,
           "error": null
         }
       ],
@@ -103,21 +103,21 @@
           "name": "should generate payload after file upload",
           "suiteName": "Payload Generation",
           "status": "passed",
-          "duration": 502,
+          "duration": 501,
           "error": null
         },
         {
           "name": "should generate different payloads for different techniques",
           "suiteName": "Payload Generation",
           "status": "passed",
-          "duration": 1104,
+          "duration": 1102,
           "error": null
         },
         {
           "name": "should preserve payload across multiple accesses",
           "suiteName": "Payload Generation",
           "status": "passed",
-          "duration": 501,
+          "duration": 502,
           "error": null
         }
       ],
@@ -138,7 +138,7 @@
           "name": "should download payload file",
           "suiteName": "Payload Export & Download",
           "status": "passed",
-          "duration": 702,
+          "duration": 701,
           "error": null
         },
         {
@@ -159,7 +159,7 @@
           "name": "should execute payload successfully",
           "suiteName": "Payload Execution",
           "status": "passed",
-          "duration": 1003,
+          "duration": 1002,
           "error": null
         },
         {
@@ -173,7 +173,7 @@
           "name": "should track execution in user actions",
           "suiteName": "Payload Execution",
           "status": "passed",
-          "duration": 1002,
+          "duration": 1003,
           "error": null
         }
       ],
@@ -229,7 +229,7 @@
           "name": "should handle proxy configuration workflow",
           "suiteName": "Advanced Workflows",
           "status": "passed",
-          "duration": 252,
+          "duration": 251,
           "error": null
         },
         {
@@ -250,14 +250,14 @@
           "name": "should handle rapid technique switching",
           "suiteName": "Error Handling & Edge Cases",
           "status": "passed",
-          "duration": 503,
+          "duration": 502,
           "error": null
         },
         {
           "name": "should handle invalid state transitions gracefully",
           "suiteName": "Error Handling & Edge Cases",
           "status": "passed",
-          "duration": 301,
+          "duration": 302,
           "error": null
         },
         {
@@ -375,7 +375,7 @@
       "name": "should handle multi-step user journey",
       "suiteName": "User Navigation & Interaction",
       "status": "passed",
-      "duration": 352,
+      "duration": 351,
       "error": null
     },
     {
@@ -389,21 +389,21 @@
       "name": "should upload file successfully",
       "suiteName": "File Upload & Management",
       "status": "passed",
-      "duration": 200,
+      "duration": 201,
       "error": null
     },
     {
       "name": "should handle multiple file uploads",
       "suiteName": "File Upload & Management",
       "status": "passed",
-      "duration": 401,
+      "duration": 402,
       "error": null
     },
     {
       "name": "should validate file state after upload",
       "suiteName": "File Upload & Management",
       "status": "passed",
-      "duration": 201,
+      "duration": 200,
       "error": null
     },
     {
@@ -424,35 +424,35 @@
       "name": "should combine technique with obfuscation level",
       "suiteName": "Technique Selection & Configuration",
       "status": "passed",
-      "duration": 102,
+      "duration": 101,
       "error": null
     },
     {
       "name": "should select and combine fingerprints",
       "suiteName": "Technique Selection & Configuration",
       "status": "passed",
-      "duration": 101,
+      "duration": 100,
       "error": null
     },
     {
       "name": "should generate payload after file upload",
       "suiteName": "Payload Generation",
       "status": "passed",
-      "duration": 502,
+      "duration": 501,
       "error": null
     },
     {
       "name": "should generate different payloads for different techniques",
       "suiteName": "Payload Generation",
       "status": "passed",
-      "duration": 1104,
+      "duration": 1102,
       "error": null
     },
     {
       "name": "should preserve payload across multiple accesses",
       "suiteName": "Payload Generation",
       "status": "passed",
-      "duration": 501,
+      "duration": 502,
       "error": null
     },
     {
@@ -466,7 +466,7 @@
       "name": "should download payload file",
       "suiteName": "Payload Export & Download",
       "status": "passed",
-      "duration": 702,
+      "duration": 701,
       "error": null
     },
     {
@@ -480,7 +480,7 @@
       "name": "should execute payload successfully",
       "suiteName": "Payload Execution",
       "status": "passed",
-      "duration": 1003,
+      "duration": 1002,
       "error": null
     },
     {
@@ -494,7 +494,7 @@
       "name": "should track execution in user actions",
       "suiteName": "Payload Execution",
       "status": "passed",
-      "duration": 1002,
+      "duration": 1003,
       "error": null
     },
     {
@@ -536,7 +536,7 @@
       "name": "should handle proxy configuration workflow",
       "suiteName": "Advanced Workflows",
       "status": "passed",
-      "duration": 252,
+      "duration": 251,
       "error": null
     },
     {
@@ -550,14 +550,14 @@
       "name": "should handle rapid technique switching",
       "suiteName": "Error Handling & Edge Cases",
       "status": "passed",
-      "duration": 503,
+      "duration": 502,
       "error": null
     },
     {
       "name": "should handle invalid state transitions gracefully",
       "suiteName": "Error Handling & Edge Cases",
       "status": "passed",
-      "duration": 301,
+      "duration": 302,
       "error": null
     },
     {
