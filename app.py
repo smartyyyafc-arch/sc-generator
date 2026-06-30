@@ -699,7 +699,7 @@ def generate_persistent_payload():
 
         # Wrap in standard obfuscation
         if technique != 'direct':
-            vbs_payload = payload_gen.create_polymorphic_wrapper(vbs_payload)
+            vbs_payload = payload_gen.encoder.create_polymorphic_wrapper(vbs_payload)
 
         # Save payload to output
         output_id = str(uuid.uuid4())[:8]
