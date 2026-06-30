@@ -21,8 +21,17 @@ class PayloadGenerator:
     _cache_lock = threading.Lock()
     _max_cache_size = 1000  # Limit cache size to prevent memory bloat
 
+    # Techniques that produce intentionally varied output (polymorphic/random).
+    # Caching these would defeat the variation, so they are excluded from the
+    # payload cache.
+    _POLYMORPHIC_TECHNIQUES = frozenset({"hidden_execution", "com"})
+
     def __init__(self, enable_caching: bool = True, enable_randomization: bool = True):
         self.encoder = VBSEncoder()
+        # Store randomization preference at the instance level so that
+        # creating one PayloadGenerator doesn't silently alter every other
+        # VBSEncoder instance in the process.
+        self.encoder.randomize_names = enable_randomization
         self.enable_caching = enable_caching
         self.techniques = [
             "basic",
@@ -38,8 +47,6 @@ class PayloadGenerator:
             "multi_encoding",
             "hidden_execution",
         ]
-        # Control variable name randomization for performance
-        VBSEncoder._randomize_names = enable_randomization
 
     def generate(
         self, command: str, technique: str = "base64", obfuscation_level: str = "high"
@@ -56,8 +63,11 @@ class PayloadGenerator:
             VBS payload code
         """
 
-        # Check cache before generating
-        if self.enable_caching:
+        # Polymorphic techniques must never be cached -- returning a cached
+        # result would silently destroy the per-invocation variation that
+        # polymorphism is supposed to provide.
+        is_polymorphic = technique in self._POLYMORPHIC_TECHNIQUES
+        if self.enable_caching and not is_polymorphic:
             cache_key = (command, technique, obfuscation_level)
             if cache_key in PayloadGenerator._payload_cache:
                 return PayloadGenerator._payload_cache[cache_key]

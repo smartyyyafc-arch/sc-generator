@@ -1,30 +1,44 @@
-FROM python:3.11-slim
+# ---- Build stage ----
+FROM python:3.11-slim AS builder
 
-# Set working directory
-WORKDIR /app
+WORKDIR /build
 
-# Install system dependencies
+# Install system dependencies needed for building
 RUN apt-get update && apt-get install -y \
     nodejs \
     npm \
     gcc \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements
+# Install Python dependencies into a virtual env for clean copy
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application
+# Copy application source and build Node assets
 COPY . .
-
-# Install Node dependencies and build
 RUN npm ci && npm run build
 
-# Create directories
-RUN mkdir -p /tmp/sc-{uploads,outputs,fingerprints,logs}
+# ---- Production stage ----
+FROM python:3.11-slim
 
-# Expose ports
-EXPOSE 5000 3000
+WORKDIR /app
+
+# Copy installed Python packages from builder
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+# Copy application code and built assets from builder
+COPY --from=builder /build /app
+
+# Create a non-root user and necessary directories
+RUN groupadd -r appuser && useradd -r -g appuser -d /app -s /sbin/nologin appuser \
+    && mkdir -p /tmp/sc-uploads /tmp/sc-outputs /tmp/sc-fingerprints /tmp/sc-logs \
+    && chown -R appuser:appuser /app /tmp/sc-uploads /tmp/sc-outputs /tmp/sc-fingerprints /tmp/sc-logs
+
+USER appuser
+
+# Expose Flask port only
+EXPOSE 5000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
