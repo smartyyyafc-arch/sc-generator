@@ -1,0 +1,264 @@
+{
+  "timestamp": "2026-06-29T21:21:58.754587",
+  "repo_path": "/home/user/sc-generator",
+  "suspicious_patterns": [
+    {
+      "pattern": "Coordinated History Clearing",
+      "severity": "CRITICAL",
+      "description": "The codebase contains explicit routines to clear shell history, installation logs, and cache after executing downloaded files",
+      "implication": "Indicates intent to hide evidence of malware installation"
+    },
+    {
+      "pattern": "Secure File Deletion with Multi-Pass Overwrite",
+      "severity": "HIGH",
+      "description": "3-pass DoD-standard file overwriting to prevent forensic recovery",
+      "implication": "Suggests awareness of forensic analysis techniques"
+    },
+    {
+      "pattern": "Cross-Platform Targeting",
+      "severity": "HIGH",
+      "description": "Cleanup routines target Windows, macOS, and Linux simultaneously",
+      "implication": "Indicates sophisticated, multi-platform malware infrastructure"
+    },
+    {
+      "pattern": "VBS/HTA Download Optimization",
+      "severity": "HIGH",
+      "description": "Extensive testing of VBS and HTA file downloads with browser compatibility checks",
+      "implication": "VBS/HTA are primary delivery vectors for Windows malware"
+    },
+    {
+      "pattern": "Recycle Bin/Trash Clearing",
+      "severity": "MEDIUM",
+      "description": "Platform-specific commands to clear recovery locations",
+      "implication": "Prevents user recovery of 'accidentally' deleted files"
+    }
+  ],
+  "evasion_techniques": [
+    {
+      "file": "test_vbs_hta_downloads.py",
+      "analysis": "VBS/HTA Download Testing Framework",
+      "risk_level": "HIGH",
+      "details": [
+        {
+          "technique": "VBS File Download via Browser",
+          "description": "Tests downloading VBS script files through HTTP",
+          "evasion_value": "VBS files trigger browser warnings but are often still downloaded",
+          "detection": "Content-Type headers indicate text/vbscript"
+        },
+        {
+          "technique": "HTA Download Compatibility Testing",
+          "description": "HTA file downloads tested across browsers",
+          "evasion_value": "HTA marked as deprecated but still executable on Windows",
+          "detection": "Browser-specific blocking mechanisms"
+        },
+        {
+          "technique": "MIME Type Verification",
+          "description": "Tests proper MIME types for evasion",
+          "evasion_value": "Proper MIME types help files bypass simple content filters",
+          "detection": "Content-Type analysis"
+        },
+        {
+          "technique": "Content-Disposition Header Manipulation",
+          "description": "Uses 'attachment' header to force downloads",
+          "evasion_value": "Ensures file saved to disk, not opened in browser",
+          "detection": "Header inspection"
+        }
+      ]
+    }
+  ],
+  "cleanup_operations": [
+    {
+      "file": "post-install-cleanup-handler.js",
+      "analysis": "Comprehensive History Clearing Framework",
+      "risk_level": "CRITICAL",
+      "capabilities": [
+        {
+          "operation": "Shell History Clearing",
+          "targets": [
+            ".bash_history",
+            ".zsh_history",
+            ".sh_history",
+            ".fish_history",
+            ".tcsh_history",
+            ".ksh_history"
+          ],
+          "evasion_value": "Removes command-line evidence of downloads",
+          "detection": "File existence check before cleanup"
+        },
+        {
+          "operation": "In-Memory Command History",
+          "description": "Clears bash/zsh command history in running shell",
+          "evasion_value": "Prevents 'history' command from revealing actions",
+          "detection": "Shell process monitoring"
+        },
+        {
+          "operation": "Installation Logs Removal",
+          "targets": [
+            "/var/log (system logs)",
+            "~/.npm (package manager logs)",
+            "~/.node-gyp (build logs)",
+            "Custom log directories"
+          ],
+          "evasion_value": "Removes evidence from system logging",
+          "detection": "Log file auditing"
+        },
+        {
+          "operation": "Secure File Overwriting",
+          "passes": 3,
+          "patterns": [
+            "zeros",
+            "ones",
+            "random"
+          ],
+          "evasion_value": "Prevents file recovery via forensics",
+          "detection": "Disk imaging and analysis"
+        },
+        {
+          "operation": "Cache Clearing",
+          "targets": [
+            "npm cache",
+            "pip cache",
+            "yarn cache",
+            "general .cache"
+          ],
+          "evasion_value": "Removes downloaded package traces",
+          "detection": "Cache integrity monitoring"
+        },
+        {
+          "operation": "Recycle Bin/Trash Clearing",
+          "platforms": [
+            "Windows",
+            "macOS",
+            "Linux"
+          ],
+          "evasion_value": "Prevents recovery of deleted files",
+          "detection": "Trash monitoring"
+        }
+      ]
+    }
+  ],
+  "browser_download_risks": [
+    {
+      "category": "Browser Download History Evasion",
+      "risk_level": "HIGH",
+      "browsers": [
+        {
+          "browser": "Google Chrome",
+          "download_history": {
+            "location": "~/.config/google-chrome/Default/History (Linux)",
+            "format": "SQLite database",
+            "tracking": [
+              "Download URL",
+              "Download timestamp",
+              "File path",
+              "File size",
+              "MIME type"
+            ]
+          },
+          "evasion_techniques": [
+            "Clearing browser cache and cookies",
+            "Using incognito/private mode (if implemented)",
+            "Deleting SQLite database directly"
+          ],
+          "detection_capability": "MEDIUM (Can recover from disk forensics)"
+        },
+        {
+          "browser": "Firefox",
+          "download_history": {
+            "location": "~/.mozilla/firefox/profile/places.sqlite",
+            "format": "SQLite database",
+            "tracking": [
+              "Download URL",
+              "Download timestamp",
+              "File path",
+              "MIME type",
+              "Download state"
+            ]
+          },
+          "evasion_techniques": [
+            "Database deletion",
+            "History clearing via about:preferences"
+          ],
+          "detection_capability": "MEDIUM (Carving from deleted database)"
+        },
+        {
+          "browser": "Edge (Chromium)",
+          "download_history": {
+            "location": "~/.config/microsoft-edge/Default/History",
+            "format": "SQLite database",
+            "tracking": [
+              "Download URL",
+              "Timestamp",
+              "File path",
+              "SmartScreen reputation data"
+            ]
+          },
+          "evasion_techniques": [
+            "History database deletion",
+            "SmartScreen cache clearing"
+          ],
+          "detection_capability": "MEDIUM"
+        }
+      ]
+    }
+  ],
+  "detection_capabilities": [
+    {
+      "category": "Detectable Evasion Patterns",
+      "patterns": [
+        {
+          "pattern": "VBS/HTA Download Testing",
+          "detection_method": "Search for MIME type references and Content-Disposition usage",
+          "indicators": [
+            "text/vbscript MIME type",
+            "application/x-mshta MIME type",
+            "Content-Disposition: attachment"
+          ]
+        },
+        {
+          "pattern": "History Clearing Operations",
+          "detection_method": "Look for shell history file deletion",
+          "indicators": [
+            ".bash_history, .zsh_history deletion",
+            "history -c command execution",
+            "Clear-History PowerShell command"
+          ]
+        },
+        {
+          "pattern": "Secure File Overwriting",
+          "detection_method": "Monitor filesystem operations for multi-pass overwrites",
+          "indicators": [
+            "Multiple write operations to same file",
+            "Random data patterns",
+            "Zero/0xFF fill patterns"
+          ]
+        },
+        {
+          "pattern": "Browser History Database Access",
+          "detection_method": "Monitor access to browser database files",
+          "indicators": [
+            "Access to ~/.config/google-chrome/Default/History",
+            "Access to ~/.mozilla/firefox/*/places.sqlite",
+            "SQLite database operations"
+          ]
+        }
+      ]
+    }
+  ],
+  "severity_assessment": {
+    "overall_risk": "CRITICAL",
+    "threat_level": "This codebase represents a sophisticated malware framework",
+    "key_risks": [
+      "Automated download history evasion",
+      "Cross-platform persistence",
+      "Forensic-resistant file deletion",
+      "Browser history tampering capability"
+    ],
+    "recommended_actions": [
+      "Quarantine the entire repository",
+      "Conduct full system scan",
+      "Restore from clean backup if infection occurred",
+      "Monitor for similar patterns in network"
+    ]
+  }
+}

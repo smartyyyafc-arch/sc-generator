@@ -17,6 +17,7 @@ from payload_generator import PayloadGenerator
 from fingerprint_manager import FingerprintManager
 from payload_installer import create_one_click_payload
 from persistence_manager import create_persistent_payload
+from enhanced_proxy_system import EnhancedProxyManager, ProxyParserValidator, ProxyType
 
 app = Flask(__name__)
 CORS(app)
@@ -34,6 +35,7 @@ app.config['MAX_CONTENT_LENGTH'] = MAX_FILE_SIZE
 
 payload_gen = PayloadGenerator()
 fingerprint_mgr = FingerprintManager()
+proxy_mgr = EnhancedProxyManager()
 
 
 @app.route('/api/health', methods=['GET'])
@@ -156,8 +158,11 @@ def create_custom_fingerprint():
 @app.route('/api/proxies', methods=['GET'])
 def get_proxies():
     """Get configured proxies"""
-    proxies = fingerprint_mgr.get_configured_proxies()
-    return jsonify({'proxies': proxies})
+    proxies = proxy_mgr.get_all_proxies()
+    return jsonify({
+        'proxies': proxies,
+        'statistics': proxy_mgr.get_statistics()
+    })
 
 
 @app.route('/api/proxies', methods=['POST'])
@@ -165,13 +170,144 @@ def add_proxy():
     """Add proxy configuration"""
     data = request.json
     proxy_url = data.get('url')
-    proxy_type = data.get('type', 'http')  # http, socks5
+    tags = data.get('tags', [])
+    notes = data.get('notes', '')
 
     if not proxy_url:
         return jsonify({'error': 'Proxy URL required'}), 400
 
-    proxy_id = fingerprint_mgr.add_proxy(proxy_url, proxy_type)
-    return jsonify({'id': proxy_id, 'url': proxy_url, 'type': proxy_type})
+    # Validate URL format
+    success, message = ProxyParserValidator.validate_proxy_url(proxy_url)
+    if not success:
+        return jsonify({'error': message}), 400
+
+    success, message, proxy_id = proxy_mgr.add_proxy(proxy_url, tags, notes)
+    if success:
+        return jsonify({
+            'success': True,
+            'id': proxy_id,
+            'message': message
+        })
+    else:
+        return jsonify({'error': message}), 400
+
+
+@app.route('/api/proxies/<proxy_id>/test', methods=['POST'])
+def test_proxy(proxy_id):
+    """Test proxy connectivity"""
+    timeout = request.json.get('timeout', 10) if request.json else 10
+
+    success, message = proxy_mgr.test_proxy(proxy_id, timeout)
+    return jsonify({
+        'proxy_id': proxy_id,
+        'success': success,
+        'message': message,
+        'timestamp': datetime.now().isoformat()
+    })
+
+
+@app.route('/api/proxies/test-all', methods=['POST'])
+def test_all_proxies():
+    """Test all proxies"""
+    timeout = request.json.get('timeout', 10) if request.json else 10
+
+    results = proxy_mgr.test_all_proxies(timeout)
+    passed = sum(1 for success, _ in results.values() if success)
+
+    return jsonify({
+        'results': {
+            proxy_id: {
+                'success': success,
+                'message': message
+            }
+            for proxy_id, (success, message) in results.items()
+        },
+        'summary': {
+            'total': len(results),
+            'passed': passed,
+            'failed': len(results) - passed
+        },
+        'timestamp': datetime.now().isoformat()
+    })
+
+
+@app.route('/api/proxies/<proxy_id>', methods=['GET'])
+def get_proxy(proxy_id):
+    """Get specific proxy configuration"""
+    proxy = proxy_mgr.get_proxy(proxy_id)
+    if proxy:
+        return jsonify(proxy)
+    return jsonify({'error': 'Proxy not found'}), 404
+
+
+@app.route('/api/proxies/<proxy_id>', methods=['DELETE'])
+def delete_proxy(proxy_id):
+    """Delete proxy configuration"""
+    success, message = proxy_mgr.remove_proxy(proxy_id)
+    if success:
+        return jsonify({'success': True, 'message': message})
+    return jsonify({'error': message}), 404
+
+
+@app.route('/api/proxies/<proxy_id>/toggle', methods=['PUT'])
+def toggle_proxy(proxy_id):
+    """Toggle proxy active status"""
+    data = request.json
+    is_active = data.get('is_active', True)
+
+    success, message = proxy_mgr.update_proxy_status(proxy_id, is_active)
+    if success:
+        return jsonify({'success': True, 'message': message})
+    return jsonify({'error': message}), 404
+
+
+@app.route('/api/proxies/<proxy_id>/tags', methods=['POST'])
+def add_proxy_tag(proxy_id):
+    """Add tag to proxy"""
+    data = request.json
+    tag = data.get('tag')
+
+    if not tag:
+        return jsonify({'error': 'Tag required'}), 400
+
+    success, message = proxy_mgr.add_tag(proxy_id, tag)
+    if success:
+        return jsonify({'success': True, 'message': message})
+    return jsonify({'error': message}), 404
+
+
+@app.route('/api/proxies/by-type/<proxy_type>', methods=['GET'])
+def get_proxies_by_type(proxy_type):
+    """Get proxies by type"""
+    try:
+        ptype = ProxyType(proxy_type.lower())
+        proxies = proxy_mgr.get_proxies_by_type(ptype)
+        return jsonify({
+            'type': proxy_type,
+            'proxies': proxies,
+            'count': len(proxies)
+        })
+    except ValueError:
+        return jsonify({'error': f'Invalid proxy type: {proxy_type}'}), 400
+
+
+@app.route('/api/proxies/by-tag/<tag>', methods=['GET'])
+def get_proxies_by_tag(tag):
+    """Get proxies by tag"""
+    proxies = proxy_mgr.get_proxies_by_tag(tag)
+    return jsonify({
+        'tag': tag,
+        'proxies': proxies,
+        'count': len(proxies)
+    })
+
+
+@app.route('/api/proxies/report', methods=['GET'])
+def export_proxy_report():
+    """Export proxy report"""
+    output_file = os.path.join(OUTPUT_FOLDER, f"proxy_report_{uuid.uuid4().hex[:8]}.json")
+    report = proxy_mgr.export_report(output_file)
+    return jsonify(report)
 
 
 @app.route('/api/upload', methods=['POST'])

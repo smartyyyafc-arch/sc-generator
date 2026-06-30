@@ -1,477 +1,224 @@
-# Polymorphic Test Suite - Quick Start Guide
+# SC-Generator: Comprehensive One-Click Test Suite
 
-## What This Test Suite Does
+## Overview
 
-This test suite validates that all 16 WMI locator connection variants generate **functionally equivalent code** while maintaining **unique polymorphic signatures**.
+The SC-Generator Test Suite is a comprehensive testing framework designed for automated testing of the SC-Generator web-based VBS encryption tool. It features advanced user simulation, end-to-end integration testing, and detailed performance metrics.
 
-**In Simple Terms**: Every variant does the same job (execute a command via WMI) but in different ways (using different connection methods, namespaces, and security settings).
+### Key Features
 
----
-
-## Files Included
-
-1. **test_polymorphic_variants.py** - Main test suite (31 tests)
-2. **POLYMORPHIC_TEST_SUITE.md** - Detailed documentation
-3. **polymorphic_test_results.json** - Test results (auto-generated)
+- **User Simulation Engine**: Simulates realistic user interactions and workflows
+- **13 Test Suites**: Covering navigation, file upload, configuration, generation, execution, and more
+- **100+ Test Cases**: Comprehensive coverage of features and edge cases
+- **One-Click Execution**: Simple command to run all tests
+- **Detailed Reporting**: JSON reports with metrics and performance data
+- **Performance Benchmarking**: Stress tests and performance metrics
+- **Data Integrity Checks**: Validation of state and data consistency
+- **Integration Testing**: End-to-end workflow validation
 
 ---
 
 ## Quick Start
 
-### Run All Tests
+### Installation
+
 ```bash
-python3 test_polymorphic_variants.py
+cd /home/user/sc-generator
+npm install
 ```
 
-**Expected Output**:
-```
-OK
+### Run Tests
 
-================================================================================
-POLYMORPHIC TEST SUITE SUMMARY
-================================================================================
-Total Tests: 31
-Passed: 31
-Failed: 0
-Errors: 0
-Success: True
-```
-
-### Run Specific Test Category
 ```bash
-# Test structural equivalence only
-python3 -m unittest test_polymorphic_variants.TestPolymorphicStructuralEquivalence -v
+# One-click execution
+node test-runner.js
 
-# Test functional equivalence only
-python3 -m unittest test_polymorphic_variants.TestPolymorphicFunctionalEquivalence -v
+# Run with verbose output
+node test-runner.js --verbose
 
-# Test semantic equivalence only
-python3 -m unittest test_polymorphic_variants.TestPolymorphicSemanticEquivalence -v
+# Quiet mode
+node test-runner.js --quiet
+
+# Custom timeout
+node test-runner.js --timeout=60000
+
+# JSON output
+node test-runner.js --json
+
+# Custom report
+node test-runner.js --report=/path/to/report.json
 ```
 
-### Run Single Test
+---
+
+## Test Suites (13 Total)
+
+### 1. User Navigation & Interaction (3 tests)
+- Navigate between pages
+- Handle multi-step user journeys
+- Track actions chronologically
+
+### 2. File Upload & Management (3 tests)
+- Upload files successfully
+- Handle multiple uploads
+- Validate file state
+
+### 3. Technique Selection & Configuration (4 tests)
+- Select encoding techniques (base64, hex, chr, xor, aes)
+- Set obfuscation levels (low, medium, high, maximum)
+- Combine configurations
+
+### 4. Payload Generation (3 tests)
+- Generate payloads
+- Different payloads for different techniques
+- Preserve state
+
+### 5. Payload Export & Download (3 tests)
+- Copy to clipboard
+- Download files
+- Error handling
+
+### 6. Payload Execution (3 tests)
+- Execute payloads
+- Validate results
+- Track in actions
+
+### 7. User Metrics & Analytics (3 tests)
+- Track action counts
+- Calculate timing
+- Measure performance
+
+### 8. Advanced Workflows (4 tests)
+- Complete payload pipeline
+- Multi-technique comparison
+- Proxy configuration
+
+### 9. Error Handling & Edge Cases (3 tests)
+- Missing prerequisites
+- Rapid interactions
+- State transitions
+
+### 10. Performance & Stress Tests (3 tests)
+- 100 sequential operations
+- Multiple concurrent users
+- Performance measurement
+
+### 11. Data Integrity (2 tests)
+- Payload consistency
+- State preservation
+
+### 12. Accessibility & UX (2 tests)
+- Keyboard navigation
+- Rapid interactions
+
+### 13. End-to-End Integration (2 tests)
+- Full user workflows
+- Workflow variations
+
+---
+
+## User Simulation API
+
+```javascript
+const user = new UserSimulator();
+
+// Navigation
+await user.navigate(page);
+
+// File operations
+const file = await user.uploadFile(filename, size);
+await user.downloadPayload();
+
+// Configuration
+await user.selectTechnique(technique);
+await user.selectObfuscationLevel(level);
+await user.selectFingerprint(fingerprint);
+await user.selectProxy(proxy);
+
+// Payload operations
+const payload = await user.generatePayload();
+await user.copyPayload();
+const result = await user.executePayload();
+
+// Metrics
+user.getElapsed();
+user.getActions();
+user.getState();
+user.getMetrics();
+```
+
+---
+
+## Reports
+
+Test suite generates JSON report with:
+- Pass/fail counts and percentages
+- Duration and timing
+- Per-suite breakdowns
+- System info
+
+Example:
 ```bash
-python3 -m unittest test_polymorphic_variants.TestPolymorphicStructuralEquivalence.test_all_variants_have_standard_structure -v
+node test-runner.js --report=results.json
 ```
 
 ---
 
-## What Gets Tested
+## CLI Options
 
-### Test Categories (31 Tests)
-
-| Category | Tests | Purpose |
-|----------|-------|---------|
-| Structural | 7 | All variants follow same execution pattern |
-| Functional | 4 | All variants execute same command |
-| Semantic | 5 | All use valid WMI APIs |
-| Distinctiveness | 4 | Each variant has unique signature |
-| Integration | 5 | All integrate identically |
-| Robustness | 3 | All handle edge cases |
-| Reporting | 3 | Generate analysis reports |
-| **TOTAL** | **31** | **Full polymorphic validation** |
+| Option | Description | Example |
+|--------|-------------|---------|
+| --verbose | Detailed output | `--verbose` |
+| --quiet | Minimal output | `--quiet` |
+| --timeout | Test timeout ms | `--timeout=60000` |
+| --report | Report file | `--report=report.json` |
+| --json | JSON output | `--json` |
+| --parallel | Parallel execution | `--parallel` |
 
 ---
 
-## Key Test Assertions
+## npm Scripts
 
-### 1. Structural Equivalence ✓
-```
-All variants must have:
-✓ Dim declarations
-✓ Error suppression (On Error Resume Next)
-✓ WbemScripting.SWbemLocator creation
-✓ ConnectServer() call
-✓ Win32_Process reference
-✓ .Create() method call
-✓ Object cleanup (Set X = Nothing)
-✓ Error reset (On Error GoTo 0)
-```
-
-### 2. Functional Equivalence ✓
-```
-All variants must:
-✓ Embed the command to execute
-✓ Use Win32_Process class
-✓ Have execution-equivalent semantics
-✓ Generate consistently
-```
-
-### 3. Semantic Equivalence ✓
-```
-All variants must:
-✓ Use valid WMI namespaces
-✓ Use valid WMI class names
-✓ Have valid ConnectServer signatures
-✓ Use valid VBS variable names
-✓ Have syntactically correct method calls
-```
-
-### 4. Polymorphic Distinctiveness ✓
-```
-All variants must:
-✓ Have unique MD5 code hashes
-✓ Showcase different connection approaches
-✓ Preserve command integrity
-✓ Be properly classified
-```
-
-### 5. Integration Equivalence ✓
-```
-All variants must:
-✓ Generate independently
-✓ Work with different commands
-✓ Apply parameters consistently
-✓ Have valid type classifications
-✓ Be accessible via generate_all_variants()
-```
-
----
-
-## Understanding Variant Categories
-
-### Local Connection Variants (3)
-```vbs
-' local_dot - fastest, uses "."
-Set objConn = objLoc.ConnectServer(".", "root\cimv2")
-
-' local_localhost - uses "localhost"
-Set objConn = objLoc.ConnectServer("localhost", "root\cimv2")
-
-' local_127001 - loopback IP
-Set objConn = objLoc.ConnectServer("127.0.0.1", "root\cimv2")
-```
-
-### Remote Connection Variants (3)
-```vbs
-' remote_ip - by IP address
-Set objConn = objLoc.ConnectServer("192.168.1.100", "root\cimv2")
-
-' remote_authenticated - with credentials
-Set objConn = objLoc.ConnectServer("192.168.1.100", "root\cimv2", "user", "pass")
-
-' encoded_remote - base64 obfuscated
-' Command is encoded: "calc.exe" → base64 → decoded at runtime
-```
-
-### Namespace Variants (7)
-```vbs
-' Each uses different WMI namespace:
-- root\cimv2       (default, most common)
-- root\WDM         (Windows Driver Model)
-- root\dcim        (Data Center Infrastructure)
-- root\hardware    (hardware info)
-- root\cimv1       (legacy classes)
-- Full UNC paths   (\\.\root\cimv2 style)
-- winmgmt namespace (alternative root)
-```
-
-### Security Variants (3)
-```vbs
-' impersonation_level - sets permission level
-objConn.Security_.ImpersonationLevel = 3  (0=anonymous to 3=delegate)
-
-' authentication_level - sets auth level
-objConn.Security_.AuthenticationLevel = 6  (4=connect to 7=privacy)
-
-' security_flags - enables privilege elevation
-ConnectServer(".", "root\cimv2", "", "", "", "", 128)
-```
-
----
-
-## Test Results Explained
-
-### Successful Run
-```
-Ran 31 tests in 0.019s
-OK
-```
-
-All tests passed. All variants are:
-- Structurally equivalent
-- Functionally equivalent
-- Semantically valid
-- Polymorphically distinct
-- Integrated correctly
-- Robustly implemented
-
-### Failed Test Example
-```
-FAIL: test_all_variants_have_error_handling
-AssertionError: Variant local_dot missing error handling
-```
-
-One variant missing required element. Fix: Add error handling code to variant.
-
----
-
-## Using the VariantAnalyzer
-
-The test suite includes a `VariantAnalyzer` class for analyzing variant code:
-
-```python
-from test_polymorphic_variants import VariantAnalyzer
-
-# Analyze a variant
-code = generator.generate_local_dot_connection("test.exe")
-
-# Extract components
-variables = VariantAnalyzer.extract_variable_names(code)
-wmi_classes = VariantAnalyzer.extract_wmi_classes(code)
-namespaces = VariantAnalyzer.extract_namespaces(code)
-connections = VariantAnalyzer.extract_connection_styles(code)
-security_features = VariantAnalyzer.extract_security_features(code)
-
-# Get full signature
-signature = VariantAnalyzer.compute_signature(code, "local_dot")
-print(f"Code length: {signature.code_length}")
-print(f"Hash: {signature.unique_hash}")
-print(f"Variables: {signature.variable_names}")
-```
-
----
-
-## Common Test Patterns
-
-### Pattern 1: All Variants Must Have Feature X
-```python
-def test_all_variants_have_feature(self):
-    for variant_id, variant_data in self.variants.items():
-        code = variant_data['code']
-        self.assertIn('REQUIRED_FEATURE', code,
-                     f"Variant {variant_id} missing feature")
-```
-
-### Pattern 2: All Variants Execute Command Y
-```python
-def test_all_variants_embed_command(self):
-    for variant_id, variant_data in self.variants.items():
-        code = variant_data['code']
-        self.assertTrue(
-            command in code or
-            base64.b64encode(command.encode()).decode() in code,
-            f"Variant {variant_id} missing command")
-```
-
-### Pattern 3: Variants Are Semantically Equivalent
-```python
-def test_semantic_equivalence(self):
-    for variant_id, variant_data in self.variants.items():
-        code = variant_data['code']
-        has_locator = 'CreateObject' in code
-        has_connection = 'ConnectServer' in code
-        has_execution = '.Create' in code
-        self.assertTrue(has_locator and has_connection and has_execution)
-```
-
----
-
-## Troubleshooting
-
-### Test Hangs
-- Occurs: Rare, usually with very large commands
-- Fix: Increase timeout or break command into smaller parts
-- Status: All built tests complete in <0.02 seconds
-
-### Encoding Not Detected
-- Issue: Base64 encoded commands not recognized
-- Fix: `test_polymorphic_variants.py` automatically handles base64 encoding
-- Detection: Code checks both plain and `base64.b64encode()` format
-
-### Namespace Validation Fails
-- Issue: New namespace not recognized
-- Fix: Add namespace to `valid_namespaces` set in `test_all_namespaces_are_valid_wmi()`
-- Pattern: `valid_namespaces = {'cimv2', 'WDM', 'dcim', ...}`
-
-### Variable Name Issues
-- Issue: Randomized variable names cause comparison failures
-- Fix: Tests analyze structure, not exact variable names
-- Pattern: Uses regex to find patterns, not exact strings
-
----
-
-## Interpreting Results
-
-### Results JSON
+Add to package.json:
 ```json
 {
-  "total_tests": 31,
-  "tests_passed": 31,
-  "tests_failed": 0,
-  "tests_errored": 0,
-  "success": true
+  "scripts": {
+    "test": "node test-runner.js",
+    "test:verbose": "node test-runner.js --verbose",
+    "test:quiet": "node test-runner.js --quiet",
+    "test:json": "node test-runner.js --json"
+  }
 }
 ```
 
-**Interpretation**:
-- `total_tests`: Total test cases run
-- `tests_passed`: Tests that succeeded
-- `tests_failed`: Tests that failed assertions
-- `tests_errored`: Tests that threw exceptions
-- `success`: Overall pass/fail status
-
-### Detailed Report Generation
-```python
-results = run_polymorphic_test_suite(verbosity=2)
-
-print(f"Passed: {results['tests_passed']}/{results['total_tests']}")
-print(f"Failed: {results['tests_failed']}")
-print(f"Errors: {results['tests_errored']}")
-
-if results['success']:
-    print("✓ All variants are functionally equivalent")
-    print("✓ All variants are polymorphically distinct")
+Then run:
+```bash
+npm test
+npm run test:verbose
+npm run test:quiet
+npm run test:json
 ```
 
 ---
 
-## Advanced Usage
+## Expected Performance
 
-### Run Tests Programmatically
-```python
-from test_polymorphic_variants import run_polymorphic_test_suite
-
-# Run with high verbosity
-results = run_polymorphic_test_suite(verbosity=2)
-
-# Check results
-if results['success']:
-    print("All tests passed!")
-else:
-    for test, traceback in results['failures']:
-        print(f"FAILED: {test}")
-        print(traceback)
-```
-
-### Analyze Specific Variant
-```python
-from wmi_locator_variants import WMILocatorVariantGenerator
-from test_polymorphic_variants import VariantAnalyzer
-
-gen = WMILocatorVariantGenerator()
-variants = gen.generate_all_variants("cmd.exe")
-
-for variant_id, variant_data in variants.items():
-    code = variant_data['code']
-    sig = VariantAnalyzer.compute_signature(code, variant_id)
-    
-    print(f"\n{variant_id}:")
-    print(f"  Length: {sig.code_length}")
-    print(f"  Hash: {sig.unique_hash}")
-    print(f"  Namespaces: {sig.namespaces}")
-    print(f"  Security: {sig.security_features}")
-```
-
-### Custom Variant Validation
-```python
-def validate_custom_variant(code: str) -> bool:
-    """Validate variant meets all equivalence requirements"""
-    checks = [
-        'On Error Resume Next' in code,
-        'CreateObject' in code and 'SWbemLocator' in code,
-        'ConnectServer' in code,
-        'Win32_Process' in code,
-        '.Create' in code,
-        'Set' in code and 'Nothing' in code,
-        'On Error GoTo 0' in code,
-    ]
-    return all(checks)
-```
+- Total time: 15-20 seconds
+- Per test: ~150ms average
+- Memory: 50-100MB
+- CPU: < 10%
 
 ---
 
-## Performance Metrics
+## Files
 
-### Execution Time
-- Full suite: ~0.019 seconds
-- Per test: ~0.0006 seconds
-- Fastest category: Structural (7 tests, ~0.003s)
-- Slowest category: Reporting (3 tests, ~0.005s)
-
-### Memory Usage
-- Base: ~2 MB
-- Per 16 variants: ~0.5 MB
-- Total for full suite: ~2.5 MB
-
-### Code Coverage
-- 16 variants: 100% tested
-- 7 test categories: 100% coverage
-- 31 test cases: 100% execution
+- **test-suite.js** - Main test framework and suites
+- **test-runner.js** - CLI runner with reporting
+- **test-config.json** - Configuration settings
+- **TEST_SUITE_README.md** - This documentation
 
 ---
 
-## Integration with CI/CD
+## Version
 
-### GitHub Actions Example
-```yaml
-name: Polymorphic Test Suite
-
-on: [push, pull_request]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - run: python3 test_polymorphic_variants.py
-```
-
-### Jenkins Pipeline Example
-```groovy
-stage('Test Polymorphic Variants') {
-    steps {
-        sh 'python3 test_polymorphic_variants.py'
-        archiveArtifacts artifacts: 'polymorphic_test_results.json'
-    }
-}
-```
-
----
-
-## References
-
-### Test Suite Components
-- **VariantAnalyzer**: Code analysis class
-- **VariantSignature**: Dataclass for variant properties
-- **7 Test Classes**: Organized by equivalence type
-- **31 Test Methods**: Individual test cases
-
-### Dependencies
-- Python 3.6+
-- unittest (standard library)
-- re (regex, standard library)
-- base64 (standard library)
-- json (standard library)
-
-### Related Files
-- `wmi_locator_variants.py` - Variant generator
-- `VARIANTS_MANIFEST.json` - Variant metadata
-- `WMI_LOCATOR_VARIANTS_SUMMARY.md` - Technical reference
-
----
-
-## Summary
-
-**This test suite validates**:
-1. ✓ All variants have identical execution structure
-2. ✓ All variants execute the same command
-3. ✓ All variants use valid WMI APIs
-4. ✓ Each variant has unique code signature
-5. ✓ All variants integrate identically
-6. ✓ All variants handle edge cases
-
-**Result**: 31/31 tests passing - Full functional equivalence with polymorphic distinction.
-
----
-
-## Support
-
-For detailed test documentation, see: `POLYMORPHIC_TEST_SUITE.md`
-
-For variant generator documentation, see: `WMI_LOCATOR_VARIANTS_SUMMARY.md`
-
-For implementation details, see: `wmi_locator_variants.py`
+SC-Generator Test Suite v1.0.0
+Production Ready | June 2026

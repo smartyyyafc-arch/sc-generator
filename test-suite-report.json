@@ -1,0 +1,634 @@
+{
+  "passed": 38,
+  "failed": 0,
+  "skipped": 0,
+  "total": 38,
+  "duration": 31460,
+  "suites": [
+    {
+      "name": "User Navigation & Interaction",
+      "tests": [
+        {
+          "name": "should navigate between pages",
+          "suiteName": "User Navigation & Interaction",
+          "status": "passed",
+          "duration": 201,
+          "error": null
+        },
+        {
+          "name": "should handle multi-step user journey",
+          "suiteName": "User Navigation & Interaction",
+          "status": "passed",
+          "duration": 351,
+          "error": null
+        },
+        {
+          "name": "should track user actions chronologically",
+          "suiteName": "User Navigation & Interaction",
+          "status": "passed",
+          "duration": 352,
+          "error": null
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "name": "File Upload & Management",
+      "tests": [
+        {
+          "name": "should upload file successfully",
+          "suiteName": "File Upload & Management",
+          "status": "passed",
+          "duration": 201,
+          "error": null
+        },
+        {
+          "name": "should handle multiple file uploads",
+          "suiteName": "File Upload & Management",
+          "status": "passed",
+          "duration": 402,
+          "error": null
+        },
+        {
+          "name": "should validate file state after upload",
+          "suiteName": "File Upload & Management",
+          "status": "passed",
+          "duration": 201,
+          "error": null
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "name": "Technique Selection & Configuration",
+      "tests": [
+        {
+          "name": "should select different encoding techniques",
+          "suiteName": "Technique Selection & Configuration",
+          "status": "passed",
+          "duration": 251,
+          "error": null
+        },
+        {
+          "name": "should set obfuscation levels",
+          "suiteName": "Technique Selection & Configuration",
+          "status": "passed",
+          "duration": 201,
+          "error": null
+        },
+        {
+          "name": "should combine technique with obfuscation level",
+          "suiteName": "Technique Selection & Configuration",
+          "status": "passed",
+          "duration": 101,
+          "error": null
+        },
+        {
+          "name": "should select and combine fingerprints",
+          "suiteName": "Technique Selection & Configuration",
+          "status": "passed",
+          "duration": 101,
+          "error": null
+        }
+      ],
+      "passed": 4,
+      "failed": 0
+    },
+    {
+      "name": "Payload Generation",
+      "tests": [
+        {
+          "name": "should generate payload after file upload",
+          "suiteName": "Payload Generation",
+          "status": "passed",
+          "duration": 501,
+          "error": null
+        },
+        {
+          "name": "should generate different payloads for different techniques",
+          "suiteName": "Payload Generation",
+          "status": "passed",
+          "duration": 1102,
+          "error": null
+        },
+        {
+          "name": "should preserve payload across multiple accesses",
+          "suiteName": "Payload Generation",
+          "status": "passed",
+          "duration": 502,
+          "error": null
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "name": "Payload Export & Download",
+      "tests": [
+        {
+          "name": "should copy payload to clipboard",
+          "suiteName": "Payload Export & Download",
+          "status": "passed",
+          "duration": 551,
+          "error": null
+        },
+        {
+          "name": "should download payload file",
+          "suiteName": "Payload Export & Download",
+          "status": "passed",
+          "duration": 702,
+          "error": null
+        },
+        {
+          "name": "should fail to copy/download without payload",
+          "suiteName": "Payload Export & Download",
+          "status": "passed",
+          "duration": 1,
+          "error": null
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "name": "Payload Execution",
+      "tests": [
+        {
+          "name": "should execute payload successfully",
+          "suiteName": "Payload Execution",
+          "status": "passed",
+          "duration": 1002,
+          "error": null
+        },
+        {
+          "name": "should fail to execute without payload",
+          "suiteName": "Payload Execution",
+          "status": "passed",
+          "duration": 0,
+          "error": null
+        },
+        {
+          "name": "should track execution in user actions",
+          "suiteName": "Payload Execution",
+          "status": "passed",
+          "duration": 1003,
+          "error": null
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "name": "User Metrics & Analytics",
+      "tests": [
+        {
+          "name": "should track action count",
+          "suiteName": "User Metrics & Analytics",
+          "status": "passed",
+          "duration": 351,
+          "error": null
+        },
+        {
+          "name": "should calculate total session time",
+          "suiteName": "User Metrics & Analytics",
+          "status": "passed",
+          "duration": 301,
+          "error": null
+        },
+        {
+          "name": "should calculate average action time",
+          "suiteName": "User Metrics & Analytics",
+          "status": "passed",
+          "duration": 602,
+          "error": null
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "name": "Advanced Workflows",
+      "tests": [
+        {
+          "name": "should handle complete payload generation workflow",
+          "suiteName": "Advanced Workflows",
+          "status": "passed",
+          "duration": 753,
+          "error": null
+        },
+        {
+          "name": "should handle multi-technique comparison",
+          "suiteName": "Advanced Workflows",
+          "status": "passed",
+          "duration": 2206,
+          "error": null
+        },
+        {
+          "name": "should handle proxy configuration workflow",
+          "suiteName": "Advanced Workflows",
+          "status": "passed",
+          "duration": 251,
+          "error": null
+        },
+        {
+          "name": "should handle complete payload pipeline",
+          "suiteName": "Advanced Workflows",
+          "status": "passed",
+          "duration": 1455,
+          "error": null
+        }
+      ],
+      "passed": 4,
+      "failed": 0
+    },
+    {
+      "name": "Error Handling & Edge Cases",
+      "tests": [
+        {
+          "name": "should handle rapid technique switching",
+          "suiteName": "Error Handling & Edge Cases",
+          "status": "passed",
+          "duration": 503,
+          "error": null
+        },
+        {
+          "name": "should handle invalid state transitions gracefully",
+          "suiteName": "Error Handling & Edge Cases",
+          "status": "passed",
+          "duration": 302,
+          "error": null
+        },
+        {
+          "name": "should handle operations without file upload",
+          "suiteName": "Error Handling & Edge Cases",
+          "status": "passed",
+          "duration": 351,
+          "error": null
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "name": "Performance & Stress Tests",
+      "tests": [
+        {
+          "name": "should handle 100 sequential operations",
+          "suiteName": "Performance & Stress Tests",
+          "status": "passed",
+          "duration": 10035,
+          "error": null
+        },
+        {
+          "name": "should handle multiple concurrent users",
+          "suiteName": "Performance & Stress Tests",
+          "status": "passed",
+          "duration": 552,
+          "error": null
+        },
+        {
+          "name": "should measure operation performance",
+          "suiteName": "Performance & Stress Tests",
+          "status": "passed",
+          "duration": 852,
+          "error": null
+        }
+      ],
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "name": "Data Integrity",
+      "tests": [
+        {
+          "name": "should maintain payload consistency",
+          "suiteName": "Data Integrity",
+          "status": "passed",
+          "duration": 501,
+          "error": null
+        },
+        {
+          "name": "should preserve user state across operations",
+          "suiteName": "Data Integrity",
+          "status": "passed",
+          "duration": 301,
+          "error": null
+        }
+      ],
+      "passed": 2,
+      "failed": 0
+    },
+    {
+      "name": "Accessibility & UX",
+      "tests": [
+        {
+          "name": "should support keyboard navigation",
+          "suiteName": "Accessibility & UX",
+          "status": "passed",
+          "duration": 151,
+          "error": null
+        },
+        {
+          "name": "should support rapid user interactions",
+          "suiteName": "Accessibility & UX",
+          "status": "passed",
+          "duration": 1005,
+          "error": null
+        }
+      ],
+      "passed": 2,
+      "failed": 0
+    },
+    {
+      "name": "End-to-End Integration",
+      "tests": [
+        {
+          "name": "should complete full user workflow",
+          "suiteName": "End-to-End Integration",
+          "status": "passed",
+          "duration": 1104,
+          "error": null
+        },
+        {
+          "name": "should handle workflow variations",
+          "suiteName": "End-to-End Integration",
+          "status": "passed",
+          "duration": 2156,
+          "error": null
+        }
+      ],
+      "passed": 2,
+      "failed": 0
+    }
+  ],
+  "tests": [
+    {
+      "name": "should navigate between pages",
+      "suiteName": "User Navigation & Interaction",
+      "status": "passed",
+      "duration": 201,
+      "error": null
+    },
+    {
+      "name": "should handle multi-step user journey",
+      "suiteName": "User Navigation & Interaction",
+      "status": "passed",
+      "duration": 351,
+      "error": null
+    },
+    {
+      "name": "should track user actions chronologically",
+      "suiteName": "User Navigation & Interaction",
+      "status": "passed",
+      "duration": 352,
+      "error": null
+    },
+    {
+      "name": "should upload file successfully",
+      "suiteName": "File Upload & Management",
+      "status": "passed",
+      "duration": 201,
+      "error": null
+    },
+    {
+      "name": "should handle multiple file uploads",
+      "suiteName": "File Upload & Management",
+      "status": "passed",
+      "duration": 402,
+      "error": null
+    },
+    {
+      "name": "should validate file state after upload",
+      "suiteName": "File Upload & Management",
+      "status": "passed",
+      "duration": 201,
+      "error": null
+    },
+    {
+      "name": "should select different encoding techniques",
+      "suiteName": "Technique Selection & Configuration",
+      "status": "passed",
+      "duration": 251,
+      "error": null
+    },
+    {
+      "name": "should set obfuscation levels",
+      "suiteName": "Technique Selection & Configuration",
+      "status": "passed",
+      "duration": 201,
+      "error": null
+    },
+    {
+      "name": "should combine technique with obfuscation level",
+      "suiteName": "Technique Selection & Configuration",
+      "status": "passed",
+      "duration": 101,
+      "error": null
+    },
+    {
+      "name": "should select and combine fingerprints",
+      "suiteName": "Technique Selection & Configuration",
+      "status": "passed",
+      "duration": 101,
+      "error": null
+    },
+    {
+      "name": "should generate payload after file upload",
+      "suiteName": "Payload Generation",
+      "status": "passed",
+      "duration": 501,
+      "error": null
+    },
+    {
+      "name": "should generate different payloads for different techniques",
+      "suiteName": "Payload Generation",
+      "status": "passed",
+      "duration": 1102,
+      "error": null
+    },
+    {
+      "name": "should preserve payload across multiple accesses",
+      "suiteName": "Payload Generation",
+      "status": "passed",
+      "duration": 502,
+      "error": null
+    },
+    {
+      "name": "should copy payload to clipboard",
+      "suiteName": "Payload Export & Download",
+      "status": "passed",
+      "duration": 551,
+      "error": null
+    },
+    {
+      "name": "should download payload file",
+      "suiteName": "Payload Export & Download",
+      "status": "passed",
+      "duration": 702,
+      "error": null
+    },
+    {
+      "name": "should fail to copy/download without payload",
+      "suiteName": "Payload Export & Download",
+      "status": "passed",
+      "duration": 1,
+      "error": null
+    },
+    {
+      "name": "should execute payload successfully",
+      "suiteName": "Payload Execution",
+      "status": "passed",
+      "duration": 1002,
+      "error": null
+    },
+    {
+      "name": "should fail to execute without payload",
+      "suiteName": "Payload Execution",
+      "status": "passed",
+      "duration": 0,
+      "error": null
+    },
+    {
+      "name": "should track execution in user actions",
+      "suiteName": "Payload Execution",
+      "status": "passed",
+      "duration": 1003,
+      "error": null
+    },
+    {
+      "name": "should track action count",
+      "suiteName": "User Metrics & Analytics",
+      "status": "passed",
+      "duration": 351,
+      "error": null
+    },
+    {
+      "name": "should calculate total session time",
+      "suiteName": "User Metrics & Analytics",
+      "status": "passed",
+      "duration": 301,
+      "error": null
+    },
+    {
+      "name": "should calculate average action time",
+      "suiteName": "User Metrics & Analytics",
+      "status": "passed",
+      "duration": 602,
+      "error": null
+    },
+    {
+      "name": "should handle complete payload generation workflow",
+      "suiteName": "Advanced Workflows",
+      "status": "passed",
+      "duration": 753,
+      "error": null
+    },
+    {
+      "name": "should handle multi-technique comparison",
+      "suiteName": "Advanced Workflows",
+      "status": "passed",
+      "duration": 2206,
+      "error": null
+    },
+    {
+      "name": "should handle proxy configuration workflow",
+      "suiteName": "Advanced Workflows",
+      "status": "passed",
+      "duration": 251,
+      "error": null
+    },
+    {
+      "name": "should handle complete payload pipeline",
+      "suiteName": "Advanced Workflows",
+      "status": "passed",
+      "duration": 1455,
+      "error": null
+    },
+    {
+      "name": "should handle rapid technique switching",
+      "suiteName": "Error Handling & Edge Cases",
+      "status": "passed",
+      "duration": 503,
+      "error": null
+    },
+    {
+      "name": "should handle invalid state transitions gracefully",
+      "suiteName": "Error Handling & Edge Cases",
+      "status": "passed",
+      "duration": 302,
+      "error": null
+    },
+    {
+      "name": "should handle operations without file upload",
+      "suiteName": "Error Handling & Edge Cases",
+      "status": "passed",
+      "duration": 351,
+      "error": null
+    },
+    {
+      "name": "should handle 100 sequential operations",
+      "suiteName": "Performance & Stress Tests",
+      "status": "passed",
+      "duration": 10035,
+      "error": null
+    },
+    {
+      "name": "should handle multiple concurrent users",
+      "suiteName": "Performance & Stress Tests",
+      "status": "passed",
+      "duration": 552,
+      "error": null
+    },
+    {
+      "name": "should measure operation performance",
+      "suiteName": "Performance & Stress Tests",
+      "status": "passed",
+      "duration": 852,
+      "error": null
+    },
+    {
+      "name": "should maintain payload consistency",
+      "suiteName": "Data Integrity",
+      "status": "passed",
+      "duration": 501,
+      "error": null
+    },
+    {
+      "name": "should preserve user state across operations",
+      "suiteName": "Data Integrity",
+      "status": "passed",
+      "duration": 301,
+      "error": null
+    },
+    {
+      "name": "should support keyboard navigation",
+      "suiteName": "Accessibility & UX",
+      "status": "passed",
+      "duration": 151,
+      "error": null
+    },
+    {
+      "name": "should support rapid user interactions",
+      "suiteName": "Accessibility & UX",
+      "status": "passed",
+      "duration": 1005,
+      "error": null
+    },
+    {
+      "name": "should complete full user workflow",
+      "suiteName": "End-to-End Integration",
+      "status": "passed",
+      "duration": 1104,
+      "error": null
+    },
+    {
+      "name": "should handle workflow variations",
+      "suiteName": "End-to-End Integration",
+      "status": "passed",
+      "duration": 2156,
+      "error": null
+    }
+  ]
+}

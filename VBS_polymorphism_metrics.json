@@ -1,0 +1,1002 @@
+[
+  {
+    "id": 1,
+    "algorithm": "segmented",
+    "variables_used": 2,
+    "code_hash": "1f4eaf466d0adefe480b369c6a8764835c86d1493c0bb71c4a7f38e4ccc0ee8c",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 440,
+    "complexity_score": 2.08
+  },
+  {
+    "id": 2,
+    "algorithm": "while_loop",
+    "variables_used": 2,
+    "code_hash": "6a169cc7eb3d9b677249366e364c161bd5d0ab8e046ff6544b7a9d6720988e3b",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 360,
+    "complexity_score": 1.92
+  },
+  {
+    "id": 3,
+    "algorithm": "case_statement",
+    "variables_used": 2,
+    "code_hash": "a09159435dee57fb3f1588504fe369dc58368ff8c5958f1d7ac9c6fbcca563e4",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 683,
+    "complexity_score": 3.566
+  },
+  {
+    "id": 4,
+    "algorithm": "simple_loop",
+    "variables_used": 2,
+    "code_hash": "4f270a6227f5215a8cd2c40ca7875999dbc53ac6347f77a0401515f497292d95",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 334,
+    "complexity_score": 1.868
+  },
+  {
+    "id": 5,
+    "algorithm": "case_statement",
+    "variables_used": 2,
+    "code_hash": "54fa8deede819fd2d2d41d779e1e6769e9f90e30a025b97f0f3a575be0d8350e",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 703,
+    "complexity_score": 3.606
+  },
+  {
+    "id": 6,
+    "algorithm": "inline_chr",
+    "variables_used": 2,
+    "code_hash": "09786d27aebf223f3ea05a20159178534b287f20f7c9cad0be8a31e0f7044617",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 275,
+    "complexity_score": 1.75
+  },
+  {
+    "id": 7,
+    "algorithm": "recursive",
+    "variables_used": 2,
+    "code_hash": "e51b7058d3d90fdbafd49116071a38d23b28523e9b950c3aec91a325c016ed85",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 361,
+    "complexity_score": 1.922
+  },
+  {
+    "id": 8,
+    "algorithm": "stringbuilder",
+    "variables_used": 2,
+    "code_hash": "dbeac6ea03885887fd8e3aa5a0c55e5761cf1c80ed83ad1d714df4fd42546f44",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 461,
+    "complexity_score": 2.122
+  },
+  {
+    "id": 9,
+    "algorithm": "while_loop",
+    "variables_used": 2,
+    "code_hash": "4875403bf64770db7fdc5762dcd7770f348e0855757e17a0e68ad092cccc2815",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 387,
+    "complexity_score": 1.974
+  },
+  {
+    "id": 10,
+    "algorithm": "do_loop",
+    "variables_used": 1,
+    "code_hash": "3234faa2357e167a3f8b3b5f2f08bc8a6f5e62738cb292d56c86270e1ecc3b88",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 354,
+    "complexity_score": 1.908
+  },
+  {
+    "id": 11,
+    "algorithm": "do_loop",
+    "variables_used": 1,
+    "code_hash": "68d43a6a3719e0f089342d59977347e21c14c83f74a1a3139249e308648b95bb",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 388,
+    "complexity_score": 1.976
+  },
+  {
+    "id": 12,
+    "algorithm": "do_loop",
+    "variables_used": 1,
+    "code_hash": "4ef33ea33724bf8e571acfc716a191693f0fc370b4686823f65e4d5b05df6e79",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 369,
+    "complexity_score": 1.938
+  },
+  {
+    "id": 13,
+    "algorithm": "case_statement",
+    "variables_used": 2,
+    "code_hash": "714b249803433d9872facff1b2a7a666bd1f3d79794b497f147210796cf0dcad",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 640,
+    "complexity_score": 3.48
+  },
+  {
+    "id": 14,
+    "algorithm": "case_statement",
+    "variables_used": 2,
+    "code_hash": "61d93e2ef30daccc4145f8543d1572ef6952c6d3902432e0d020831ef07d0356",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 629,
+    "complexity_score": 3.458
+  },
+  {
+    "id": 15,
+    "algorithm": "recursive",
+    "variables_used": 2,
+    "code_hash": "2cb674b096f18134470a3a14bae20477e12de3ed1aa2434ff4305fa1fb431313",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 377,
+    "complexity_score": 1.954
+  },
+  {
+    "id": 16,
+    "algorithm": "while_loop",
+    "variables_used": 2,
+    "code_hash": "368be1c0651b770b0dc0cb5b1386de4e4928426f00e9e70963190eaeed1cc32e",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 387,
+    "complexity_score": 1.974
+  },
+  {
+    "id": 17,
+    "algorithm": "do_loop",
+    "variables_used": 1,
+    "code_hash": "ca9220e8a6ed8eff65fad0e5b1b00bd742205a1baec55871726a673143502236",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 394,
+    "complexity_score": 1.988
+  },
+  {
+    "id": 18,
+    "algorithm": "split_nibble",
+    "variables_used": 2,
+    "code_hash": "427bf13e1b6fee9999823ec99a67153bceb75c648654b2ba818d82001d11f916",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 488,
+    "complexity_score": 2.176
+  },
+  {
+    "id": 19,
+    "algorithm": "case_statement",
+    "variables_used": 2,
+    "code_hash": "2877b05d8047063e12645ba5fd7b79fa37b15ccae95f89da6a3ada21b2941413",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 654,
+    "complexity_score": 3.508
+  },
+  {
+    "id": 20,
+    "algorithm": "stringbuilder",
+    "variables_used": 2,
+    "code_hash": "0022bfe93877e8939f89c2f7c6d65b85157a8424acddce38a177face5d23fdf5",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 516,
+    "complexity_score": 2.232
+  },
+  {
+    "id": 21,
+    "algorithm": "case_statement",
+    "variables_used": 2,
+    "code_hash": "655444ec64cf01ec0477e38ca6db9d9ec8a3cb37397815af14221734a6ca9a68",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 676,
+    "complexity_score": 3.552
+  },
+  {
+    "id": 22,
+    "algorithm": "while_loop",
+    "variables_used": 2,
+    "code_hash": "e2e179a364c7c895e469b82964ea282c6076db234da616e6933f2376e9ba4230",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 369,
+    "complexity_score": 1.938
+  },
+  {
+    "id": 23,
+    "algorithm": "stringbuilder",
+    "variables_used": 2,
+    "code_hash": "35cfe30af093e1a478dd4908cbec1f12ba6c662347c9b20f6a4c7b2fb724c28a",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 496,
+    "complexity_score": 2.192
+  },
+  {
+    "id": 24,
+    "algorithm": "do_loop",
+    "variables_used": 1,
+    "code_hash": "d916ab71d0eba7a2e7d6832ca43a33647519cb1f898c6c5f85c333eca418cb7c",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 365,
+    "complexity_score": 1.93
+  },
+  {
+    "id": 25,
+    "algorithm": "recursive",
+    "variables_used": 2,
+    "code_hash": "03f2c7d87d7a2eb14a7faa22e980569d5f5c725c1d9fa128270c914f10b0b403",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 394,
+    "complexity_score": 1.988
+  },
+  {
+    "id": 26,
+    "algorithm": "inline_chr",
+    "variables_used": 2,
+    "code_hash": "67b69646a7bef9f82faac4ff6a1de298c85d4c0b1f19d9ee14805f4ee745fe85",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 281,
+    "complexity_score": 1.762
+  },
+  {
+    "id": 27,
+    "algorithm": "recursive",
+    "variables_used": 2,
+    "code_hash": "e35ac401f66a3f19682c27b864c3aeb2b59a18473a8fcbcdc7f8f323ce08510d",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 386,
+    "complexity_score": 1.972
+  },
+  {
+    "id": 28,
+    "algorithm": "conditional",
+    "variables_used": 2,
+    "code_hash": "84f39ccc390cc339443cd03da7748a323ae6341557730328ec3e51ba9679e682",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 511,
+    "complexity_score": 3.222
+  },
+  {
+    "id": 29,
+    "algorithm": "segmented",
+    "variables_used": 2,
+    "code_hash": "96e053983cba58a8d2605fcf635ba3f2779cb9d4fbaa725df6243e1e3d9d031c",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 479,
+    "complexity_score": 2.158
+  },
+  {
+    "id": 30,
+    "algorithm": "case_statement",
+    "variables_used": 2,
+    "code_hash": "74dfe8b7da569eaf73692517ea33c06a45c3f207cf30930e12c1d55d04d15c16",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 673,
+    "complexity_score": 3.5460000000000003
+  },
+  {
+    "id": 31,
+    "algorithm": "do_loop",
+    "variables_used": 1,
+    "code_hash": "2c160ec466b496c5baa4f8669753c4cc46c99470818af7039507e8bbba3b7710",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 371,
+    "complexity_score": 1.942
+  },
+  {
+    "id": 32,
+    "algorithm": "split_nibble",
+    "variables_used": 2,
+    "code_hash": "26e938e43c1d82416023d523f39cae4e3877966c2bce1ac7e36bb146f5bf4406",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 503,
+    "complexity_score": 2.206
+  },
+  {
+    "id": 33,
+    "algorithm": "case_statement",
+    "variables_used": 2,
+    "code_hash": "ed66ab2df8d9a3ddd7053b1427f64c1203fa666e6bbf87f30cc94f6cb0ee0bb7",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 680,
+    "complexity_score": 3.56
+  },
+  {
+    "id": 34,
+    "algorithm": "do_loop",
+    "variables_used": 1,
+    "code_hash": "94d82b3f20d462b69fac3f1aab7ef086a81dafdc6ad39144e1156c1aee9d8de5",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 373,
+    "complexity_score": 1.946
+  },
+  {
+    "id": 35,
+    "algorithm": "do_loop",
+    "variables_used": 1,
+    "code_hash": "a2f09e83f62bccc1f3b4cbd6730faca650ece57ac16300b5aecacbf03bb6cf3c",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 405,
+    "complexity_score": 2.01
+  },
+  {
+    "id": 36,
+    "algorithm": "while_loop",
+    "variables_used": 2,
+    "code_hash": "99995db112ba91f1cec27f50457fb2a8b29bed074ad9a435affa567912fddd54",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 408,
+    "complexity_score": 2.016
+  },
+  {
+    "id": 37,
+    "algorithm": "segmented",
+    "variables_used": 2,
+    "code_hash": "3388bbc5573c4294c3e7a6ddf1676c365f5d1936da6b8501f9352fb7fa3bbaf3",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 504,
+    "complexity_score": 2.208
+  },
+  {
+    "id": 38,
+    "algorithm": "stringbuilder",
+    "variables_used": 2,
+    "code_hash": "1516f73c26b03c95ea3498a37c6b65700a6788d1721e94f53abd5c72af5e4d11",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 502,
+    "complexity_score": 2.2039999999999997
+  },
+  {
+    "id": 39,
+    "algorithm": "do_loop",
+    "variables_used": 1,
+    "code_hash": "63cb3303b675d149abbf7528d7d6c6a79f7b1b2f296e1bfee422a305301a2889",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 371,
+    "complexity_score": 1.942
+  },
+  {
+    "id": 40,
+    "algorithm": "split_nibble",
+    "variables_used": 2,
+    "code_hash": "4eb1bd56bad8fbad5115e7ed41c5a750f2909cd71902b09674892a48063d8587",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 457,
+    "complexity_score": 2.114
+  },
+  {
+    "id": 41,
+    "algorithm": "conditional",
+    "variables_used": 2,
+    "code_hash": "831547e71ac483818dd99ea99032d1a5e2193df1837b1e9171a22b5e956a9d7f",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 499,
+    "complexity_score": 3.198
+  },
+  {
+    "id": 42,
+    "algorithm": "simple_loop",
+    "variables_used": 2,
+    "code_hash": "704f6b10553ea965d2e17cdc53d76bd04e03590201d2f37e9447f99f84fd3a09",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 332,
+    "complexity_score": 1.864
+  },
+  {
+    "id": 43,
+    "algorithm": "recursive",
+    "variables_used": 2,
+    "code_hash": "ed56171f260c904b5c07223e18705187021d2151b673131531bdc95de973b5b6",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 397,
+    "complexity_score": 1.994
+  },
+  {
+    "id": 44,
+    "algorithm": "segmented",
+    "variables_used": 2,
+    "code_hash": "eb1d969e7397f3379682f72497bd3a631a24352c3d024d2ec674dd9566fd1848",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 483,
+    "complexity_score": 2.166
+  },
+  {
+    "id": 45,
+    "algorithm": "simple_loop",
+    "variables_used": 2,
+    "code_hash": "7123ffc843b83be650db389834535ec25521e0ae73184646d22a248f928c0259",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 330,
+    "complexity_score": 1.86
+  },
+  {
+    "id": 46,
+    "algorithm": "case_statement",
+    "variables_used": 2,
+    "code_hash": "3cae60a8117a7be52c7883ffb3524a6eea9ac7542629ccd64c888938ff36d393",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 731,
+    "complexity_score": 3.662
+  },
+  {
+    "id": 47,
+    "algorithm": "conditional",
+    "variables_used": 2,
+    "code_hash": "0b2cf06a035c5926ecb2b56cd19aba87c400e9f9eb604bf5cfc65b9b7a4d635f",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 515,
+    "complexity_score": 3.23
+  },
+  {
+    "id": 48,
+    "algorithm": "stringbuilder",
+    "variables_used": 2,
+    "code_hash": "5e5ea2fbfbfc3127f0c01e3985dfca9c15446816332f403a2116f056fd23fab3",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 513,
+    "complexity_score": 2.226
+  },
+  {
+    "id": 49,
+    "algorithm": "case_statement",
+    "variables_used": 2,
+    "code_hash": "9791b70402c08a17477ba67809b75f6e926188a38f9f886e2ab0326b1eb466ff",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 725,
+    "complexity_score": 3.65
+  },
+  {
+    "id": 50,
+    "algorithm": "simple_loop",
+    "variables_used": 2,
+    "code_hash": "46d01ccd65b6f942f7e3fc4e904d16ecb94885ace6d4cb78935f8cdf0ad76f04",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 355,
+    "complexity_score": 1.91
+  },
+  {
+    "id": 51,
+    "algorithm": "recursive",
+    "variables_used": 2,
+    "code_hash": "291fa2a373e207ba13f7efd9e1629f1d721c0bff614d687ce8cdeba9325d3e7c",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 401,
+    "complexity_score": 2.002
+  },
+  {
+    "id": 52,
+    "algorithm": "stringbuilder",
+    "variables_used": 2,
+    "code_hash": "6ba826d55804ecb6ff3b56169032534158b643243b7e7cc4321953c48461c6f1",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 531,
+    "complexity_score": 2.262
+  },
+  {
+    "id": 53,
+    "algorithm": "segmented",
+    "variables_used": 2,
+    "code_hash": "7e820c9a4612ed869190bc6795a8c754b149fbe7e786eb3e39bb3e17dadc1418",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 473,
+    "complexity_score": 2.146
+  },
+  {
+    "id": 54,
+    "algorithm": "do_loop",
+    "variables_used": 1,
+    "code_hash": "e00b45ddfbd09e2e819d79d20f992fb3a7fa15305fa97b4c0404e2dc124dc77b",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 391,
+    "complexity_score": 1.982
+  },
+  {
+    "id": 55,
+    "algorithm": "do_loop",
+    "variables_used": 1,
+    "code_hash": "0fa406c50e21ca9acd4785232d03fe22557ce86cb37cca37e50a234ba9cc515a",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 407,
+    "complexity_score": 2.0140000000000002
+  },
+  {
+    "id": 56,
+    "algorithm": "simple_loop",
+    "variables_used": 2,
+    "code_hash": "07d0ad585293d6fc5e930a9d8d7e8bd6ed73e80f10e3554f906f2e2be3284039",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 361,
+    "complexity_score": 1.922
+  },
+  {
+    "id": 57,
+    "algorithm": "inline_chr",
+    "variables_used": 2,
+    "code_hash": "ae6a5561e65b14904e793c725ed8b1d780df8ad31b8d271a9b1ea888e9c6fc3a",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 294,
+    "complexity_score": 1.788
+  },
+  {
+    "id": 58,
+    "algorithm": "segmented",
+    "variables_used": 2,
+    "code_hash": "5393a7f64fa68167195d322c9e4ed8934048f3c1b23e99cec8059927c6cf6674",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 475,
+    "complexity_score": 2.15
+  },
+  {
+    "id": 59,
+    "algorithm": "inline_chr",
+    "variables_used": 2,
+    "code_hash": "86a7edad4bc2b887345100c6b64db8c983719d633228f17741ce290d56ab8ba7",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 279,
+    "complexity_score": 1.758
+  },
+  {
+    "id": 60,
+    "algorithm": "case_statement",
+    "variables_used": 2,
+    "code_hash": "80c9f7bcace520f46d4c524820c19c00c51e1716b996cacf5364d851bcee2c4d",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 661,
+    "complexity_score": 3.5220000000000002
+  },
+  {
+    "id": 61,
+    "algorithm": "recursive",
+    "variables_used": 2,
+    "code_hash": "0afebd937a76e5d8c46ac80acd0aacaa6d3b51ca3df5d9941855324e1743a79f",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 394,
+    "complexity_score": 1.988
+  },
+  {
+    "id": 62,
+    "algorithm": "recursive",
+    "variables_used": 2,
+    "code_hash": "41f95daff8b7ce8ccc56e034280c48df7f5bdd96e359112971aafde48fd7ab0d",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 406,
+    "complexity_score": 2.012
+  },
+  {
+    "id": 63,
+    "algorithm": "while_loop",
+    "variables_used": 2,
+    "code_hash": "02e71981bef17b9d97e6afc14ee71a62102beaf2096acd94ce50bf70e53ab407",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 386,
+    "complexity_score": 1.972
+  },
+  {
+    "id": 64,
+    "algorithm": "case_statement",
+    "variables_used": 2,
+    "code_hash": "a04dcf0213eff411c7799392ca8edd65ca3f52462e619fb6840e63dac44fc817",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 699,
+    "complexity_score": 3.598
+  },
+  {
+    "id": 65,
+    "algorithm": "do_loop",
+    "variables_used": 1,
+    "code_hash": "1c594a38548ee334baac9b794025c622694cbe6e0d1fd9233428bb21503e90f1",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 362,
+    "complexity_score": 1.924
+  },
+  {
+    "id": 66,
+    "algorithm": "inline_chr",
+    "variables_used": 2,
+    "code_hash": "e6a403fc7ee69eded4785d5852489aa93c1bfb17984f548b09e91772a51b7bf3",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 288,
+    "complexity_score": 1.776
+  },
+  {
+    "id": 67,
+    "algorithm": "inline_chr",
+    "variables_used": 2,
+    "code_hash": "b3f13ec79696d938dee5b7d98023d63cca6dd63dee8ff1d28f7be50ff8780d4b",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 297,
+    "complexity_score": 1.794
+  },
+  {
+    "id": 68,
+    "algorithm": "stringbuilder",
+    "variables_used": 2,
+    "code_hash": "985832ec241fc803c5d3c2bbbde8341c68f9733e73a143d11bca775f6e3407cb",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 530,
+    "complexity_score": 2.26
+  },
+  {
+    "id": 69,
+    "algorithm": "simple_loop",
+    "variables_used": 2,
+    "code_hash": "f6a69ca53fa6d711ba4de7cc8ec404fb186e89ac27100f92b9267772c9e0b6ea",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 353,
+    "complexity_score": 1.906
+  },
+  {
+    "id": 70,
+    "algorithm": "stringbuilder",
+    "variables_used": 2,
+    "code_hash": "22e8069ac6f8c5bbab7314d60cda23d043debb8e5e172dbfe0e3c7c3be05f4a5",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 487,
+    "complexity_score": 2.174
+  },
+  {
+    "id": 71,
+    "algorithm": "inline_chr",
+    "variables_used": 2,
+    "code_hash": "373583e65cddde0739fe35c937b15355118e288a099d567f67dae832f7c2b890",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 297,
+    "complexity_score": 1.794
+  },
+  {
+    "id": 72,
+    "algorithm": "while_loop",
+    "variables_used": 2,
+    "code_hash": "fd9e3935222dd515b2698554e0ecc2ffb6e89d0776057461dcc149feca6d8c4f",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 394,
+    "complexity_score": 1.988
+  },
+  {
+    "id": 73,
+    "algorithm": "simple_loop",
+    "variables_used": 2,
+    "code_hash": "6845d40eb3be97aa5acf7db913715d860143dff9c9de8cc47939fe10c0be3a33",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 336,
+    "complexity_score": 1.872
+  },
+  {
+    "id": 74,
+    "algorithm": "inline_chr",
+    "variables_used": 2,
+    "code_hash": "863b0230ab4a4355ad82bf35a23a03fe8fcc64ba3ff5e59da9ac7fa1dd3e401e",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 280,
+    "complexity_score": 1.76
+  },
+  {
+    "id": 75,
+    "algorithm": "recursive",
+    "variables_used": 2,
+    "code_hash": "2a94ae27b0c23098d18d4c8534c25cb4f5e3153748beecff899682dfac93dd8d",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 382,
+    "complexity_score": 1.964
+  },
+  {
+    "id": 76,
+    "algorithm": "inline_chr",
+    "variables_used": 2,
+    "code_hash": "318dcba7dce6262311cdb7d9766712846ce41a2a1b8b9b28eadec15bedd36f71",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 273,
+    "complexity_score": 1.746
+  },
+  {
+    "id": 77,
+    "algorithm": "recursive",
+    "variables_used": 2,
+    "code_hash": "76a3e290bf83ace08fd0e92b658f23c45b0a42f5cc67b45663ccddda4489951b",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 387,
+    "complexity_score": 1.974
+  },
+  {
+    "id": 78,
+    "algorithm": "split_nibble",
+    "variables_used": 2,
+    "code_hash": "41ff119e6927690820a66f3d46371aee1e37e32f60ee76921da91db5882fcbf0",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 487,
+    "complexity_score": 2.174
+  },
+  {
+    "id": 79,
+    "algorithm": "conditional",
+    "variables_used": 2,
+    "code_hash": "85402bcd9da792cf96a6348506ca3f5c51cb62af49cd4dac48fdf638c96a2173",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 496,
+    "complexity_score": 3.192
+  },
+  {
+    "id": 80,
+    "algorithm": "segmented",
+    "variables_used": 2,
+    "code_hash": "34700e3411d048fd9ff503e5f07c8f80e8e291c732e3a127fba7f99bb0942d40",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 504,
+    "complexity_score": 2.208
+  },
+  {
+    "id": 81,
+    "algorithm": "simple_loop",
+    "variables_used": 2,
+    "code_hash": "9d65426df401440df11061aa8c079d21f7b42778c5fce64287c55d8ff329fcad",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 350,
+    "complexity_score": 1.9
+  },
+  {
+    "id": 82,
+    "algorithm": "case_statement",
+    "variables_used": 2,
+    "code_hash": "7aa09efabbcc5a2a1d4ee1555bce85639a30a81e25f69cecb9e94c1d6a9bbcce",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 703,
+    "complexity_score": 3.606
+  },
+  {
+    "id": 83,
+    "algorithm": "conditional",
+    "variables_used": 2,
+    "code_hash": "0ae0dedb1c19799ce02d62e940a4c186587e73d3a00b16cde165b0df20f3b54c",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 487,
+    "complexity_score": 3.174
+  },
+  {
+    "id": 84,
+    "algorithm": "simple_loop",
+    "variables_used": 2,
+    "code_hash": "5012b040b85eb26c76b9a7668dca9cb6c50dcf2fc87379e9d1492fbb2bdd833c",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 346,
+    "complexity_score": 1.892
+  },
+  {
+    "id": 85,
+    "algorithm": "case_statement",
+    "variables_used": 2,
+    "code_hash": "93fad0ea5ade369534b6705fa36a52e5a70a878db4e66f9b2aab367b5b8a20d0",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 663,
+    "complexity_score": 3.526
+  },
+  {
+    "id": 86,
+    "algorithm": "while_loop",
+    "variables_used": 2,
+    "code_hash": "953142e396ac209a665df8a5aa6ef55fe900dae256026b5b8ff93a4b795ee13b",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 380,
+    "complexity_score": 4.96
+  },
+  {
+    "id": 87,
+    "algorithm": "recursive",
+    "variables_used": 2,
+    "code_hash": "45f5b22b9c8354859086bb3a1cc0e56a1cde0dc151cb5f1a7530f741367684c7",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 373,
+    "complexity_score": 1.946
+  },
+  {
+    "id": 88,
+    "algorithm": "inline_chr",
+    "variables_used": 2,
+    "code_hash": "b41e8bcca67a64f8f9c2daf2efb4c4b4b355176ef3c08a87e8ac0f102bf48bda",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 295,
+    "complexity_score": 1.79
+  },
+  {
+    "id": 89,
+    "algorithm": "stringbuilder",
+    "variables_used": 2,
+    "code_hash": "faf6a57b70849b0f929e4a7e01d8750f52b0dc03b8715e3cb01696e3adf5ff7f",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 542,
+    "complexity_score": 2.284
+  },
+  {
+    "id": 90,
+    "algorithm": "simple_loop",
+    "variables_used": 2,
+    "code_hash": "cea0875f0df34b09581b97c12b8fda204aec0bdcca3d33f84b6e4209c5976025",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 355,
+    "complexity_score": 1.91
+  },
+  {
+    "id": 91,
+    "algorithm": "recursive",
+    "variables_used": 2,
+    "code_hash": "da7f1d26b8b0e788099eadfa4eb6beb632f975347c4d2d4e388f17f23b45dcfd",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 376,
+    "complexity_score": 1.952
+  },
+  {
+    "id": 92,
+    "algorithm": "simple_loop",
+    "variables_used": 2,
+    "code_hash": "156f6fd2f0d677b4b6020def4c45d8584d2f6e2ebbd73b9aecf4157bc4edbcea",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 354,
+    "complexity_score": 1.908
+  },
+  {
+    "id": 93,
+    "algorithm": "conditional",
+    "variables_used": 2,
+    "code_hash": "0876046ef2068813f33c9c814e1904f0693cbf2dca58b7b990cc9b488cbe77ad",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 501,
+    "complexity_score": 3.202
+  },
+  {
+    "id": 94,
+    "algorithm": "recursive",
+    "variables_used": 2,
+    "code_hash": "1d900a9ddde8f54335e3bc39c406769a62e5667bd54de04442d3f7f9cfe75586",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 399,
+    "complexity_score": 1.998
+  },
+  {
+    "id": 95,
+    "algorithm": "while_loop",
+    "variables_used": 2,
+    "code_hash": "d788b0e3a69a258bd08960af7afe89766c4b63da8f8852db0d0ca4a292637232",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 375,
+    "complexity_score": 1.95
+  },
+  {
+    "id": 96,
+    "algorithm": "stringbuilder",
+    "variables_used": 2,
+    "code_hash": "aca24f4d33f089036336da8e544c7dfa272925b7485d93435a5460ecc81bd21c",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 522,
+    "complexity_score": 2.2439999999999998
+  },
+  {
+    "id": 97,
+    "algorithm": "simple_loop",
+    "variables_used": 2,
+    "code_hash": "bab1fdb3ed62f1f73a87be9291d81ba91856bdf31d9489ee0f64fa20bc72e6c9",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 349,
+    "complexity_score": 1.898
+  },
+  {
+    "id": 98,
+    "algorithm": "case_statement",
+    "variables_used": 2,
+    "code_hash": "1cd1ec3afa8b3ca04d755d07d0763f23cff903d4042ec91c1470cb17dee54d83",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 653,
+    "complexity_score": 3.5060000000000002
+  },
+  {
+    "id": 99,
+    "algorithm": "while_loop",
+    "variables_used": 2,
+    "code_hash": "433696fcf5a71da3f4afbdf571d452caa5664b2fc774545e2eec0f83356c56c7",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 404,
+    "complexity_score": 2.008
+  },
+  {
+    "id": 100,
+    "algorithm": "inline_chr",
+    "variables_used": 2,
+    "code_hash": "dec1a661aec999fe1495c99bb0149f78852285b38ac43771a6570c12d5ee5c86",
+    "is_unique": true,
+    "is_functional": true,
+    "code_length": 291,
+    "complexity_score": 1.782
+  }
+]

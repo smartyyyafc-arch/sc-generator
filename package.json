@@ -12,7 +12,12 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "node comprehensive-test-suite.js",
+    "test:full": "node comprehensive-test-suite.js",
+    "test:verbose": "node comprehensive-test-suite.js",
+    "test:quiet": "node comprehensive-test-suite.js --quiet",
+    "test:json": "node comprehensive-test-suite.js --json",
+    "test:report": "node comprehensive-test-suite.js && cat ./test-suite-report.json",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

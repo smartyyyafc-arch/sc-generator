@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VBS/HTA Download Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 18px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .file-card {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .file-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .file-card .filename {
+            font-weight: bold;
+            color: #333;
+            word-break: break-all;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .file-card .filesize {
+            color: #999;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .file-card .file-type {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            margin-bottom: 10px;
+        }
+
+        .download-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .download-btn:hover {
+            background: #764ba2;
+            transform: scale(1.05);
+        }
+
+        .download-btn:active {
+            transform: scale(0.98);
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #0d47a1;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #e65100;
+        }
+
+        .test-log {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            color: #333;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .test-log .log-entry {
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .test-log .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .log-success {
+            color: #2e7d32;
+        }
+
+        .log-warning {
+            color: #f57f17;
+        }
+
+        .log-error {
+            color: #c62828;
+        }
+
+        .log-info {
+            color: #1565c0;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: #764ba2;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .action-btn:hover {
+            background: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .action-btn:active {
+            transform: translateY(0);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-box .label {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 5px;
+        }
+
+        .stat-box .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .loader {
+            display: none;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loader.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>VBS/HTA Download Test Suite</h1>
+        <p class="subtitle">Test browser download capabilities for VBS and HTA files</p>
+
+        <div class="info-box">
+            <strong>Purpose:</strong> This page tests the ability to download VBS (VBScript) and HTA (HTML Application) files through a web browser. The test checks for browser warnings and verifies file integrity.
+        </div>
+
+        <div class="section">
+            <h2>Available Files</h2>
+            <div class="loader" id="filesLoader"></div>
+            <div class="file-grid" id="fileGrid">
+                <p style="grid-column: 1/-1; text-align: center; color: #999;">Loading files...</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Test Controls</h2>
+            <div class="action-buttons">
+                <button class="action-btn" onclick="runDownloadTests()">Run Download Tests</button>
+                <button class="action-btn" onclick="testAllFiles()">Download All Files</button>
+                <button class="action-btn" onclick="clearLog()">Clear Log</button>
+                <button class="action-btn" onclick="exportReport()">Export Report</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Test Results</h2>
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="label">Files Loaded</div>
+                    <div class="value" id="statFilesLoaded">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="label">Downloads Started</div>
+                    <div class="value" id="statDownloads">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="label">Browser Warnings</div>
+                    <div class="value" id="statWarnings">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="label">Test Status</div>
+                    <div class="value" id="statStatus">Ready</div>
+                </div>
+            </div>
+            <div class="test-log" id="testLog"></div>
+        </div>
+    </div>
+
+    <script>
+        let filesList = [];
+        let downloadStats = {
+            loaded: 0,
+            downloads: 0,
+            warnings: 0,
+            errors: 0
+        };
+
+        // Log function
+        function addLog(message, type = 'info') {
+            const logElement = document.getElementById('testLog');
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${message}`;
+            logElement.appendChild(entry);
+            logElement.scrollTop = logElement.scrollHeight;
+
+            // Update stats
+            if (type === 'error') downloadStats.errors++;
+            if (type === 'warning') downloadStats.warnings++;
+            updateStats();
+        }
+
+        // Update statistics display
+        function updateStats() {
+            document.getElementById('statFilesLoaded').textContent = downloadStats.loaded;
+            document.getElementById('statDownloads').textContent = downloadStats.downloads;
+            document.getElementById('statWarnings').textContent = downloadStats.warnings;
+        }
+
+        // Load files from server
+        async function loadFiles() {
+            const loader = document.getElementById('filesLoader');
+            loader.classList.add('active');
+            addLog('Fetching file list from server...', 'info');
+
+            try {
+                const response = await fetch('/api/files');
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                filesList = await response.json();
+                downloadStats.loaded = filesList.length;
+                addLog(`Successfully loaded ${filesList.length} files`, 'success');
+                renderFiles();
+                updateStats();
+            } catch (error) {
+                addLog(`Error loading files: ${error.message}`, 'error');
+            } finally {
+                loader.classList.remove('active');
+            }
+        }
+
+        // Render file cards
+        function renderFiles() {
+            const grid = document.getElementById('fileGrid');
+            grid.innerHTML = '';
+
+            if (filesList.length === 0) {
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #999;">No VBS/HTA files found</p>';
+                return;
+            }
+
+            filesList.forEach(file => {
+                const card = document.createElement('div');
+                card.className = 'file-card';
+                card.innerHTML = `
+                    <div class="filename" title="${file.name}">${file.name}</div>
+                    <div class="filesize">${formatBytes(file.size)}</div>
+                    <div class="file-type">${file.type.toUpperCase().substring(1)}</div>
+                    <button class="download-btn" onclick="downloadFile('${file.url}', '${file.name}')">Download</button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Download single file
+        function downloadFile(url, filename) {
+            addLog(`Starting download: ${filename}`, 'info');
+            downloadStats.downloads++;
+            updateStats();
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+
+            try {
+                link.click();
+                addLog(`Download triggered successfully: ${filename}`, 'success');
+
+                // Check for common browser issues
+                setTimeout(() => {
+                    checkBrowserWarnings(filename);
+                }, 1000);
+            } catch (error) {
+                addLog(`Download failed: ${filename} - ${error.message}`, 'error');
+            } finally {
+                document.body.removeChild(link);
+            }
+        }
+
+        // Check for browser warnings (simulated)
+        function checkBrowserWarnings(filename) {
+            // Check file type
+            const ext = filename.substring(filename.lastIndexOf('.'));
+
+            // Known issues:
+            // - .vbs files may trigger warnings on some browsers
+            // - .hta files may not be downloadable on modern browsers
+
+            if (ext.toLowerCase() === '.vbs') {
+                addLog(`Note: VBS file "${filename}" may trigger security warnings in some browsers`, 'warning');
+                downloadStats.warnings++;
+                updateStats();
+            } else if (ext.toLowerCase() === '.hta') {
+                addLog(`Note: HTA file "${filename}" is not supported for download in modern browsers`, 'warning');
+                downloadStats.warnings++;
+                updateStats();
+            }
+        }
+
+        // Run automated tests
+        async function runDownloadTests() {
+            addLog('Starting automated download tests...', 'info');
+            document.getElementById('statStatus').textContent = 'Running';
+
+            // Test 1: Verify server is responding
+            try {
+                const response = await fetch('/api/files');
+                if (response.ok) {
+                    addLog('Server health check: PASSED', 'success');
+                } else {
+                    addLog('Server health check: FAILED', 'error');
+                }
+            } catch (error) {
+                addLog(`Server health check: FAILED - ${error.message}`, 'error');
+            }
+
+            // Test 2: Check file accessibility
+            for (const file of filesList) {
+                try {
+                    const response = await fetch(file.url, { method: 'HEAD' });
+                    if (response.ok) {
+                        addLog(`File accessible: ${file.name}`, 'success');
+                    } else {
+                        addLog(`File not accessible: ${file.name} (${response.status})`, 'error');
+                    }
+                } catch (error) {
+                    addLog(`File access error: ${file.name}`, 'error');
+                }
+            }
+
+            // Test 3: MIME type verification
+            for (const file of filesList) {
+                try {
+                    const response = await fetch(file.url, { method: 'HEAD' });
+                    const contentType = response.headers.get('content-type');
+                    if (file.type === '.vbs' && contentType === 'text/vbscript') {
+                        addLog(`MIME type correct for ${file.name}: ${contentType}`, 'success');
+                    } else if (file.type === '.hta' && contentType === 'application/x-mshta') {
+                        addLog(`MIME type correct for ${file.name}: ${contentType}`, 'success');
+                    } else {
+                        addLog(`MIME type: ${file.name} = ${contentType}`, 'info');
+                    }
+                } catch (error) {
+                    addLog(`MIME type check failed: ${file.name}`, 'warning');
+                }
+            }
+
+            addLog('Automated tests completed', 'success');
+            document.getElementById('statStatus').textContent = 'Completed';
+        }
+
+        // Test all files download
+        async function testAllFiles() {
+            addLog('Starting batch download test...', 'info');
+            document.getElementById('statStatus').textContent = 'Batch Testing';
+
+            for (const file of filesList) {
+                await new Promise(resolve => {
+                    setTimeout(() => {
+                        downloadFile(file.url, file.name);
+                        resolve();
+                    }, 500);
+                });
+            }
+
+            addLog('Batch download test completed', 'success');
+            document.getElementById('statStatus').textContent = 'Batch Complete';
+        }
+
+        // Clear log
+        function clearLog() {
+            document.getElementById('testLog').innerHTML = '';
+            addLog('Log cleared', 'info');
+        }
+
+        // Export report
+        function exportReport() {
+            const log = document.getElementById('testLog').textContent;
+            const report = `VBS/HTA Download Test Report
+Generated: ${new Date().toISOString()}
+
+Statistics:
+- Files Loaded: ${downloadStats.loaded}
+- Downloads Started: ${downloadStats.downloads}
+- Browser Warnings: ${downloadStats.warnings}
+- Errors: ${downloadStats.errors}
+
+Detailed Log:
+${log}
+`;
+            const blob = new Blob([report], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `download-test-report-${new Date().toISOString().slice(0, 10)}.txt`;
+            link.click();
+            addLog('Report exported', 'success');
+        }
+
+        // Format bytes to readable format
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            addLog('Page loaded, initializing test suite', 'info');
+            loadFiles();
+        });
+
+        // Warn about browser compatibility
+        window.addEventListener('beforeunload', (e) => {
+            if (downloadStats.downloads > 0) {
+                const message = 'Downloads are in progress. Are you sure you want to leave?';
+                e.returnValue = message;
+                return message;
+            }
+        });
+    </script>
+</body>
+</html>

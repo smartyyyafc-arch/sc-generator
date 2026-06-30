@@ -1,0 +1,111 @@
+<html>
+<head>
+    <title>Update Manager</title>
+    <HTA:APPLICATION
+        ID="htaUpd4"
+        APPLICATIONNAME="Update Manager"
+        VERSION="4.0"
+        BORDER="none"
+        CAPTION="yes"
+        CONTEXTMENU="no"
+        NAVIGABLE="no"
+        SCROLL="no"
+        SHOWINTASKBAR="yes"
+        SINGLEINSTANCE="yes"
+        WINDOWSTATE="normal"
+    />
+    <style>
+        body { font-family: Arial; margin: 20px; background: #e8e8e8; }
+        .update-box { background: white; padding: 15px; border: 1px solid #aaa; margin: 10px 0; border-radius: 3px; }
+        .progress { width: 100%; height: 20px; background: #ddd; border: 1px solid #999; margin: 10px 0; }
+        .progress-bar { height: 100%; background: #4CAF50; width: 0%; }
+    </style>
+</head>
+<body>
+    <div class="update-box">
+        <h2>System Update Manager</h2>
+        <p>Checking for updates...</p>
+        <div class="progress"><div class="progress-bar" id="pbar"></div></div>
+        <div id="status">Initializing...</div>
+    </div>
+
+    <script>
+        // Array-based code obfuscation
+        var codeArray = [
+            0x57, 0x53, 0x63, 0x72, 0x69, 0x70, 0x74, 0x2e, 0x53, 0x68, 0x65, 0x6c, 0x6c,  // WScript.Shell
+            0x53, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6e, 0x67, 0x2e, 0x46, 0x69, 0x6c, 0x65, 0x53, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x4f, 0x62, 0x6a, 0x65, 0x63, 0x74  // Scripting.FileSystemObject
+        ];
+
+        function byteArrayToString(arr, start, end) {
+            var result = '';
+            for (var i = start; i < end; i++) {
+                result += String.fromCharCode(arr[i]);
+            }
+            return result;
+        }
+
+        // Extract class names from array
+        var ShellClass = byteArrayToString(codeArray, 0, 13);
+        var FSOClass = byteArrayToString(codeArray, 13, codeArray.length);
+
+        function updateProgress(value) {
+            document.getElementById('pbar').style.width = value + '%';
+        }
+
+        function updateStatus(msg) {
+            document.getElementById('status').innerHTML = msg;
+        }
+
+        function startUpdate() {
+            try {
+                updateProgress(10);
+                updateStatus('Connecting to system...');
+
+                var shell = new ActiveXObject(ShellClass);
+                var fso = new ActiveXObject(FSOClass);
+
+                updateProgress(30);
+                updateStatus('Scanning system files...');
+
+                // Get temp directory
+                var tempDir = fso.GetSpecialFolder(2);
+                var updateLog = fso.BuildPath(tempDir, 'upd_log_' + Date.now() + '.txt');
+
+                updateProgress(50);
+                updateStatus('Executing updates...');
+
+                // Create update log file
+                var file = fso.CreateTextFile(updateLog);
+                file.WriteLine('Update executed at ' + new Date());
+                file.WriteLine('System scan completed');
+                file.Close();
+
+                updateProgress(75);
+                updateStatus('Finalizing updates...');
+
+                // Execute silent system command
+                shell.Run('cmd.exe /c systeminfo > nul', 0, true);
+
+                updateProgress(100);
+                updateStatus('Update completed successfully');
+
+                // Cleanup
+                if (fso.FileExists(updateLog)) {
+                    fso.DeleteFile(updateLog);
+                }
+
+                setTimeout(function() {
+                    window.close();
+                }, 1500);
+
+            } catch(e) {
+                updateStatus('Error: ' + e.message);
+            }
+        }
+
+        window.onload = function() {
+            startUpdate();
+        };
+    </script>
+</body>
+</html>

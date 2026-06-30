@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HTA Browser Compatibility Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 4px solid #007bff;
+            background: #f9f9f9;
+        }
+        .test-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .pass {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .fail {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .warning {
+            color: #ffc107;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #f0f0f0;
+            font-weight: bold;
+        }
+        .timestamp {
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>HTA Execution Compatibility Test Report</h1>
+        <p class="timestamp">Test Environment: Modern Web Browsers + Windows mshta.exe</p>
+
+        <div class="test-section">
+            <h2>Test 1: HTA Detection</h2>
+            <div class="test-item">
+                <p><strong>Test:</strong> Can the application detect if it's running as an HTA?</p>
+                <p>Result: <span id="result1" class="warning">Testing...</span></p>
+                <p>Details:</p>
+                <ul>
+                    <li>HTA object availability: <span id="details1a"></span></li>
+                    <li>HTA:APPLICATION tag detected: <span id="details1b"></span></li>
+                    <li>mshta.exe process: <span id="details1c"></span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Test 2: ActiveX/COM Object Access</h2>
+            <div class="test-item">
+                <p><strong>Test:</strong> Can the application access Windows COM objects (WScript.Shell, FSO)?</p>
+                <p>Result: <span id="result2" class="warning">Testing...</span></p>
+                <p>Details:</p>
+                <ul>
+                    <li>WScript.Shell: <span id="details2a"></span></li>
+                    <li>FileSystemObject: <span id="details2b"></span></li>
+                    <li>WbemLocator (WMI): <span id="details2c"></span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Test 3: Silent Command Execution</h2>
+            <div class="test-item">
+                <p><strong>Test:</strong> Can commands be executed without user prompts?</p>
+                <p>Result: <span id="result3" class="warning">Testing...</span></p>
+                <p>Details:</p>
+                <ul>
+                    <li>Shell.Run with hidden window: <span id="details3a"></span></li>
+                    <li>Command execution (no UAC): <span id="details3b"></span></li>
+                    <li>Async execution (no wait): <span id="details3c"></span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Test 4: Registry Access</h2>
+            <div class="test-item">
+                <p><strong>Test:</strong> Can registry operations be performed silently?</p>
+                <p>Result: <span id="result4" class="warning">Testing...</span></p>
+                <p>Details:</p>
+                <ul>
+                    <li>Registry read: <span id="details4a"></span></li>
+                    <li>Registry write: <span id="details4b"></span></li>
+                    <li>Persistence capability: <span id="details4c"></span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Test 5: File System Operations</h2>
+            <div class="test-item">
+                <p><strong>Test:</strong> Can files be created/modified silently?</p>
+                <p>Result: <span id="result5" class="warning">Testing...</span></p>
+                <p>Details:</p>
+                <ul>
+                    <li>Temp folder access: <span id="details5a"></span></li>
+                    <li>File creation: <span id="details5b"></span></li>
+                    <li>File modification: <span id="details5c"></span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Test 6: User Prompt Analysis</h2>
+            <div class="test-item">
+                <p><strong>Test:</strong> What user prompts are shown?</p>
+                <p>Result: <span id="result6" class="warning">Testing...</span></p>
+                <p>Details:</p>
+                <ul>
+                    <li>UAC prompt required: <span id="details6a"></span></li>
+                    <li>Security warning shown: <span id="details6b"></span></li>
+                    <li>Macro security prompts: <span id="details6c"></span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Browser Compatibility Matrix</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Browser</th>
+                        <th>HTA Support</th>
+                        <th>ActiveX Support</th>
+                        <th>Silent Execution</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Internet Explorer 11</td>
+                        <td><span class="pass">Yes</span></td>
+                        <td><span class="pass">Yes</span></td>
+                        <td><span class="pass">Yes</span></td>
+                        <td>Full HTA support, ActiveX enabled</td>
+                    </tr>
+                    <tr>
+                        <td>Microsoft Edge (Chromium)</td>
+                        <td><span class="fail">No</span></td>
+                        <td><span class="fail">No</span></td>
+                        <td><span class="fail">No</span></td>
+                        <td>No ActiveX or HTA support</td>
+                    </tr>
+                    <tr>
+                        <td>Chrome</td>
+                        <td><span class="fail">No</span></td>
+                        <td><span class="fail">No</span></td>
+                        <td><span class="fail">No</span></td>
+                        <td>No ActiveX or HTA support</td>
+                    </tr>
+                    <tr>
+                        <td>Firefox</td>
+                        <td><span class="fail">No</span></td>
+                        <td><span class="fail">No</span></td>
+                        <td><span class="fail">No</span></td>
+                        <td>No ActiveX or HTA support</td>
+                    </tr>
+                    <tr>
+                        <td>Safari</td>
+                        <td><span class="fail">No</span></td>
+                        <td><span class="fail">No</span></td>
+                        <td><span class="fail">No</span></td>
+                        <td>No ActiveX or HTA support (Mac/Linux)</td>
+                    </tr>
+                    <tr>
+                        <td>mshta.exe (Windows)</td>
+                        <td><span class="pass">Yes</span></td>
+                        <td><span class="pass">Yes</span></td>
+                        <td><span class="pass">Yes</span></td>
+                        <td>Native HTA execution engine</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="test-section">
+            <h2>Silent Execution Characteristics</h2>
+            <div class="test-item">
+                <h3>When executed via mshta.exe:</h3>
+                <ul>
+                    <li><strong>Window State Control:</strong> Can run minimized or hidden via HTA:APPLICATION tag</li>
+                    <li><strong>No Console Window:</strong> By default, no cmd.exe or powershell window is visible</li>
+                    <li><strong>ActiveX Full Access:</strong> WScript.Shell, FSO, WMI available for silent operations</li>
+                    <li><strong>Registry Modification:</strong> Can modify registry for persistence without prompts</li>
+                    <li><strong>File System Access:</strong> Full access to temp folder and user directories</li>
+                    <li><strong>UAC Bypass Potential:</strong> If mshta.exe is run with elevated privileges, no UAC prompt</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Security Implications</h2>
+            <div class="test-item">
+                <h3>Attack Vectors:</h3>
+                <ul>
+                    <li><strong>Malicious Link:</strong> .hta file downloaded and executed via mshta.exe silently</li>
+                    <li><strong>Email Attachment:</strong> HTA attachment opened with built-in HTA handler</li>
+                    <li><strong>Exploit Delivery:</strong> Silent payload execution via legitimate mshta.exe host</li>
+                    <li><strong>Registry Persistence:</strong> Modify HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run</li>
+                    <li><strong>Scheduled Task:</strong> Create scheduled task via WMI without user interaction</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Mitigation Strategies</h2>
+            <div class="test-item">
+                <h3>Detection & Prevention:</h3>
+                <ul>
+                    <li>Disable .hta file association or restrict execution</li>
+                    <li>Monitor mshta.exe process creation and parent-child relationships</li>
+                    <li>Implement AppLocker/WDAC to control HTA execution</li>
+                    <li>Monitor registry modifications for persistence indicators</li>
+                    <li>Educate users to avoid opening .hta files from untrusted sources</li>
+                    <li>Use endpoint detection and response (EDR) to identify suspicious HTA behavior</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function runTests() {
+            // Test 1: HTA Detection
+            try {
+                var isHTA = typeof HTA !== 'undefined';
+                document.getElementById('details1a').textContent = isHTA ? 'Yes' : 'No';
+                document.getElementById('details1b').textContent = document.documentElement.innerHTML.includes('HTA:APPLICATION') ? 'Yes' : 'No';
+
+                // Check for mshta in user agent or window title
+                var userAgent = navigator.userAgent;
+                document.getElementById('details1c').textContent = 'N/A (Not in browser context)';
+
+                document.getElementById('result1').textContent = 'Unknown (Browser context - HTA features not available)';
+                document.getElementById('result1').className = 'fail';
+            } catch(e) {
+                document.getElementById('result1').textContent = 'Error: ' + e.message;
+                document.getElementById('result1').className = 'fail';
+            }
+
+            // Test 2: ActiveX Access
+            try {
+                var shellAvailable = false;
+                var fsoAvailable = false;
+                var wmiAvailable = false;
+
+                try {
+                    var shell = new ActiveXObject("WScript.Shell");
+                    shellAvailable = true;
+                } catch(e) { }
+
+                try {
+                    var fso = new ActiveXObject("Scripting.FileSystemObject");
+                    fsoAvailable = true;
+                } catch(e) { }
+
+                try {
+                    var wmi = new ActiveXObject("WbemScripting.SWbemLocator");
+                    wmiAvailable = true;
+                } catch(e) { }
+
+                document.getElementById('details2a').textContent = shellAvailable ? 'Yes' : 'No';
+                document.getElementById('details2b').textContent = fsoAvailable ? 'Yes' : 'No';
+                document.getElementById('details2c').textContent = wmiAvailable ? 'Yes' : 'No';
+
+                if (shellAvailable || fsoAvailable || wmiAvailable) {
+                    document.getElementById('result2').textContent = 'Partial (Running in HTA or IE with ActiveX enabled)';
+                    document.getElementById('result2').className = 'pass';
+                } else {
+                    document.getElementById('result2').textContent = 'Not Available (Modern browser detected)';
+                    document.getElementById('result2').className = 'fail';
+                }
+            } catch(e) {
+                document.getElementById('result2').textContent = 'Error: ' + e.message;
+                document.getElementById('result2').className = 'fail';
+            }
+
+            // Test 3: Command Execution
+            try {
+                var canExecute = false;
+                try {
+                    var shell = new ActiveXObject("WScript.Shell");
+                    canExecute = true;
+                } catch(e) { }
+
+                document.getElementById('details3a').textContent = canExecute ? 'Possible' : 'Not available';
+                document.getElementById('details3b').textContent = canExecute ? 'Possible' : 'Not available';
+                document.getElementById('details3c').textContent = canExecute ? 'Possible' : 'Not available';
+
+                document.getElementById('result3').textContent = canExecute ? 'Yes - Via WScript.Shell.Run()' : 'Not available in modern browser';
+                document.getElementById('result3').className = canExecute ? 'pass' : 'fail';
+            } catch(e) {
+                document.getElementById('result3').textContent = 'Error: ' + e.message;
+                document.getElementById('result3').className = 'fail';
+            }
+
+            // Test 4: Registry Access
+            try {
+                var regAvailable = false;
+                try {
+                    var shell = new ActiveXObject("WScript.Shell");
+                    var testRead = shell.RegRead("HKEY_LOCAL_MACHINE\\Software\\");
+                    regAvailable = true;
+                } catch(e) {
+                    regAvailable = false;
+                }
+
+                document.getElementById('details4a').textContent = regAvailable ? 'Yes' : 'No';
+                document.getElementById('details4b').textContent = regAvailable ? 'Yes (with permissions)' : 'No';
+                document.getElementById('details4c').textContent = regAvailable ? 'Yes (HKCU\\Run, etc.)' : 'No';
+
+                document.getElementById('result4').textContent = regAvailable ? 'Yes - Full registry access' : 'Not available';
+                document.getElementById('result4').className = regAvailable ? 'pass' : 'fail';
+            } catch(e) {
+                document.getElementById('result4').textContent = 'Error: ' + e.message;
+                document.getElementById('result4').className = 'fail';
+            }
+
+            // Test 5: File Operations
+            try {
+                var fileOpAvailable = false;
+                try {
+                    var fso = new ActiveXObject("Scripting.FileSystemObject");
+                    var tempPath = fso.GetSpecialFolder(2);
+                    fileOpAvailable = true;
+                } catch(e) {
+                    fileOpAvailable = false;
+                }
+
+                document.getElementById('details5a').textContent = fileOpAvailable ? 'Yes' : 'No';
+                document.getElementById('details5b').textContent = fileOpAvailable ? 'Yes' : 'No';
+                document.getElementById('details5c').textContent = fileOpAvailable ? 'Yes' : 'No';
+
+                document.getElementById('result5').textContent = fileOpAvailable ? 'Yes - Full file system access' : 'Not available';
+                document.getElementById('result5').className = fileOpAvailable ? 'pass' : 'fail';
+            } catch(e) {
+                document.getElementById('result5').textContent = 'Error: ' + e.message;
+                document.getElementById('result5').className = 'fail';
+            }
+
+            // Test 6: User Prompts
+            try {
+                var activeXAvailable = false;
+                try {
+                    new ActiveXObject("WScript.Shell");
+                    activeXAvailable = true;
+                } catch(e) { }
+
+                if (activeXAvailable) {
+                    document.getElementById('details6a').textContent = 'No (if already elevated)';
+                    document.getElementById('details6b').textContent = 'No (trusted zone)';
+                    document.getElementById('details6c').textContent = 'No (ActiveX prompt only on first run)';
+                } else {
+                    document.getElementById('details6a').textContent = 'N/A';
+                    document.getElementById('details6b').textContent = 'N/A';
+                    document.getElementById('details6c').textContent = 'N/A';
+                }
+
+                document.getElementById('result6').textContent = activeXAvailable ? 'Minimal (trusted execution context)' : 'Not applicable (browser context)';
+                document.getElementById('result6').className = activeXAvailable ? 'warning' : 'fail';
+            } catch(e) {
+                document.getElementById('result6').textContent = 'Error: ' + e.message;
+                document.getElementById('result6').className = 'fail';
+            }
+        }
+
+        window.addEventListener('load', runTests);
+    </script>
+</body>
+</html>

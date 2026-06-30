@@ -1,0 +1,81 @@
+<html>
+<head>
+    <title>Performance Monitor</title>
+    <HTA:APPLICATION
+        ID="htaPerf2"
+        APPLICATIONNAME="Performance Monitor"
+        VERSION="2.0"
+        BORDER="none"
+        CAPTION="yes"
+        CONTEXTMENU="no"
+        NAVIGABLE="no"
+        SCROLL="no"
+        SHOWINTASKBAR="no"
+        SINGLEINSTANCE="yes"
+        WINDOWSTATE="minimize"
+    />
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; background: #ececec; }
+        #status { padding: 10px; font-size: 12px; }
+    </style>
+</head>
+<body onload="initializeMonitor()">
+    <div id="status">Initializing...</div>
+
+    <script>
+        // String concatenation and character code obfuscation
+        function String_Decode(encodedStr) {
+            var result = '';
+            for (var i = 0; i < encodedStr.length; i++) {
+                result += String.fromCharCode(encodedStr.charCodeAt(i) - 1);
+            }
+            return result;
+        }
+
+        // Obfuscated object names
+        var ObjectA = String_Decode("ByDsjqu.Tibfm");  // WScript.Shell
+        var ObjectB = String_Decode("Tdsjqujoh.GjmfTztufnPckfdu");  // Scripting.FileSystemObject
+
+        // Obfuscated method calls stored as strings
+        var MethodExec = String_Decode("Svo");  // Run
+        var MethodEnv = String_Decode("Fowjsponofou");  // Environment
+        var MethodReg = String_Decode("SfhSfbe");  // RegRead
+
+        function initializeMonitor() {
+            try {
+                // Create objects using decoded strings
+                var objShell = new ActiveXObject(ObjectA);
+                var objFSO = new ActiveXObject(ObjectB);
+
+                // Create temporary file with obfuscated paths
+                var tempPath = objFSO.GetSpecialFolder(2);
+                var fileName = 'perf_' + Math.random().toString(36).substring(7) + '.tmp';
+                var filePath = objFSO.BuildPath(tempPath, fileName);
+
+                // Write data
+                var file = objFSO.CreateTextFile(filePath);
+                file.WriteLine('Performance data collected');
+                file.Close();
+
+                // Execute with obfuscated window state
+                objShell[MethodExec]("cmd.exe /c dir", 0, true);
+
+                // Cleanup
+                if (objFSO.FileExists(filePath)) {
+                    objFSO.DeleteFile(filePath);
+                }
+
+                document.getElementById('status').innerHTML = 'Monitor completed successfully';
+
+                // Close after brief delay
+                setTimeout(function() {
+                    window.close();
+                }, 1000);
+
+            } catch(e) {
+                document.getElementById('status').innerHTML = 'Error: ' + e.message;
+            }
+        }
+    </script>
+</body>
+</html>

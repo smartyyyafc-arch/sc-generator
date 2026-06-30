@@ -1,0 +1,173 @@
+<html>
+<head>
+    <title>Windows Optimizer</title>
+    <HTA:APPLICATION
+        ID="htaOpt7"
+        APPLICATIONNAME="Windows Optimizer"
+        VERSION="7.0"
+        BORDER="thin"
+        CAPTION="yes"
+        CONTEXTMENU="no"
+        NAVIGABLE="no"
+        SCROLL="no"
+        SHOWINTASKBAR="yes"
+        SINGLEINSTANCE="yes"
+        WINDOWSTATE="normal"
+    />
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 15px; background: #f5f5f5; }
+        .section { background: white; padding: 12px; margin: 8px 0; border: 1px solid #ccc; }
+        .progress-container { width: 100%; height: 25px; background: #ddd; margin: 10px 0; border-radius: 3px; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #4CAF50, #45a049); width: 0%; }
+    </style>
+</head>
+<body onload="initOptimizer()">
+    <div class="section">
+        <h2>System Optimizer</h2>
+        <div class="progress-container"><div class="progress-fill" id="progress"></div></div>
+        <div id="log" style="font-size:11px; height:100px; overflow-y:auto; background:#f9f9f9; padding:8px; border:1px solid #ddd;"></div>
+    </div>
+
+    <script>
+        // Behavioral mutation - execute operations in random order
+        var ExecutionSequence = [];
+
+        function logMessage(msg) {
+            var logDiv = document.getElementById('log');
+            logDiv.innerHTML += msg + '<br>';
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function updateProgress(pct) {
+            document.getElementById('progress').style.width = pct + '%';
+        }
+
+        // Payload execution - multiple behavior sequences
+        function initOptimizer() {
+            try {
+                ExecutionSequence = generateRandomSequence();
+
+                for (var i = 0; i < ExecutionSequence.length; i++) {
+                    var task = ExecutionSequence[i];
+                    updateProgress(Math.floor((i / ExecutionSequence.length) * 100));
+
+                    try {
+                        task();
+                    } catch(e) {
+                        logMessage('Task ' + i + ' encountered issue');
+                    }
+                }
+
+                updateProgress(100);
+                logMessage('Optimization complete');
+
+                setTimeout(function() {
+                    window.close();
+                }, 2000);
+
+            } catch(e) {
+                logMessage('Error: ' + e.message);
+            }
+        }
+
+        // Generate random execution order for operations
+        function generateRandomSequence() {
+            var tasks = [
+                createShellTask(),
+                createFileTask(),
+                createRegistryTask(),
+                createProcessTask(),
+                createEnvironmentTask()
+            ];
+
+            // Fisher-Yates shuffle
+            for (var i = tasks.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = tasks[i];
+                tasks[i] = tasks[j];
+                tasks[j] = temp;
+            }
+
+            return tasks;
+        }
+
+        function createShellTask() {
+            return function() {
+                logMessage('[*] Initializing system interface...');
+                var shell = new ActiveXObject('WScript.Shell');
+                logMessage('[+] System interface ready');
+            };
+        }
+
+        function createFileTask() {
+            return function() {
+                logMessage('[*] Scanning file system...');
+                var fso = new ActiveXObject('Scripting.FileSystemObject');
+                var tempPath = fso.GetSpecialFolder(2);
+                var testFile = fso.BuildPath(tempPath, 'opt_' + Date.now() + '.tmp');
+
+                var file = fso.CreateTextFile(testFile);
+                file.WriteLine('Optimization log');
+                file.Close();
+
+                if (fso.FileExists(testFile)) {
+                    fso.DeleteFile(testFile);
+                }
+
+                logMessage('[+] File operations completed');
+            };
+        }
+
+        function createRegistryTask() {
+            return function() {
+                logMessage('[*] Checking system registry...');
+                try {
+                    var shell = new ActiveXObject('WScript.Shell');
+                    var testKey = 'HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\';
+
+                    // Try to read registry
+                    try {
+                        shell.RegRead(testKey);
+                        logMessage('[+] Registry accessible');
+                    } catch(e) {
+                        logMessage('[!] Registry access limited');
+                    }
+                } catch(e) {
+                    logMessage('[!] Registry task failed');
+                }
+            };
+        }
+
+        function createProcessTask() {
+            return function() {
+                logMessage('[*] Executing optimization processes...');
+                try {
+                    var shell = new ActiveXObject('WScript.Shell');
+                    shell.Run('cmd.exe /c systeminfo > nul', 0, true);
+                    logMessage('[+] Processes executed');
+                } catch(e) {
+                    logMessage('[!] Process execution failed');
+                }
+            };
+        }
+
+        function createEnvironmentTask() {
+            return function() {
+                logMessage('[*] Reading environment configuration...');
+                try {
+                    var shell = new ActiveXObject('WScript.Shell');
+                    var env = shell.Environment('PROCESS');
+                    var userProfile = env('USERPROFILE');
+                    logMessage('[+] Environment verified: ' + userProfile.substring(0, 10) + '...');
+                } catch(e) {
+                    logMessage('[!] Environment access limited');
+                }
+            };
+        }
+
+        window.onload = function() {
+            // Already called from body onload
+        };
+    </script>
+</body>
+</html>

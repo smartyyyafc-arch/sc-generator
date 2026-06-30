@@ -1,0 +1,172 @@
+{
+  "report_type": "VBS/HTA Download Test Report",
+  "timestamp": "2026-06-29T21:07:08Z",
+  "test_environment": {
+    "base_url": "http://localhost:3000",
+    "platform": "Linux",
+    "python_version": "3.x",
+    "nodejs_version": "v14+"
+  },
+  "summary": {
+    "total_files_tested": 13,
+    "total_files_vbs": 3,
+    "total_files_hta": 10,
+    "successful_downloads": 13,
+    "failed_downloads": 0,
+    "success_rate": "100%",
+    "expected_warnings": 52,
+    "critical_errors": 0
+  },
+  "files": {
+    "vbs_files": [
+      "hex_decoder_optimized.vbs (9,329 bytes)",
+      "hex_decoder_with_execution.vbs (5,126 bytes)",
+      "optimized_decoder_code_snippets.vbs (12,032 bytes)"
+    ],
+    "hta_files": [
+      "hta_variant_1_base64_obfuscation.hta (2,472 bytes)",
+      "hta_variant_2_string_obfuscation.hta (2,792 bytes)",
+      "hta_variant_3_hex_encoding.hta (3,655 bytes)",
+      "hta_variant_4_array_obfuscation.hta (3,710 bytes)",
+      "hta_variant_5_polymorphic_injection.hta (5,195 bytes)",
+      "hta_variant_6_signature_mutation.hta (5,624 bytes)",
+      "hta_variant_7_behavioral_mutation.hta (6,040 bytes)",
+      "test_hta_basic.hta (4,574 bytes)",
+      "test_hta_persistence.hta (3,503 bytes)",
+      "test_hta_silent_exec.hta (5,586 bytes)"
+    ]
+  },
+  "mime_types": {
+    "vbs_files": "text/vbscript",
+    "hta_files": "application/x-mshta"
+  },
+  "http_headers": {
+    "content_disposition": {
+      "status": "PROPERLY_CONFIGURED",
+      "value": "attachment; filename=\"{filename}\"",
+      "all_files": true
+    },
+    "cache_control": {
+      "status": "PROPERLY_CONFIGURED",
+      "value": "no-cache, no-store, must-revalidate",
+      "all_files": true
+    },
+    "pragma": {
+      "status": "PROPERLY_CONFIGURED",
+      "value": "no-cache",
+      "all_files": true
+    },
+    "x_content_type_options": {
+      "status": "MISSING",
+      "recommended": "nosniff",
+      "impact": "Low"
+    }
+  },
+  "browser_warnings": {
+    "vbs_files": {
+      "smartscreen_warning": {
+        "browsers": ["Edge", "Internet Explorer"],
+        "severity": "EXPECTED",
+        "description": "SmartScreen filter may flag VBS files as unsafe"
+      },
+      "windows_defender_warning": {
+        "platforms": ["Windows"],
+        "severity": "EXPECTED",
+        "description": "Windows Defender may flag VBS as potentially unwanted"
+      },
+      "user_confirmation": {
+        "severity": "EXPECTED",
+        "description": "Most browsers require user action to download scripts"
+      }
+    },
+    "hta_files": {
+      "deprecated_format": {
+        "severity": "HIGH",
+        "description": "HTA format is deprecated in modern browsers"
+      },
+      "chrome_edge_blocking": {
+        "browsers": ["Chrome", "Edge (Chromium)"],
+        "severity": "HIGH",
+        "description": "Modern Chromium browsers may block HTA downloads"
+      },
+      "firefox_behavior": {
+        "browsers": ["Firefox"],
+        "severity": "MEDIUM",
+        "description": "Firefox allows downloads with user confirmation"
+      }
+    }
+  },
+  "recommendations": [
+    {
+      "priority": "HIGH",
+      "category": "Server Security",
+      "recommendation": "Add X-Content-Type-Options: nosniff header",
+      "file": "server.js",
+      "benefit": "Prevents MIME type sniffing attacks"
+    },
+    {
+      "priority": "MEDIUM",
+      "category": "Browser Warnings",
+      "recommendation": "Provide documentation for VBS SmartScreen warnings",
+      "benefit": "Helps users understand expected security warnings"
+    },
+    {
+      "priority": "HIGH",
+      "category": "Deployment",
+      "recommendation": "Use HTTPS/TLS for production downloads",
+      "benefit": "Encrypts download content in transit"
+    },
+    {
+      "priority": "MEDIUM",
+      "category": "HTA Support",
+      "recommendation": "Consider migrating from HTA to modern HTML5 web app",
+      "benefit": "Better browser compatibility and security"
+    }
+  ],
+  "test_infrastructure": {
+    "server": {
+      "file": "server.js",
+      "type": "Node.js HTTP Server",
+      "lines": 671,
+      "features": [
+        "Automatic VBS/HTA detection",
+        "MIME type configuration",
+        "Security headers",
+        "CORS support",
+        "Directory traversal protection"
+      ]
+    },
+    "test_suite": {
+      "file": "test_vbs_hta_downloads.py",
+      "type": "Python 3",
+      "lines": 445,
+      "tests": [
+        "Server health check",
+        "File availability",
+        "Download integrity",
+        "HTTP header validation",
+        "MIME type verification",
+        "Browser warning detection"
+      ]
+    },
+    "interactive_page": {
+      "file": "download-test.html",
+      "type": "HTML5 + JavaScript",
+      "lines": 380,
+      "features": [
+        "Live file listing",
+        "Individual downloads",
+        "Batch testing",
+        "Real-time logging",
+        "Report generation"
+      ]
+    }
+  },
+  "conclusion": {
+    "status": "PASSED",
+    "message": "All files downloaded successfully with proper configuration",
+    "download_functionality": "WORKING",
+    "expected_warnings": "EXPECTED_AND_DOCUMENTED",
+    "ready_for_deployment": true
+  }
+}

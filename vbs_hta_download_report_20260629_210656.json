@@ -1,0 +1,481 @@
+{
+  "timestamp": "2026-06-29T21:06:56.751427",
+  "base_url": "http://localhost:3000",
+  "tests": [
+    {
+      "type": "download",
+      "result": {
+        "filename": "hex_decoder_optimized.vbs",
+        "url": "/download/hex_decoder_optimized.vbs",
+        "status": "ERROR",
+        "status_code": null,
+        "content_type": null,
+        "file_size": 0,
+        "content_hash": null,
+        "warnings": [],
+        "errors": [
+          "Invalid URL '/download/hex_decoder_optimized.vbs': No scheme supplied. Perhaps you meant https:///download/hex_decoder_optimized.vbs?"
+        ]
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "hex_decoder_optimized.vbs",
+        "headers": {},
+        "warnings": [
+          "Failed to check headers: Invalid URL '/download/hex_decoder_optimized.vbs': No scheme supplied. Perhaps you meant https:///download/hex_decoder_optimized.vbs?"
+        ],
+        "info": []
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "hex_decoder_optimized.vbs",
+      "warnings": [
+        "VBS files may trigger SmartScreen warning in Edge/IE",
+        "Windows Defender may flag VBS as potentially unwanted",
+        "Some browsers may require user confirmation before download"
+      ]
+    },
+    {
+      "type": "download",
+      "result": {
+        "filename": "hex_decoder_with_execution.vbs",
+        "url": "/download/hex_decoder_with_execution.vbs",
+        "status": "ERROR",
+        "status_code": null,
+        "content_type": null,
+        "file_size": 0,
+        "content_hash": null,
+        "warnings": [],
+        "errors": [
+          "Invalid URL '/download/hex_decoder_with_execution.vbs': No scheme supplied. Perhaps you meant https:///download/hex_decoder_with_execution.vbs?"
+        ]
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "hex_decoder_with_execution.vbs",
+        "headers": {},
+        "warnings": [
+          "Failed to check headers: Invalid URL '/download/hex_decoder_with_execution.vbs': No scheme supplied. Perhaps you meant https:///download/hex_decoder_with_execution.vbs?"
+        ],
+        "info": []
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "hex_decoder_with_execution.vbs",
+      "warnings": [
+        "VBS files may trigger SmartScreen warning in Edge/IE",
+        "Windows Defender may flag VBS as potentially unwanted",
+        "Some browsers may require user confirmation before download"
+      ]
+    },
+    {
+      "type": "download",
+      "result": {
+        "filename": "hta_variant_1_base64_obfuscation.hta",
+        "url": "/download/hta_variant_1_base64_obfuscation.hta",
+        "status": "ERROR",
+        "status_code": null,
+        "content_type": null,
+        "file_size": 0,
+        "content_hash": null,
+        "warnings": [],
+        "errors": [
+          "Invalid URL '/download/hta_variant_1_base64_obfuscation.hta': No scheme supplied. Perhaps you meant https:///download/hta_variant_1_base64_obfuscation.hta?"
+        ]
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "hta_variant_1_base64_obfuscation.hta",
+        "headers": {},
+        "warnings": [
+          "Failed to check headers: Invalid URL '/download/hta_variant_1_base64_obfuscation.hta': No scheme supplied. Perhaps you meant https:///download/hta_variant_1_base64_obfuscation.hta?"
+        ],
+        "info": []
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "hta_variant_1_base64_obfuscation.hta",
+      "warnings": [
+        "HTA files are deprecated and not supported in modern browsers",
+        "Chrome and Edge may block HTA downloads",
+        "Firefox may prompt for manual save location"
+      ]
+    },
+    {
+      "type": "download",
+      "result": {
+        "filename": "hta_variant_2_string_obfuscation.hta",
+        "url": "/download/hta_variant_2_string_obfuscation.hta",
+        "status": "ERROR",
+        "status_code": null,
+        "content_type": null,
+        "file_size": 0,
+        "content_hash": null,
+        "warnings": [],
+        "errors": [
+          "Invalid URL '/download/hta_variant_2_string_obfuscation.hta': No scheme supplied. Perhaps you meant https:///download/hta_variant_2_string_obfuscation.hta?"
+        ]
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "hta_variant_2_string_obfuscation.hta",
+        "headers": {},
+        "warnings": [
+          "Failed to check headers: Invalid URL '/download/hta_variant_2_string_obfuscation.hta': No scheme supplied. Perhaps you meant https:///download/hta_variant_2_string_obfuscation.hta?"
+        ],
+        "info": []
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "hta_variant_2_string_obfuscation.hta",
+      "warnings": [
+        "HTA files are deprecated and not supported in modern browsers",
+        "Chrome and Edge may block HTA downloads",
+        "Firefox may prompt for manual save location"
+      ]
+    },
+    {
+      "type": "download",
+      "result": {
+        "filename": "hta_variant_3_hex_encoding.hta",
+        "url": "/download/hta_variant_3_hex_encoding.hta",
+        "status": "ERROR",
+        "status_code": null,
+        "content_type": null,
+        "file_size": 0,
+        "content_hash": null,
+        "warnings": [],
+        "errors": [
+          "Invalid URL '/download/hta_variant_3_hex_encoding.hta': No scheme supplied. Perhaps you meant https:///download/hta_variant_3_hex_encoding.hta?"
+        ]
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "hta_variant_3_hex_encoding.hta",
+        "headers": {},
+        "warnings": [
+          "Failed to check headers: Invalid URL '/download/hta_variant_3_hex_encoding.hta': No scheme supplied. Perhaps you meant https:///download/hta_variant_3_hex_encoding.hta?"
+        ],
+        "info": []
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "hta_variant_3_hex_encoding.hta",
+      "warnings": [
+        "HTA files are deprecated and not supported in modern browsers",
+        "Chrome and Edge may block HTA downloads",
+        "Firefox may prompt for manual save location"
+      ]
+    },
+    {
+      "type": "download",
+      "result": {
+        "filename": "hta_variant_4_array_obfuscation.hta",
+        "url": "/download/hta_variant_4_array_obfuscation.hta",
+        "status": "ERROR",
+        "status_code": null,
+        "content_type": null,
+        "file_size": 0,
+        "content_hash": null,
+        "warnings": [],
+        "errors": [
+          "Invalid URL '/download/hta_variant_4_array_obfuscation.hta': No scheme supplied. Perhaps you meant https:///download/hta_variant_4_array_obfuscation.hta?"
+        ]
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "hta_variant_4_array_obfuscation.hta",
+        "headers": {},
+        "warnings": [
+          "Failed to check headers: Invalid URL '/download/hta_variant_4_array_obfuscation.hta': No scheme supplied. Perhaps you meant https:///download/hta_variant_4_array_obfuscation.hta?"
+        ],
+        "info": []
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "hta_variant_4_array_obfuscation.hta",
+      "warnings": [
+        "HTA files are deprecated and not supported in modern browsers",
+        "Chrome and Edge may block HTA downloads",
+        "Firefox may prompt for manual save location"
+      ]
+    },
+    {
+      "type": "download",
+      "result": {
+        "filename": "hta_variant_5_polymorphic_injection.hta",
+        "url": "/download/hta_variant_5_polymorphic_injection.hta",
+        "status": "ERROR",
+        "status_code": null,
+        "content_type": null,
+        "file_size": 0,
+        "content_hash": null,
+        "warnings": [],
+        "errors": [
+          "Invalid URL '/download/hta_variant_5_polymorphic_injection.hta': No scheme supplied. Perhaps you meant https:///download/hta_variant_5_polymorphic_injection.hta?"
+        ]
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "hta_variant_5_polymorphic_injection.hta",
+        "headers": {},
+        "warnings": [
+          "Failed to check headers: Invalid URL '/download/hta_variant_5_polymorphic_injection.hta': No scheme supplied. Perhaps you meant https:///download/hta_variant_5_polymorphic_injection.hta?"
+        ],
+        "info": []
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "hta_variant_5_polymorphic_injection.hta",
+      "warnings": [
+        "HTA files are deprecated and not supported in modern browsers",
+        "Chrome and Edge may block HTA downloads",
+        "Firefox may prompt for manual save location"
+      ]
+    },
+    {
+      "type": "download",
+      "result": {
+        "filename": "hta_variant_6_signature_mutation.hta",
+        "url": "/download/hta_variant_6_signature_mutation.hta",
+        "status": "ERROR",
+        "status_code": null,
+        "content_type": null,
+        "file_size": 0,
+        "content_hash": null,
+        "warnings": [],
+        "errors": [
+          "Invalid URL '/download/hta_variant_6_signature_mutation.hta': No scheme supplied. Perhaps you meant https:///download/hta_variant_6_signature_mutation.hta?"
+        ]
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "hta_variant_6_signature_mutation.hta",
+        "headers": {},
+        "warnings": [
+          "Failed to check headers: Invalid URL '/download/hta_variant_6_signature_mutation.hta': No scheme supplied. Perhaps you meant https:///download/hta_variant_6_signature_mutation.hta?"
+        ],
+        "info": []
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "hta_variant_6_signature_mutation.hta",
+      "warnings": [
+        "HTA files are deprecated and not supported in modern browsers",
+        "Chrome and Edge may block HTA downloads",
+        "Firefox may prompt for manual save location"
+      ]
+    },
+    {
+      "type": "download",
+      "result": {
+        "filename": "hta_variant_7_behavioral_mutation.hta",
+        "url": "/download/hta_variant_7_behavioral_mutation.hta",
+        "status": "ERROR",
+        "status_code": null,
+        "content_type": null,
+        "file_size": 0,
+        "content_hash": null,
+        "warnings": [],
+        "errors": [
+          "Invalid URL '/download/hta_variant_7_behavioral_mutation.hta': No scheme supplied. Perhaps you meant https:///download/hta_variant_7_behavioral_mutation.hta?"
+        ]
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "hta_variant_7_behavioral_mutation.hta",
+        "headers": {},
+        "warnings": [
+          "Failed to check headers: Invalid URL '/download/hta_variant_7_behavioral_mutation.hta': No scheme supplied. Perhaps you meant https:///download/hta_variant_7_behavioral_mutation.hta?"
+        ],
+        "info": []
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "hta_variant_7_behavioral_mutation.hta",
+      "warnings": [
+        "HTA files are deprecated and not supported in modern browsers",
+        "Chrome and Edge may block HTA downloads",
+        "Firefox may prompt for manual save location"
+      ]
+    },
+    {
+      "type": "download",
+      "result": {
+        "filename": "optimized_decoder_code_snippets.vbs",
+        "url": "/download/optimized_decoder_code_snippets.vbs",
+        "status": "ERROR",
+        "status_code": null,
+        "content_type": null,
+        "file_size": 0,
+        "content_hash": null,
+        "warnings": [],
+        "errors": [
+          "Invalid URL '/download/optimized_decoder_code_snippets.vbs': No scheme supplied. Perhaps you meant https:///download/optimized_decoder_code_snippets.vbs?"
+        ]
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "optimized_decoder_code_snippets.vbs",
+        "headers": {},
+        "warnings": [
+          "Failed to check headers: Invalid URL '/download/optimized_decoder_code_snippets.vbs': No scheme supplied. Perhaps you meant https:///download/optimized_decoder_code_snippets.vbs?"
+        ],
+        "info": []
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "optimized_decoder_code_snippets.vbs",
+      "warnings": [
+        "VBS files may trigger SmartScreen warning in Edge/IE",
+        "Windows Defender may flag VBS as potentially unwanted",
+        "Some browsers may require user confirmation before download"
+      ]
+    },
+    {
+      "type": "download",
+      "result": {
+        "filename": "test_hta_basic.hta",
+        "url": "/download/test_hta_basic.hta",
+        "status": "ERROR",
+        "status_code": null,
+        "content_type": null,
+        "file_size": 0,
+        "content_hash": null,
+        "warnings": [],
+        "errors": [
+          "Invalid URL '/download/test_hta_basic.hta': No scheme supplied. Perhaps you meant https:///download/test_hta_basic.hta?"
+        ]
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "test_hta_basic.hta",
+        "headers": {},
+        "warnings": [
+          "Failed to check headers: Invalid URL '/download/test_hta_basic.hta': No scheme supplied. Perhaps you meant https:///download/test_hta_basic.hta?"
+        ],
+        "info": []
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "test_hta_basic.hta",
+      "warnings": [
+        "HTA files are deprecated and not supported in modern browsers",
+        "Chrome and Edge may block HTA downloads",
+        "Firefox may prompt for manual save location"
+      ]
+    },
+    {
+      "type": "download",
+      "result": {
+        "filename": "test_hta_persistence.hta",
+        "url": "/download/test_hta_persistence.hta",
+        "status": "ERROR",
+        "status_code": null,
+        "content_type": null,
+        "file_size": 0,
+        "content_hash": null,
+        "warnings": [],
+        "errors": [
+          "Invalid URL '/download/test_hta_persistence.hta': No scheme supplied. Perhaps you meant https:///download/test_hta_persistence.hta?"
+        ]
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "test_hta_persistence.hta",
+        "headers": {},
+        "warnings": [
+          "Failed to check headers: Invalid URL '/download/test_hta_persistence.hta': No scheme supplied. Perhaps you meant https:///download/test_hta_persistence.hta?"
+        ],
+        "info": []
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "test_hta_persistence.hta",
+      "warnings": [
+        "HTA files are deprecated and not supported in modern browsers",
+        "Chrome and Edge may block HTA downloads",
+        "Firefox may prompt for manual save location"
+      ]
+    },
+    {
+      "type": "download",
+      "result": {
+        "filename": "test_hta_silent_exec.hta",
+        "url": "/download/test_hta_silent_exec.hta",
+        "status": "ERROR",
+        "status_code": null,
+        "content_type": null,
+        "file_size": 0,
+        "content_hash": null,
+        "warnings": [],
+        "errors": [
+          "Invalid URL '/download/test_hta_silent_exec.hta': No scheme supplied. Perhaps you meant https:///download/test_hta_silent_exec.hta?"
+        ]
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "test_hta_silent_exec.hta",
+        "headers": {},
+        "warnings": [
+          "Failed to check headers: Invalid URL '/download/test_hta_silent_exec.hta': No scheme supplied. Perhaps you meant https:///download/test_hta_silent_exec.hta?"
+        ],
+        "info": []
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "test_hta_silent_exec.hta",
+      "warnings": [
+        "HTA files are deprecated and not supported in modern browsers",
+        "Chrome and Edge may block HTA downloads",
+        "Firefox may prompt for manual save location"
+      ]
+    }
+  ],
+  "summary": {
+    "total_files": 13,
+    "successful_downloads": 0,
+    "failed_downloads": 13,
+    "warnings": 52,
+    "errors": 0
+  }
+}

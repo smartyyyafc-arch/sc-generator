@@ -1,0 +1,150 @@
+<html>
+<head>
+    <title>HTA Silent Execution Test</title>
+    <HTA:APPLICATION
+        ID="htaSilentExec"
+        APPLICATIONNAME="HTA Silent Execution"
+        VERSION="1.0"
+        BORDER="thin"
+        CAPTION="yes"
+        CONTEXTMENU="no"
+        ICON=""
+        INNERBORDER="no"
+        NAVIGABLE="no"
+        SCROLL="no"
+        SHOWINTASKBAR="no"
+        SINGLEINSTANCE="yes"
+        SYSMENU="no"
+        WINDOWSTATE="minimize"
+    />
+    <style>
+        body { font-family: Courier New; margin: 0; padding: 10px; font-size: 11px; }
+        #log { height: 300px; overflow-y: auto; border: 1px solid #ccc; background: black; color: lime; padding: 5px; margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <h3>Silent HTA Execution Test</h3>
+    <div id="log"></div>
+
+    <script>
+        var logEntries = [];
+
+        function log(message) {
+            var timestamp = new Date().toLocaleTimeString();
+            logEntries.push('[' + timestamp + '] ' + message);
+            document.getElementById('log').innerText = logEntries.join('\n');
+            document.getElementById('log').scrollTop = document.getElementById('log').scrollHeight;
+        }
+
+        function testSilentExecution() {
+            log('Starting silent execution tests...');
+
+            // Test 1: Command execution
+            try {
+                var shell = new ActiveXObject("WScript.Shell");
+                log('✓ WScript.Shell object created');
+
+                // Attempt to run command with no visible window
+                var status = shell.Run("cmd.exe /c echo Silent execution test > %temp%\\hta_test.txt", 0, true);
+                log('✓ Command executed with window state 0 (hidden), exit code: ' + status);
+
+            } catch(e) {
+                log('✗ Command execution failed: ' + e.message);
+            }
+
+            // Test 2: PowerShell execution
+            try {
+                var shell = new ActiveXObject("WScript.Shell");
+                var psCmd = 'powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Write-Output \'HTA Silent Test\' | Out-File -FilePath $env:temp\\hta_ps_test.txt"';
+                var status = shell.Run(psCmd, 0, false);
+                log('✓ PowerShell executed asynchronously (no wait)');
+
+            } catch(e) {
+                log('✗ PowerShell execution failed: ' + e.message);
+            }
+
+            // Test 3: Registry modification
+            try {
+                var shell = new ActiveXObject("WScript.Shell");
+                var regPath = "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\";
+                shell.RegWrite(regPath + "HTA_TEST_Entry", "test_value", "REG_SZ");
+                log('✓ Registry write successful');
+
+                var readValue = shell.RegRead(regPath + "HTA_TEST_Entry");
+                log('✓ Registry read successful: ' + readValue);
+
+                // Cleanup
+                shell.RegDelete(regPath + "HTA_TEST_Entry");
+                log('✓ Registry cleanup successful');
+
+            } catch(e) {
+                log('✗ Registry operations failed: ' + e.message);
+            }
+
+            // Test 4: File operations
+            try {
+                var fso = new ActiveXObject("Scripting.FileSystemObject");
+                var tempPath = fso.GetSpecialFolder(2); // 2 = Temp folder
+                var testFile = fso.BuildPath(tempPath, 'hta_filetest_' + Date.now() + '.txt');
+
+                var file = fso.CreateTextFile(testFile);
+                file.WriteLine('Silent HTA execution test at ' + new Date());
+                file.WriteLine('File created without user interaction');
+                file.Close();
+                log('✓ File created: ' + testFile);
+
+                // Verify file exists
+                if (fso.FileExists(testFile)) {
+                    log('✓ File verified to exist');
+                    fso.DeleteFile(testFile);
+                    log('✓ File deleted');
+                } else {
+                    log('✗ File verification failed');
+                }
+
+            } catch(e) {
+                log('✗ File operations failed: ' + e.message);
+            }
+
+            // Test 5: Environment variable access
+            try {
+                var shell = new ActiveXObject("WScript.Shell");
+                var env = shell.Environment("PROCESS");
+                var systemDrive = env("SystemDrive");
+                log('✓ Environment access successful - SystemDrive: ' + systemDrive);
+
+            } catch(e) {
+                log('✗ Environment access failed: ' + e.message);
+            }
+
+            // Test 6: Silent process execution with different window styles
+            try {
+                var shell = new ActiveXObject("WScript.Shell");
+
+                // 0 = Hide, 1 = Normal, 2 = Minimize
+                var testValues = [0, 2]; // 0 (hidden) and 2 (minimized)
+
+                for (var i = 0; i < testValues.length; i++) {
+                    shell.Run("cmd.exe /c echo test", testValues[i], false);
+                }
+                log('✓ Window state tests completed (0=hidden, 2=minimized)');
+
+            } catch(e) {
+                log('✗ Window state tests failed: ' + e.message);
+            }
+
+            log('');
+            log('Tests completed at ' + new Date().toLocaleTimeString());
+
+            // Auto-close after 5 seconds
+            setTimeout(function() {
+                window.close();
+            }, 5000);
+        }
+
+        window.onload = function() {
+            testSilentExecution();
+        };
+    </script>
+</body>
+</html>

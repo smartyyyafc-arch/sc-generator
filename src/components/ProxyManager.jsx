@@ -8,9 +8,13 @@ export default function ProxyManager({
 }) {
   const [showAddForm, setShowAddForm] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
+  const [showStats, setShowStats] = useState(false);
+  const [statistics, setStatistics] = useState(null);
+  const [testingProxy, setTestingProxy] = useState(null);
   const [proxyForm, setProxyForm] = useState({
     url: '',
-    type: 'http',
+    tags: [],
+    notes: '',
   });
 
   const handleAddProxy = async () => {
@@ -19,10 +23,63 @@ export default function ProxyManager({
       return;
     }
 
-    const id = await onAddProxy(proxyForm.url, proxyForm.type);
-    if (id) {
-      setProxyForm({ url: '', type: 'http' });
-      setShowAddForm(false);
+    try {
+      const response = await fetch('/api/proxies', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url: proxyForm.url,
+          tags: proxyForm.tags,
+          notes: proxyForm.notes,
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setProxyForm({ url: '', tags: [], notes: '' });
+          setShowAddForm(false);
+          // Refresh proxies
+          onAddProxy(proxyForm.url, proxyForm.tags);
+        } else {
+          alert(`Error: ${data.error}`);
+        }
+      }
+    } catch (error) {
+      alert(`Failed to add proxy: ${error.message}`);
+    }
+  };
+
+  const handleTestProxy = async (proxyId) => {
+    setTestingProxy(proxyId);
+    try {
+      const response = await fetch(`/api/proxies/${proxyId}/test`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ timeout: 10 })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert(`Test result: ${data.success ? 'PASSED' : 'FAILED'}\n${data.message}`);
+      }
+    } catch (error) {
+      alert(`Test failed: ${error.message}`);
+    } finally {
+      setTestingProxy(null);
+    }
+  };
+
+  const handleFetchStats = async () => {
+    try {
+      const response = await fetch('/api/proxies');
+      if (response.ok) {
+        const data = await response.json();
+        setStatistics(data.statistics);
+        setShowStats(!showStats);
+      }
+    } catch (error) {
+      alert(`Failed to fetch statistics: ${error.message}`);
     }
   };
 
@@ -86,7 +143,19 @@ export default function ProxyManager({
       </div>
 
       <div className="form-group">
-        <label>Select Proxy (Optional):</label>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+          <label>Select Proxy (Optional):</label>
+          <button
+            className="btn-secondary"
+            onClick={handleFetchStats}
+            style={{
+              padding: '0.4rem 0.8rem',
+              fontSize: '0.85rem',
+            }}
+          >
+            {showStats ? '✕ Hide Stats' : '📊 Stats'}
+          </button>
+        </div>
         <select
           value={selectedProxy || ''}
           onChange={(e) => onSelectProxy(e.target.value || null)}
@@ -96,10 +165,43 @@ export default function ProxyManager({
           </option>
           {proxies.map((px) => (
             <option key={px.id} value={px.id}>
-              ✓ {px.url} ({px.type.toUpperCase()})
+              ✓ {px.url} ({px.proxy_type.toUpperCase()})
             </option>
           ))}
         </select>
+
+        {showStats && statistics && (
+          <div
+            style={{
+              marginTop: '1rem',
+              padding: '1rem',
+              backgroundColor: 'rgba(76, 175, 80, 0.08)',
+              border: '1px solid rgba(76, 175, 80, 0.3)',
+              borderRadius: '6px',
+              fontSize: '0.85rem',
+            }}
+          >
+            <p style={{ margin: '0 0 0.5rem 0', color: '#4caf50', fontWeight: 'bold' }}>
+              📊 Proxy Statistics
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.8rem' }}>
+              <div>Total: {statistics.total_proxies}</div>
+              <div>Active: {statistics.active_proxies}</div>
+              <div>Tested: {statistics.tested_proxies}</div>
+              <div>Passed: {statistics.passed_tests}</div>
+            </div>
+            {Object.keys(statistics.by_type || {}).length > 0 && (
+              <div style={{ marginTop: '0.5rem' }}>
+                <p style={{ margin: '0.3rem 0', fontWeight: 'bold' }}>By Type:</p>
+                {Object.entries(statistics.by_type).map(([type, count]) => (
+                  <div key={type} style={{ marginLeft: '0.5rem', fontSize: '0.75rem' }}>
+                    {type.toUpperCase()}: {count}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {!selectedProxy && (
@@ -107,6 +209,7 @@ export default function ProxyManager({
           style={{
             padding: '0.8rem',
             marginBottom: '1rem',
+            marginTop: '0.5rem',
             backgroundColor: 'rgba(76, 175, 80, 0.08)',
             border: '1px solid rgba(76, 175, 80, 0.3)',
             borderRadius: '6px',
@@ -120,6 +223,26 @@ export default function ProxyManager({
           <p style={{ margin: 0 }}>
             This is fine for most scenarios. Only add a proxy if your target has network monitoring.
           </p>
+        </div>
+      )}
+
+      {selectedProxy && (
+        <div style={{ marginTop: '0.5rem' }}>
+          {proxies.find((p) => p.id === selectedProxy) && (
+            <button
+              className="btn-secondary"
+              onClick={() => handleTestProxy(selectedProxy)}
+              disabled={testingProxy === selectedProxy}
+              style={{
+                width: '100%',
+                padding: '0.5rem',
+                marginBottom: '0.5rem',
+                backgroundColor: testingProxy === selectedProxy ? 'rgba(76, 175, 80, 0.3)' : 'rgba(76, 175, 80, 0.1)',
+              }}
+            >
+              {testingProxy === selectedProxy ? '⏳ Testing...' : '✓ Test Proxy'}
+            </button>
+          )}
         </div>
       )}
 
@@ -147,35 +270,53 @@ export default function ProxyManager({
               type="text"
               value={proxyForm.url}
               onChange={(e) => setProxyForm({ ...proxyForm, url: e.target.value })}
-              placeholder="e.g., http://proxy.example.com:8080"
+              placeholder="e.g., http://proxy.example.com:8080 or socks5://user:pass@socks.example.com:1080"
             />
             <p style={{ fontSize: '0.8rem', color: '#a0a0a0', margin: '0.5rem 0 0 0' }}>
-              Include port number in the URL
+              Supports: HTTP, HTTPS, SOCKS4, SOCKS5. Use user:pass@host:port for authentication.
             </p>
           </div>
+
           <div className="form-group">
-            <label>Proxy Type:</label>
-            <select
-              value={proxyForm.type}
-              onChange={(e) => setProxyForm({ ...proxyForm, type: e.target.value })}
-            >
-              <option value="http">HTTP (most common)</option>
-              <option value="https">HTTPS (encrypted)</option>
-              <option value="socks5">SOCKS5 (advanced)</option>
-            </select>
+            <label>Tags (Optional):</label>
+            <input
+              type="text"
+              value={proxyForm.tags.join(', ')}
+              onChange={(e) => setProxyForm({
+                ...proxyForm,
+                tags: e.target.value.split(',').map(t => t.trim()).filter(t => t)
+              })}
+              placeholder="e.g., corporate, secure, test"
+            />
             <p style={{ fontSize: '0.8rem', color: '#a0a0a0', margin: '0.5rem 0 0 0' }}>
-              {proxyForm.type === 'http' && 'Standard HTTP proxy - compatible with most systems'}
-              {proxyForm.type === 'https' && 'Encrypted proxy connection - best for sensitive networks'}
-              {proxyForm.type === 'socks5' && 'SOCKS5 protocol - works with any traffic type'}
+              Comma-separated tags for organizing proxies
             </p>
           </div>
-          <button
-            className="btn-primary"
-            onClick={handleAddProxy}
-            style={{ width: '100%' }}
-          >
-            ✓ Add Proxy Configuration
-          </button>
+
+          <div className="form-group">
+            <label>Notes (Optional):</label>
+            <textarea
+              value={proxyForm.notes}
+              onChange={(e) => setProxyForm({ ...proxyForm, notes: e.target.value })}
+              placeholder="e.g., Corporate proxy, requires authentication"
+              rows="3"
+            />
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+            <button
+              className="btn-primary"
+              onClick={handleAddProxy}
+            >
+              ✓ Add Proxy
+            </button>
+            <button
+              className="btn-secondary"
+              onClick={() => setShowAddForm(false)}
+            >
+              ✕ Cancel
+            </button>
+          </div>
         </div>
       )}
     </div>

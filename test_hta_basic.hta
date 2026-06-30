@@ -1,0 +1,132 @@
+<html>
+<head>
+    <title>HTA Basic Test - Silent Execution</title>
+    <HTA:APPLICATION
+        ID="htaBasicTest"
+        APPLICATIONNAME="HTA Silent Test"
+        VERSION="1.0"
+        BORDER="none"
+        CAPTION="yes"
+        CONTEXTMENU="no"
+        ICON=""
+        INNERBORDER="no"
+        NAVIGABLE="no"
+        SCROLL="no"
+        SCROLLFLAT="yes"
+        SELECTION="no"
+        SHOWINTASKBAR="yes"
+        SINGLEINSTANCE="yes"
+        SYSMENU="yes"
+        WINDOWSTATE="normal"
+    />
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f0f0f0; }
+        .status { padding: 10px; margin: 5px 0; border: 1px solid #ccc; background: white; }
+        .success { color: green; }
+        .error { color: red; }
+        .test-section { margin: 20px 0; padding: 15px; border-left: 4px solid #007bff; background: #e7f3ff; }
+    </style>
+</head>
+<body>
+    <h1>HTA Execution Test Suite</h1>
+    <div id="output"></div>
+    <button onclick="runTests()">Run Tests</button>
+    <button onclick="window.close()">Close</button>
+
+    <script>
+        // Test 1: Check if running via mshta.exe
+        function testMshtaDetection() {
+            var isMshta = false;
+            try {
+                // In mshta.exe, the HTA object is available
+                if (typeof HTA !== 'undefined') {
+                    isMshta = true;
+                }
+            } catch(e) {}
+            return isMshta;
+        }
+
+        // Test 2: Check for silent execution capability
+        function testSilentCapability() {
+            try {
+                // Check if WScript is available (indicates script execution context)
+                if (typeof WScript !== 'undefined') {
+                    return true;
+                }
+            } catch(e) {}
+            return false;
+        }
+
+        // Test 3: Check UAC elevation status
+        function testUACStatus() {
+            try {
+                var shell = new ActiveXObject("WScript.Shell");
+                var regPath = "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\";
+                var adminCheck = shell.RegRead(regPath + "AdminCheck");
+                return adminCheck === 1;
+            } catch(e) {
+                return false;
+            }
+        }
+
+        // Test 4: Test file system access
+        function testFileSystemAccess() {
+            try {
+                var fso = new ActiveXObject("Scripting.FileSystemObject");
+                var tempPath = fso.GetTempName();
+                return true;
+            } catch(e) {
+                return false;
+            }
+        }
+
+        // Test 5: Test WMI access for silent execution
+        function testWMIAccess() {
+            try {
+                var locator = new ActiveXObject("WbemScripting.SWbemLocator");
+                var service = locator.ConnectServer(".", "root\\cimv2");
+                return true;
+            } catch(e) {
+                return false;
+            }
+        }
+
+        // Test 6: Test registry access
+        function testRegistryAccess() {
+            try {
+                var shell = new ActiveXObject("WScript.Shell");
+                shell.RegRead("HKEY_LOCAL_MACHINE\\Software\\");
+                return true;
+            } catch(e) {
+                return false;
+            }
+        }
+
+        function addStatus(message, success) {
+            var div = document.createElement('div');
+            div.className = 'status ' + (success ? 'success' : 'error');
+            div.textContent = (success ? '✓' : '✗') + ' ' + message;
+            document.getElementById('output').appendChild(div);
+        }
+
+        function runTests() {
+            document.getElementById('output').innerHTML = '';
+
+            addStatus('Environment Detection', true);
+            addStatus('Running via mshta.exe: ' + testMshtaDetection(), testMshtaDetection());
+            addStatus('Silent execution available: ' + testSilentCapability(), testSilentCapability());
+
+            addStatus('System Capability Tests', true);
+            addStatus('UAC elevation status readable: ' + testUACStatus(), testUACStatus());
+            addStatus('File system access (FSO): ' + testFileSystemAccess(), testFileSystemAccess());
+            addStatus('WMI access available: ' + testWMIAccess(), testWMIAccess());
+            addStatus('Registry access available: ' + testRegistryAccess(), testRegistryAccess());
+        }
+
+        // Auto-run on load
+        window.onload = function() {
+            runTests();
+        };
+    </script>
+</body>
+</html>

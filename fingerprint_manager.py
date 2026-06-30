@@ -8,8 +8,10 @@ import hashlib
 import json
 import os
 import uuid
+import platform
+import psutil
 from typing import Dict, List, Optional, Tuple
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 
 
 @dataclass
@@ -32,6 +34,35 @@ class ProxyConfig:
     headers: Optional[Dict] = None
 
 
+@dataclass
+class OSFingerprint:
+    """Operating System fingerprint data"""
+    os_name: str
+    os_version: str
+    architecture: str
+    processor_name: str
+    processor_count: int
+    processor_freq: float  # MHz
+    total_memory: int  # bytes
+    network_adapters: List[Dict] = field(default_factory=list)
+    disk_info: Dict = field(default_factory=dict)
+    python_version: str = ""
+    hostname: str = ""
+    timestamp: str = ""
+
+
+@dataclass
+class SystemHardware:
+    """System hardware details"""
+    cpu_model: str
+    cpu_cores: int
+    cpu_threads: int
+    cpu_frequency_mhz: float
+    ram_total_gb: float
+    ram_available_gb: float
+    network_interfaces: List[Dict] = field(default_factory=list)
+
+
 class FingerprintManager:
     """Manage fingerprints and proxy configurations"""
 
@@ -41,9 +72,12 @@ class FingerprintManager:
 
         self.fingerprints: Dict[str, FingerprintConfig] = {}
         self.proxies: Dict[str, ProxyConfig] = {}
+        self.os_fingerprint: Optional[OSFingerprint] = None
+        self.system_hardware: Optional[SystemHardware] = None
 
         self._load_configs()
         self._initialize_default_fingerprints()
+        self._collect_system_fingerprint()
 
     def _load_configs(self):
         """Load saved configurations from disk"""
@@ -369,12 +403,348 @@ class FingerprintManager:
             'is_custom': fp.is_custom
         }
 
+    def _collect_system_fingerprint(self) -> None:
+        """Collect comprehensive OS and hardware fingerprint"""
+        try:
+            import sys
+            from datetime import datetime
+
+            # Collect basic OS information
+            os_name = platform.system()
+            os_version = platform.release()
+            architecture = platform.machine()
+            processor_name = platform.processor()
+            processor_count = os.cpu_count() or 1
+            processor_freq = self._get_cpu_frequency()
+
+            # Get memory info
+            try:
+                total_memory = psutil.virtual_memory().total
+            except AttributeError:
+                total_memory = 0
+
+            # Collect network adapter information
+            network_adapters = self._collect_network_adapters()
+
+            # Collect disk information
+            disk_info = self._collect_disk_info()
+
+            # Create OS fingerprint
+            self.os_fingerprint = OSFingerprint(
+                os_name=os_name,
+                os_version=os_version,
+                architecture=architecture,
+                processor_name=processor_name,
+                processor_count=processor_count,
+                processor_freq=processor_freq,
+                total_memory=total_memory,
+                network_adapters=network_adapters,
+                disk_info=disk_info,
+                python_version=f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
+                hostname=platform.node(),
+                timestamp=datetime.now().isoformat()
+            )
+
+            # Collect system hardware details
+            self.system_hardware = SystemHardware(
+                cpu_model=self._get_cpu_model(),
+                cpu_cores=self._get_cpu_cores(),
+                cpu_threads=self._get_cpu_threads(),
+                cpu_frequency_mhz=processor_freq,
+                ram_total_gb=total_memory / (1024**3) if total_memory > 0 else 0,
+                ram_available_gb=self._get_available_memory(),
+                network_interfaces=network_adapters
+            )
+
+        except Exception as e:
+            print(f"Error collecting system fingerprint: {e}")
+
+    def _get_cpu_frequency(self) -> float:
+        """Get CPU frequency in MHz"""
+        try:
+            freq = psutil.cpu_freq()
+            if freq:
+                return freq.current
+        except Exception:
+            pass
+
+        # Fallback: try to parse from /proc/cpuinfo on Linux
+        try:
+            with open('/proc/cpuinfo', 'r') as f:
+                for line in f:
+                    if line.startswith('cpu MHz'):
+                        return float(line.split(':')[1].strip())
+        except Exception:
+            pass
+
+        return 0.0
+
+    def _get_cpu_model(self) -> str:
+        """Get CPU model name"""
+        try:
+            import subprocess
+            if platform.system() == 'Windows':
+                result = subprocess.run(
+                    ['wmic', 'cpu', 'get', 'name'],
+                    capture_output=True,
+                    text=True,
+                    timeout=5
+                )
+                lines = result.stdout.strip().split('\n')
+                if len(lines) > 1:
+                    return lines[1].strip()
+            elif platform.system() == 'Darwin':  # macOS
+                result = subprocess.run(
+                    ['sysctl', '-n', 'machdep.cpu.brand_string'],
+                    capture_output=True,
+                    text=True,
+                    timeout=5
+                )
+                return result.stdout.strip()
+            else:  # Linux
+                try:
+                    with open('/proc/cpuinfo', 'r') as f:
+                        for line in f:
+                            if line.startswith('model name'):
+                                return line.split(':')[1].strip()
+                except Exception:
+                    pass
+        except Exception:
+            pass
+
+        return platform.processor()
+
+    def _get_cpu_cores(self) -> int:
+        """Get physical CPU cores"""
+        try:
+            return psutil.cpu_count(logical=False) or os.cpu_count() or 1
+        except Exception:
+            return os.cpu_count() or 1
+
+    def _get_cpu_threads(self) -> int:
+        """Get logical CPU threads"""
+        try:
+            return psutil.cpu_count(logical=True) or os.cpu_count() or 1
+        except Exception:
+            return os.cpu_count() or 1
+
+    def _get_available_memory(self) -> float:
+        """Get available RAM in GB"""
+        try:
+            available = psutil.virtual_memory().available
+            return available / (1024**3)
+        except Exception:
+            return 0.0
+
+    def _collect_network_adapters(self) -> List[Dict]:
+        """Collect network adapter information"""
+        adapters = []
+        try:
+            if_addrs = psutil.net_if_addrs()
+            if_stats = psutil.net_if_stats()
+
+            for interface_name, interface_addrs in if_addrs.items():
+                adapter_info = {
+                    'name': interface_name,
+                    'addresses': [],
+                    'status': 'up' if if_stats.get(interface_name, None) and if_stats[interface_name].isup else 'down',
+                    'speed_mbps': 0
+                }
+
+                for addr in interface_addrs:
+                    adapter_info['addresses'].append({
+                        'family': str(addr.family),
+                        'address': addr.address,
+                        'netmask': addr.netmask,
+                        'broadcast': addr.broadcast
+                    })
+
+                # Get speed if available
+                if interface_name in if_stats:
+                    adapter_info['speed_mbps'] = if_stats[interface_name].speed
+
+                adapters.append(adapter_info)
+
+        except Exception as e:
+            print(f"Error collecting network adapters: {e}")
+
+        return adapters
+
+    def _collect_disk_info(self) -> Dict:
+        """Collect disk information"""
+        disk_info = {}
+        try:
+            partitions = psutil.disk_partitions()
+            for partition in partitions:
+                try:
+                    usage = psutil.disk_usage(partition.mountpoint)
+                    disk_info[partition.device] = {
+                        'mountpoint': partition.mountpoint,
+                        'fstype': partition.fstype,
+                        'total_gb': usage.total / (1024**3),
+                        'used_gb': usage.used / (1024**3),
+                        'free_gb': usage.free / (1024**3),
+                        'percent_used': usage.percent
+                    }
+                except Exception:
+                    pass
+        except Exception as e:
+            print(f"Error collecting disk info: {e}")
+
+        return disk_info
+
+    def get_os_fingerprint(self) -> Optional[Dict]:
+        """Get collected OS fingerprint"""
+        if not self.os_fingerprint:
+            return None
+
+        return {
+            'os_name': self.os_fingerprint.os_name,
+            'os_version': self.os_fingerprint.os_version,
+            'architecture': self.os_fingerprint.architecture,
+            'processor_name': self.os_fingerprint.processor_name,
+            'processor_count': self.os_fingerprint.processor_count,
+            'processor_freq_mhz': self.os_fingerprint.processor_freq,
+            'total_memory_gb': self.os_fingerprint.total_memory / (1024**3),
+            'network_adapters': self.os_fingerprint.network_adapters,
+            'disk_info': self.os_fingerprint.disk_info,
+            'python_version': self.os_fingerprint.python_version,
+            'hostname': self.os_fingerprint.hostname,
+            'timestamp': self.os_fingerprint.timestamp
+        }
+
+    def get_system_hardware_info(self) -> Optional[Dict]:
+        """Get system hardware information"""
+        if not self.system_hardware:
+            return None
+
+        return {
+            'cpu_model': self.system_hardware.cpu_model,
+            'cpu_cores': self.system_hardware.cpu_cores,
+            'cpu_threads': self.system_hardware.cpu_threads,
+            'cpu_frequency_mhz': self.system_hardware.cpu_frequency_mhz,
+            'ram_total_gb': self.system_hardware.ram_total_gb,
+            'ram_available_gb': self.system_hardware.ram_available_gb,
+            'network_interfaces': self.system_hardware.network_interfaces
+        }
+
+    def get_fingerprint_hash(self) -> str:
+        """Generate a hash representing the entire system fingerprint"""
+        if not self.os_fingerprint or not self.system_hardware:
+            return ""
+
+        fingerprint_data = {
+            'os': self.os_fingerprint.os_name,
+            'version': self.os_fingerprint.os_version,
+            'arch': self.os_fingerprint.architecture,
+            'cpu': self.system_hardware.cpu_model,
+            'cores': self.system_hardware.cpu_cores,
+            'ram': int(self.system_hardware.ram_total_gb),
+            'interfaces': len(self.system_hardware.network_interfaces)
+        }
+
+        fingerprint_str = json.dumps(fingerprint_data, sort_keys=True)
+        return hashlib.sha256(fingerprint_str.encode()).hexdigest()
+
+    def spoof_fingerprint(self, target_config: Dict) -> None:
+        """Spoof system fingerprint with target configuration"""
+        if not self.os_fingerprint or not self.system_hardware:
+            return
+
+        # Update OS fingerprint
+        if 'os_name' in target_config:
+            self.os_fingerprint.os_name = target_config['os_name']
+        if 'os_version' in target_config:
+            self.os_fingerprint.os_version = target_config['os_version']
+        if 'processor_name' in target_config:
+            self.os_fingerprint.processor_name = target_config['processor_name']
+        if 'processor_count' in target_config:
+            self.os_fingerprint.processor_count = target_config['processor_count']
+        if 'total_memory' in target_config:
+            self.os_fingerprint.total_memory = target_config['total_memory']
+
+        # Update hardware info
+        if 'cpu_model' in target_config:
+            self.system_hardware.cpu_model = target_config['cpu_model']
+        if 'cpu_cores' in target_config:
+            self.system_hardware.cpu_cores = target_config['cpu_cores']
+        if 'cpu_threads' in target_config:
+            self.system_hardware.cpu_threads = target_config['cpu_threads']
+        if 'ram_total_gb' in target_config:
+            self.system_hardware.ram_total_gb = target_config['ram_total_gb']
+
+    def export_fingerprint_report(self, output_file: str = None) -> Dict:
+        """Export comprehensive fingerprint report"""
+        report = {
+            'os_fingerprint': self.get_os_fingerprint(),
+            'hardware_info': self.get_system_hardware_info(),
+            'fingerprint_hash': self.get_fingerprint_hash(),
+            'available_fingerprints': self.get_available_fingerprints(),
+            'configured_proxies': self.get_configured_proxies()
+        }
+
+        if output_file:
+            with open(output_file, 'w') as f:
+                json.dump(report, f, indent=2)
+
+        return report
+
 
 if __name__ == "__main__":
-    # Test fingerprint manager
+    # Test fingerprint manager with enhanced OS fingerprinting
     mgr = FingerprintManager()
 
-    print("Available Fingerprints:")
+    print("=" * 70)
+    print("SYSTEM FINGERPRINT ANALYSIS")
+    print("=" * 70)
+
+    # Display OS Fingerprint
+    os_fp = mgr.get_os_fingerprint()
+    if os_fp:
+        print("\nOperating System Information:")
+        print(f"  OS: {os_fp['os_name']} {os_fp['os_version']}")
+        print(f"  Architecture: {os_fp['architecture']}")
+        print(f"  Hostname: {os_fp['hostname']}")
+        print(f"  Python Version: {os_fp['python_version']}")
+
+    # Display Hardware Info
+    hw_info = mgr.get_system_hardware_info()
+    if hw_info:
+        print("\nHardware Information:")
+        print(f"  CPU Model: {hw_info['cpu_model']}")
+        print(f"  CPU Cores: {hw_info['cpu_cores']} (Threads: {hw_info['cpu_threads']})")
+        print(f"  CPU Frequency: {hw_info['cpu_frequency_mhz']:.2f} MHz")
+        print(f"  Total RAM: {hw_info['ram_total_gb']:.2f} GB")
+        print(f"  Available RAM: {hw_info['ram_available_gb']:.2f} GB")
+
+    # Display Network Adapters
+    if hw_info and hw_info['network_interfaces']:
+        print("\nNetwork Adapters:")
+        for adapter in hw_info['network_interfaces']:
+            print(f"  - {adapter['name']} ({adapter['status']})")
+            if adapter['addresses']:
+                for addr in adapter['addresses']:
+                    print(f"    IP: {addr['address']}")
+            if adapter['speed_mbps'] > 0:
+                print(f"    Speed: {adapter['speed_mbps']} Mbps")
+
+    # Display Disk Information
+    if os_fp and os_fp['disk_info']:
+        print("\nDisk Information:")
+        for device, info in os_fp['disk_info'].items():
+            print(f"  {device} ({info['fstype']})")
+            print(f"    Total: {info['total_gb']:.2f} GB")
+            print(f"    Used: {info['used_gb']:.2f} GB ({info['percent_used']:.1f}%)")
+            print(f"    Free: {info['free_gb']:.2f} GB")
+
+    # Display Fingerprint Hash
+    fp_hash = mgr.get_fingerprint_hash()
+    print(f"\nFingerprint Hash: {fp_hash}")
+
+    print("\n" + "=" * 70)
+    print("AVAILABLE FINGERPRINT PROFILES")
+    print("=" * 70)
+    print("\nAvailable Fingerprints:")
     for fp in mgr.get_available_fingerprints():
         print(f"  - {fp['name']} ({fp['id']})")
 
@@ -385,3 +755,11 @@ if __name__ == "__main__":
     print("\nConfigured Proxies:")
     for px in mgr.get_configured_proxies():
         print(f"  - {px['url']} ({px['type']})")
+
+    # Export full report
+    print("\n" + "=" * 70)
+    print("EXPORTING FINGERPRINT REPORT")
+    print("=" * 70)
+    report_file = '/tmp/sc-fingerprints/fingerprint_report.json'
+    mgr.export_fingerprint_report(report_file)
+    print(f"Report exported to: {report_file}")

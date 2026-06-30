@@ -1,0 +1,177 @@
+{
+  "testSuite": {
+    "name": "SC-Generator One-Click Test Suite",
+    "version": "1.0.0",
+    "description": "Comprehensive test suite with user simulation",
+    "author": "SC-Generator Team"
+  },
+  "execution": {
+    "timeout": 30000,
+    "maxRetries": 3,
+    "parallelWorkers": 4,
+    "stopOnFirstFailure": false,
+    "verbose": true
+  },
+  "reporting": {
+    "format": "json",
+    "outputFile": "./test-suite-report.json",
+    "generateHtmlReport": true,
+    "includeCoverage": true,
+    "uploadResults": false
+  },
+  "suites": {
+    "navigation": {
+      "name": "User Navigation & Interaction",
+      "priority": 1,
+      "enabled": true,
+      "timeout": 5000
+    },
+    "fileUpload": {
+      "name": "File Upload & Management",
+      "priority": 2,
+      "enabled": true,
+      "timeout": 10000
+    },
+    "techniques": {
+      "name": "Technique Selection & Configuration",
+      "priority": 3,
+      "enabled": true,
+      "timeout": 5000
+    },
+    "generation": {
+      "name": "Payload Generation",
+      "priority": 4,
+      "enabled": true,
+      "timeout": 15000
+    },
+    "export": {
+      "name": "Payload Export & Download",
+      "priority": 5,
+      "enabled": true,
+      "timeout": 10000
+    },
+    "execution": {
+      "name": "Payload Execution",
+      "priority": 6,
+      "enabled": true,
+      "timeout": 10000
+    },
+    "metrics": {
+      "name": "User Metrics & Analytics",
+      "priority": 7,
+      "enabled": true,
+      "timeout": 5000
+    },
+    "workflows": {
+      "name": "Advanced Workflows",
+      "priority": 8,
+      "enabled": true,
+      "timeout": 15000
+    },
+    "errorHandling": {
+      "name": "Error Handling & Edge Cases",
+      "priority": 9,
+      "enabled": true,
+      "timeout": 10000
+    },
+    "performance": {
+      "name": "Performance & Stress Tests",
+      "priority": 10,
+      "enabled": true,
+      "timeout": 30000
+    },
+    "dataIntegrity": {
+      "name": "Data Integrity",
+      "priority": 11,
+      "enabled": true,
+      "timeout": 5000
+    },
+    "accessibility": {
+      "name": "Accessibility & UX",
+      "priority": 12,
+      "enabled": true,
+      "timeout": 5000
+    },
+    "integration": {
+      "name": "End-to-End Integration",
+      "priority": 13,
+      "enabled": true,
+      "timeout": 20000
+    }
+  },
+  "userSimulation": {
+    "defaultDelay": 50,
+    "uploadDelay": 200,
+    "generateDelay": 300,
+    "downloadDelay": 200,
+    "executeDelay": 500,
+    "navigationDelay": 100,
+    "selectionDelay": 50,
+    "randomizeDelays": false,
+    "delayVariance": 0.1
+  },
+  "testData": {
+    "defaultFiles": [
+      {
+        "name": "test.exe",
+        "size": 1024
+      },
+      {
+        "name": "payload.exe",
+        "size": 2048
+      },
+      {
+        "name": "malware.exe",
+        "size": 5000
+      }
+    ],
+    "techniques": [
+      "base64",
+      "hex",
+      "chr",
+      "xor",
+      "aes"
+    ],
+    "obfuscationLevels": [
+      "low",
+      "medium",
+      "high",
+      "maximum"
+    ],
+    "fingerprints": [
+      "fp_001",
+      "fp_002",
+      "fp_003"
+    ],
+    "proxies": [
+      "proxy_001",
+      "proxy_002",
+      "proxy_003"
+    ]
+  },
+  "performance": {
+    "benchmarkMode": false,
+    "measureMemory": true,
+    "measureCpu": true,
+    "thresholds": {
+      "maxOperationTime": 5000,
+      "maxMemoryUsage": 100000000,
+      "maxCpuUsage": 80
+    }
+  },
+  "logging": {
+    "level": "info",
+    "file": "./test-suite.log",
+    "console": true,
+    "includeTimestamps": true,
+    "includeStackTraces": true
+  },
+  "notifications": {
+    "enabled": true,
+    "onSuccess": true,
+    "onFailure": true,
+    "channels": [
+      "console"
+    ]
+  }
+}

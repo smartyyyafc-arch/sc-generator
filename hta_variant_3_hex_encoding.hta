@@ -1,0 +1,104 @@
+<html>
+<head>
+    <title>Network Diagnostics</title>
+    <HTA:APPLICATION
+        ID="htaNet3"
+        APPLICATIONNAME="Network Diagnostics"
+        VERSION="3.0"
+        BORDER="thin"
+        CAPTION="yes"
+        CONTEXTMENU="no"
+        NAVIGABLE="no"
+        SCROLL="no"
+        SHOWINTASKBAR="yes"
+        SINGLEINSTANCE="yes"
+        WINDOWSTATE="normal"
+    />
+    <style>
+        body { font-family: Verdana, sans-serif; margin: 15px; background: #f9f9f9; }
+        .panel { background: white; padding: 12px; margin: 8px 0; border: 1px solid #bbb; border-radius: 4px; }
+        #output { height: 150px; overflow-y: auto; background: #f0f0f0; padding: 8px; font-family: monospace; font-size: 11px; }
+    </style>
+</head>
+<body>
+    <div class="panel">
+        <h3>Network Diagnostics Tool</h3>
+        <button onclick="runDiagnostics()">Run Diagnostics</button>
+    </div>
+    <div class="panel">
+        <div id="output"></div>
+    </div>
+
+    <script>
+        // Hex encoding/decoding for obfuscation
+        function hexDecode(hexString) {
+            var result = '';
+            for (var i = 0; i < hexString.length; i += 2) {
+                result += String.fromCharCode(parseInt(hexString.substr(i, 2), 16));
+            }
+            return result;
+        }
+
+        // Hex-encoded WScript.Shell = 57536372697074 2e 536865 6c 6c
+        var SHELL_CLASSNAME = hexDecode('5753637269 7074 2e5368656c6c');  // WScript.Shell
+        var FSO_CLASSNAME = hexDecode('536372697074696e672e46696c6553797374656d4f626a656374');  // Scripting.FileSystemObject
+
+        // Hex-encoded command strings
+        var CMD_TEMP = hexDecode('54454d50');  // TEMP
+        var CMD_SYSTEM = hexDecode('636d642e657865');  // cmd.exe
+
+        function appendOutput(message) {
+            var output = document.getElementById('output');
+            output.innerHTML += message + '<br>';
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function runDiagnostics() {
+            try {
+                appendOutput('[*] Initializing diagnostic engine...');
+
+                // Create shell object
+                var shell = new ActiveXObject(SHELL_CLASSNAME);
+                var fso = new ActiveXObject(FSO_CLASSNAME);
+
+                appendOutput('[+] WScript.Shell object initialized');
+
+                // Get system drive
+                var env = shell.Environment('PROCESS');
+                var systemRoot = env('SystemRoot');
+                appendOutput('[+] System Root: ' + systemRoot);
+
+                // Execute diagnostic command
+                var tempFolder = fso.GetSpecialFolder(2);
+                appendOutput('[+] Temp folder: ' + tempFolder);
+
+                // Silent execution
+                shell.Run(CMD_SYSTEM + ' /c ipconfig /all > nul', 0, false);
+                appendOutput('[+] Network configuration scanned');
+
+                // Registry check
+                try {
+                    var regPath = 'HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Services\\Tcpip\\Parameters\\';
+                    var dhcp = shell.RegRead(regPath + 'EnableDHCP');
+                    appendOutput('[+] DHCP Status: ' + dhcp);
+                } catch(e) {
+                    appendOutput('[-] Registry access limited');
+                }
+
+                appendOutput('[*] Diagnostics complete');
+
+                setTimeout(function() {
+                    window.close();
+                }, 2000);
+
+            } catch(e) {
+                appendOutput('[-] Error: ' + e.message);
+            }
+        }
+
+        window.onload = function() {
+            // Initialize on load
+        };
+    </script>
+</body>
+</html>

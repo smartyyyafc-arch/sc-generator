@@ -1,0 +1,454 @@
+{
+  "metadata": {
+    "title": "SC-Generator VM Detection & Sandbox Evasion Test Report",
+    "timestamp": "2026-06-29T20:36:46.562795",
+    "test_framework_version": "1.0.0",
+    "total_test_vectors": 15,
+    "test_cases_executed": 24
+  },
+  "executive_summary": {
+    "overall_evasion_rate_percent": 29.17,
+    "average_evasion_score": 0.59,
+    "tests_passed": 7,
+    "tests_failed": 17,
+    "critical_failures": 1,
+    "moderate_concerns": 16
+  },
+  "category_results": [
+    {
+      "category": "Hypervisor Detection",
+      "total_tests": 3,
+      "passed_evasion": 1,
+      "failed_evasion": 2,
+      "evasion_rate_percent": 33.33,
+      "average_detection_confidence": 0.583,
+      "tests": [
+        {
+          "vector": "hypervisor_detection",
+          "test_name": "CPU Manufacturer Spoofing",
+          "technique": "CPUID register manipulation",
+          "payload_type": "vbs_array_decoder",
+          "is_detectable": true,
+          "detection_confidence": 0.45,
+          "evasion_score": 0.65,
+          "bypass_method": "String obfuscation + randomized variable names",
+          "notes": "WMI-based CPU info can be obfuscated; direct CPUID requires kernel access",
+          "timestamp": "2026-06-29T20:36:46.562458"
+        },
+        {
+          "vector": "hypervisor_detection",
+          "test_name": "Hypervisor Bit Detection (CPUID 0x1)",
+          "technique": "Monitor/mwait instruction detection",
+          "payload_type": "vbs_persistence",
+          "is_detectable": true,
+          "detection_confidence": 0.72,
+          "evasion_score": 0.35,
+          "bypass_method": "N/A - requires kernel patch or VM option disabling",
+          "notes": "Very difficult to evade at VBScript level; requires low-level VM configuration",
+          "timestamp": "2026-06-29T20:36:46.562475"
+        },
+        {
+          "vector": "hypervisor_detection",
+          "test_name": "SMBIOS Hardware Info Spoofing",
+          "technique": "DMI table enumeration",
+          "payload_type": "vbs_polymorphic",
+          "is_detectable": true,
+          "detection_confidence": 0.58,
+          "evasion_score": 0.48,
+          "bypass_method": "Registry modification + WMI class obfuscation",
+          "notes": "SC-Generator can randomize variable names but cannot modify SMBIOS tables",
+          "timestamp": "2026-06-29T20:36:46.562477"
+        }
+      ]
+    },
+    {
+      "category": "Debugger Detection",
+      "total_tests": 4,
+      "passed_evasion": 3,
+      "failed_evasion": 1,
+      "evasion_rate_percent": 75.0,
+      "average_detection_confidence": 0.275,
+      "tests": [
+        {
+          "vector": "debugger_presence",
+          "test_name": "Debugger Process Name Detection",
+          "technique": "WMI Win32_Process name enumeration",
+          "payload_type": "vbs_antidebug",
+          "is_detectable": false,
+          "detection_confidence": 0.05,
+          "evasion_score": 0.95,
+          "bypass_method": "Process name spoofing + WMI namespace obfuscation",
+          "notes": "ANTI_DEBUG_FEATURES clearly defeat this - WMI queries reverse the detection",
+          "timestamp": "2026-06-29T20:36:46.562480"
+        },
+        {
+          "vector": "debugger_presence",
+          "test_name": "Registry AeDebug Debugger Detection",
+          "technique": "HKLM registry key reading",
+          "payload_type": "vbs_antidebug",
+          "is_detectable": false,
+          "detection_confidence": 0.08,
+          "evasion_score": 0.92,
+          "bypass_method": "Registry obfuscation + key path randomization",
+          "notes": "SC-Generator's registry hardening defeats standard detection",
+          "timestamp": "2026-06-29T20:36:46.562482"
+        },
+        {
+          "vector": "debugger_presence",
+          "test_name": "Single-Step Debugging Detection",
+          "technique": "Loop execution timing analysis",
+          "payload_type": "vbs_antidebug",
+          "is_detectable": true,
+          "detection_confidence": 0.62,
+          "evasion_score": 0.52,
+          "bypass_method": "Timing obfuscation + variable-speed loops",
+          "notes": "Timing checks can be bypassed with jitter injection",
+          "timestamp": "2026-06-29T20:36:46.562483"
+        },
+        {
+          "vector": "debugger_presence",
+          "test_name": "Exception Handler Detection",
+          "technique": "Abnormal exception pattern analysis",
+          "payload_type": "vbs_hardened",
+          "is_detectable": true,
+          "detection_confidence": 0.35,
+          "evasion_score": 0.68,
+          "bypass_method": "Normal exception handling patterns + error suppression",
+          "notes": "Well-designed error handling appears legitimate",
+          "timestamp": "2026-06-29T20:36:46.562485"
+        }
+      ]
+    },
+    {
+      "category": "Sandbox Detection",
+      "total_tests": 4,
+      "passed_evasion": 0,
+      "failed_evasion": 4,
+      "evasion_rate_percent": 0.0,
+      "average_detection_confidence": 0.565,
+      "tests": [
+        {
+          "vector": "sandbox_behavior",
+          "test_name": "User Interaction Detection",
+          "technique": "MouseMove/KeyPress event monitoring",
+          "payload_type": "vbs_behavior",
+          "is_detectable": true,
+          "detection_confidence": 0.78,
+          "evasion_score": 0.25,
+          "bypass_method": "Fake user events - limited; requires OS-level injection",
+          "notes": "Very hard to spoof at script level; most sandboxes inject events anyway",
+          "timestamp": "2026-06-29T20:36:46.562489"
+        },
+        {
+          "vector": "sandbox_behavior",
+          "test_name": "Sandbox Temp/Working Directory Detection",
+          "technique": "Path name enumeration (Temp, AppData)",
+          "payload_type": "vbs_persistence",
+          "is_detectable": true,
+          "detection_confidence": 0.45,
+          "evasion_score": 0.62,
+          "bypass_method": "Path randomization + environment variable obfuscation",
+          "notes": "SC-Generator can randomize paths; sandbox still limited in scope",
+          "timestamp": "2026-06-29T20:36:46.562491"
+        },
+        {
+          "vector": "sandbox_behavior",
+          "test_name": "Network Stack Isolation Detection",
+          "technique": "Netstat/GetNetworkAdapterConfiguration analysis",
+          "payload_type": "vbs_network",
+          "is_detectable": true,
+          "detection_confidence": 0.55,
+          "evasion_score": 0.45,
+          "bypass_method": "Network callback obfuscation + HTTPS randomization",
+          "notes": "Network adapters detectable in most sandboxes",
+          "timestamp": "2026-06-29T20:36:46.562493"
+        },
+        {
+          "vector": "sandbox_behavior",
+          "test_name": "Sandbox Timeout/Deadline Detection",
+          "technique": "Sleep call analysis + execution deadline inference",
+          "payload_type": "vbs_polymorphic",
+          "is_detectable": true,
+          "detection_confidence": 0.48,
+          "evasion_score": 0.58,
+          "bypass_method": "Sleep time randomization + variable delay patterns",
+          "notes": "Polymorphic delays in SC-Generator help here",
+          "timestamp": "2026-06-29T20:36:46.562494"
+        }
+      ]
+    },
+    {
+      "category": "Instrumentation Detection",
+      "total_tests": 3,
+      "passed_evasion": 1,
+      "failed_evasion": 2,
+      "evasion_rate_percent": 33.33,
+      "average_detection_confidence": 0.457,
+      "tests": [
+        {
+          "vector": "code_instrumentation",
+          "test_name": "DLL Injection Detection",
+          "technique": "Process module enumeration",
+          "payload_type": "vbs_injection",
+          "is_detectable": true,
+          "detection_confidence": 0.72,
+          "evasion_score": 0.38,
+          "bypass_method": "Direct memory manipulation - not available in VBScript",
+          "notes": "VBScript cannot directly inject DLLs; must use WMI/COM",
+          "timestamp": "2026-06-29T20:36:46.562496"
+        },
+        {
+          "vector": "code_instrumentation",
+          "test_name": "API Hooking Detection (Import Address Table)",
+          "technique": "IAT/EAT inspection",
+          "payload_type": "vbs_hardened",
+          "is_detectable": false,
+          "detection_confidence": 0.1,
+          "evasion_score": 0.9,
+          "bypass_method": "VBScript operates at higher abstraction level",
+          "notes": "VBScript interprets through host executable; harder to hook",
+          "timestamp": "2026-06-29T20:36:46.562498"
+        },
+        {
+          "vector": "code_instrumentation",
+          "test_name": "Function Replacement Detection",
+          "technique": "Code page integrity checks",
+          "payload_type": "vbs_polymorphic",
+          "is_detectable": true,
+          "detection_confidence": 0.55,
+          "evasion_score": 0.5,
+          "bypass_method": "Polymorphic code generation + obfuscation",
+          "notes": "SC-Generator's polymorphism helps defeat signature detection",
+          "timestamp": "2026-06-29T20:36:46.562500"
+        }
+      ]
+    },
+    {
+      "category": "Registry Markers",
+      "total_tests": 3,
+      "passed_evasion": 1,
+      "failed_evasion": 2,
+      "evasion_rate_percent": 33.33,
+      "average_detection_confidence": 0.46,
+      "tests": [
+        {
+          "vector": "registry_markers",
+          "test_name": "VM Software Registry Keys",
+          "technique": "HKLM registry enumeration for VirtualBox/VMware keys",
+          "payload_type": "vbs_stealth",
+          "is_detectable": true,
+          "detection_confidence": 0.65,
+          "evasion_score": 0.55,
+          "bypass_method": "Registry key obfuscation + WMI redirection",
+          "notes": "Can check registry but cannot modify it without admin rights",
+          "timestamp": "2026-06-29T20:36:46.562502"
+        },
+        {
+          "vector": "registry_markers",
+          "test_name": "Security Tool Registry Detection",
+          "technique": "HKLM\\Software enumeration for AV/EDR keys",
+          "payload_type": "vbs_detection",
+          "is_detectable": false,
+          "detection_confidence": 0.15,
+          "evasion_score": 0.85,
+          "bypass_method": "Registry parsing + key name obfuscation",
+          "notes": "Registry access is normal; obfuscation defeats pattern matching",
+          "timestamp": "2026-06-29T20:36:46.562503"
+        },
+        {
+          "vector": "registry_markers",
+          "test_name": "Persistence Registry Modification Detection",
+          "technique": "Registry change monitoring (file system filter driver)",
+          "payload_type": "vbs_persistence",
+          "is_detectable": true,
+          "detection_confidence": 0.58,
+          "evasion_score": 0.5,
+          "bypass_method": "Alternative persistence methods + timing distribution",
+          "notes": "Registry write behavior visible to EDR; SC-Generator offers multiple methods",
+          "timestamp": "2026-06-29T20:36:46.562505"
+        }
+      ]
+    },
+    {
+      "category": "File System Markers",
+      "total_tests": 3,
+      "passed_evasion": 1,
+      "failed_evasion": 2,
+      "evasion_rate_percent": 33.33,
+      "average_detection_confidence": 0.607,
+      "tests": [
+        {
+          "vector": "file_system_markers",
+          "test_name": "Suspicious File Path Detection",
+          "technique": "Drop location analysis (Temp, AppData patterns)",
+          "payload_type": "vbs_file",
+          "is_detectable": true,
+          "detection_confidence": 0.62,
+          "evasion_score": 0.55,
+          "bypass_method": "Environment variable randomization + path obfuscation",
+          "notes": "SC-Generator supports multiple storage backends (registry, env vars)",
+          "timestamp": "2026-06-29T20:36:46.562507"
+        },
+        {
+          "vector": "file_system_markers",
+          "test_name": "File Magic Number/Signature Detection",
+          "technique": "Magic byte analysis (VBS header detection)",
+          "payload_type": "vbs_encoded",
+          "is_detectable": true,
+          "detection_confidence": 0.48,
+          "evasion_score": 0.68,
+          "bypass_method": "Encoding + polymorphic headers + binary wrapping",
+          "notes": "Array encoder in SC-Generator produces non-obvious signatures",
+          "timestamp": "2026-06-29T20:36:46.562508"
+        },
+        {
+          "vector": "file_system_markers",
+          "test_name": "File Deletion Trail Detection",
+          "technique": "USN Journal / Volume Shadow Copy analysis",
+          "payload_type": "vbs_cleanup",
+          "is_detectable": true,
+          "detection_confidence": 0.72,
+          "evasion_score": 0.42,
+          "bypass_method": "Legitimate file operations + archive storage",
+          "notes": "USN Journal captures all deletions; limited evasion at this level",
+          "timestamp": "2026-06-29T20:36:46.562510"
+        }
+      ]
+    },
+    {
+      "category": "Entropy Analysis",
+      "total_tests": 2,
+      "passed_evasion": 0,
+      "failed_evasion": 2,
+      "evasion_rate_percent": 0.0,
+      "average_detection_confidence": 0.55,
+      "tests": [
+        {
+          "vector": "entropy_analysis",
+          "test_name": "High Entropy Detection (Compressed/Encrypted Data)",
+          "technique": "Shannon entropy calculation on payload data",
+          "payload_type": "vbs_base64",
+          "is_detectable": true,
+          "detection_confidence": 0.52,
+          "evasion_score": 0.62,
+          "bypass_method": "Polymorphic encoding + context injection + low-entropy wrapper",
+          "notes": "Multi-encoding in SC-Generator adds legitimate-looking padding",
+          "timestamp": "2026-06-29T20:36:46.562511"
+        },
+        {
+          "vector": "entropy_analysis",
+          "test_name": "Artificial Randomization Detection",
+          "technique": "Randomness source analysis (quality of randomness)",
+          "payload_type": "vbs_polymorphic",
+          "is_detectable": true,
+          "detection_confidence": 0.58,
+          "evasion_score": 0.55,
+          "bypass_method": "Cryptographic randomization + deterministic patterns",
+          "notes": "SC-Generator uses proper RNG; entropy source is legitimate",
+          "timestamp": "2026-06-29T20:36:46.562513"
+        }
+      ]
+    },
+    {
+      "category": "Timing Analysis",
+      "total_tests": 2,
+      "passed_evasion": 0,
+      "failed_evasion": 2,
+      "evasion_rate_percent": 0.0,
+      "average_detection_confidence": 0.465,
+      "tests": [
+        {
+          "vector": "timing_analysis",
+          "test_name": "Abnormal Execution Speed",
+          "technique": "Execution time profiling + heuristic analysis",
+          "payload_type": "vbs_hardened",
+          "is_detectable": true,
+          "detection_confidence": 0.45,
+          "evasion_score": 0.63,
+          "bypass_method": "Sleep injection + variable-speed operations",
+          "notes": "Timing evasion covered in ANTI_DEBUG_FEATURES",
+          "timestamp": "2026-06-29T20:36:46.562515"
+        },
+        {
+          "vector": "timing_analysis",
+          "test_name": "Temporal Behavior Anomaly",
+          "technique": "Event timeline correlation analysis",
+          "payload_type": "vbs_persistence",
+          "is_detectable": true,
+          "detection_confidence": 0.48,
+          "evasion_score": 0.58,
+          "bypass_method": "Distributed execution + random delays between operations",
+          "notes": "SC-Generator's multi-staging helps defeat timeline analysis",
+          "timestamp": "2026-06-29T20:36:46.562516"
+        }
+      ]
+    }
+  ],
+  "vulnerability_analysis": [
+    {
+      "severity": "CRITICAL",
+      "count": 1,
+      "affected_vectors": [
+        "sandbox_behavior"
+      ],
+      "details": [
+        {
+          "test": "User Interaction Detection",
+          "evasion_score": 0.25,
+          "reason": "Fake user events - limited; requires OS-level injection"
+        }
+      ]
+    },
+    {
+      "severity": "MODERATE",
+      "count": 16,
+      "affected_vectors": [
+        "hypervisor_detection",
+        "code_instrumentation",
+        "entropy_analysis",
+        "registry_markers",
+        "timing_analysis",
+        "file_system_markers",
+        "debugger_presence",
+        "sandbox_behavior"
+      ],
+      "details": [
+        {
+          "test": "Hypervisor Bit Detection (CPUID 0x1)",
+          "evasion_score": 0.35,
+          "reason": "N/A - requires kernel patch or VM option disabling"
+        },
+        {
+          "test": "SMBIOS Hardware Info Spoofing",
+          "evasion_score": 0.48,
+          "reason": "Registry modification + WMI class obfuscation"
+        },
+        {
+          "test": "Single-Step Debugging Detection",
+          "evasion_score": 0.52,
+          "reason": "Timing obfuscation + variable-speed loops"
+        }
+      ]
+    },
+    {
+      "severity": "STRONG_EVASION",
+      "count": 7,
+      "affected_vectors": [
+        "hypervisor_detection",
+        "code_instrumentation",
+        "registry_markers",
+        "file_system_markers",
+        "debugger_presence"
+      ],
+      "coverage_percent": 29.17
+    }
+  ],
+  "recommendations": [
+    "HYPERVISOR: Implement CPUID spoofing at VM level; VBScript-level evasion limited. Consider VM options to disable hypervisor bit or configure VM brand strings.",
+    "SANDBOX: Use environment-variable based persistence instead of file drops. SC-Generator's registry storage variants provide better evasion than temp files.",
+    "FILE SYSTEM: Avoid persistent on-disk artifacts. Prefer in-memory execution or registry-based storage to bypass file system monitoring.",
+    "INSTRUMENTATION: Leverage VBScript's high-level abstraction to evade low-level DLL injection detection. Use WMI over direct Win32 APIs.",
+    "TIMING: Implement variable-speed loops and cryptographic delays as shown in multi-encoding-hardened.py. SC-Generator's polymorphic engine supports this.",
+    "ENTROPY: Use SC-Generator's multi-encoding to produce legitimate-looking mixed-entropy payloads that pass automated entropy thresholds."
+  ]
+}

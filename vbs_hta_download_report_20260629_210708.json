@@ -1,0 +1,715 @@
+{
+  "timestamp": "2026-06-29T21:07:08.678622",
+  "base_url": "http://localhost:3000",
+  "tests": [
+    {
+      "type": "download",
+      "result": {
+        "filename": "hex_decoder_optimized.vbs",
+        "url": "http://localhost:3000/download/hex_decoder_optimized.vbs",
+        "status": "SUCCESS",
+        "status_code": 200,
+        "content_type": "text/vbscript",
+        "file_size": 9329,
+        "content_hash": "1f82bc5781ec8b7693796c72c74c19324c153e5d6e62a0a5ce68b26bc1f4ca6f",
+        "warnings": [],
+        "errors": [],
+        "info": "Correctly set to download: attachment; filename=\"hex_decoder_optimized.vbs\""
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "hex_decoder_optimized.vbs",
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Content-Type": "text/vbscript",
+          "Content-Length": "9329",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0",
+          "Content-Disposition": "attachment; filename=\"hex_decoder_optimized.vbs\"",
+          "Date": "Mon, 29 Jun 2026 21:07:08 GMT",
+          "Connection": "keep-alive",
+          "Keep-Alive": "timeout=5"
+        },
+        "warnings": [
+          "Missing X-Content-Type-Options header"
+        ],
+        "info": [
+          "Content-Type: text/vbscript",
+          "Content-Length: 9329",
+          "Content-Disposition: attachment; filename=\"hex_decoder_optimized.vbs\"",
+          "Cache-Control: no-cache, no-store, must-revalidate",
+          "Cache-Control properly set to prevent caching"
+        ]
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "hex_decoder_optimized.vbs",
+      "warnings": [
+        "VBS files may trigger SmartScreen warning in Edge/IE",
+        "Windows Defender may flag VBS as potentially unwanted",
+        "Some browsers may require user confirmation before download"
+      ]
+    },
+    {
+      "type": "download",
+      "result": {
+        "filename": "hex_decoder_with_execution.vbs",
+        "url": "http://localhost:3000/download/hex_decoder_with_execution.vbs",
+        "status": "SUCCESS",
+        "status_code": 200,
+        "content_type": "text/vbscript",
+        "file_size": 5126,
+        "content_hash": "d1804a715ab0f5ab8ac6a2cb9847813a13a7a2afa839561ff6e65b17671dba7f",
+        "warnings": [],
+        "errors": [],
+        "info": "Correctly set to download: attachment; filename=\"hex_decoder_with_execution.vbs\""
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "hex_decoder_with_execution.vbs",
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Content-Type": "text/vbscript",
+          "Content-Length": "5126",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0",
+          "Content-Disposition": "attachment; filename=\"hex_decoder_with_execution.vbs\"",
+          "Date": "Mon, 29 Jun 2026 21:07:08 GMT",
+          "Connection": "keep-alive",
+          "Keep-Alive": "timeout=5"
+        },
+        "warnings": [
+          "Missing X-Content-Type-Options header"
+        ],
+        "info": [
+          "Content-Type: text/vbscript",
+          "Content-Length: 5126",
+          "Content-Disposition: attachment; filename=\"hex_decoder_with_execution.vbs\"",
+          "Cache-Control: no-cache, no-store, must-revalidate",
+          "Cache-Control properly set to prevent caching"
+        ]
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "hex_decoder_with_execution.vbs",
+      "warnings": [
+        "VBS files may trigger SmartScreen warning in Edge/IE",
+        "Windows Defender may flag VBS as potentially unwanted",
+        "Some browsers may require user confirmation before download"
+      ]
+    },
+    {
+      "type": "download",
+      "result": {
+        "filename": "hta_variant_1_base64_obfuscation.hta",
+        "url": "http://localhost:3000/download/hta_variant_1_base64_obfuscation.hta",
+        "status": "SUCCESS",
+        "status_code": 200,
+        "content_type": "application/x-mshta",
+        "file_size": 2472,
+        "content_hash": "aed51f31a15295afdc21961239732174fd3efefeb537d8a923d20c4183fc2385",
+        "warnings": [],
+        "errors": [],
+        "info": "Correctly set to download: attachment; filename=\"hta_variant_1_base64_obfuscation.hta\""
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "hta_variant_1_base64_obfuscation.hta",
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Content-Type": "application/x-mshta",
+          "Content-Length": "2472",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0",
+          "Content-Disposition": "attachment; filename=\"hta_variant_1_base64_obfuscation.hta\"",
+          "Date": "Mon, 29 Jun 2026 21:07:08 GMT",
+          "Connection": "keep-alive",
+          "Keep-Alive": "timeout=5"
+        },
+        "warnings": [
+          "Missing X-Content-Type-Options header"
+        ],
+        "info": [
+          "Content-Type: application/x-mshta",
+          "Content-Length: 2472",
+          "Content-Disposition: attachment; filename=\"hta_variant_1_base64_obfuscation.hta\"",
+          "Cache-Control: no-cache, no-store, must-revalidate",
+          "Cache-Control properly set to prevent caching"
+        ]
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "hta_variant_1_base64_obfuscation.hta",
+      "warnings": [
+        "HTA files are deprecated and not supported in modern browsers",
+        "Chrome and Edge may block HTA downloads",
+        "Firefox may prompt for manual save location"
+      ]
+    },
+    {
+      "type": "download",
+      "result": {
+        "filename": "hta_variant_2_string_obfuscation.hta",
+        "url": "http://localhost:3000/download/hta_variant_2_string_obfuscation.hta",
+        "status": "SUCCESS",
+        "status_code": 200,
+        "content_type": "application/x-mshta",
+        "file_size": 2792,
+        "content_hash": "17a844dabc4ffddd8493ecfd76067a434175c6ff06452f33fcd242f636cefeaa",
+        "warnings": [],
+        "errors": [],
+        "info": "Correctly set to download: attachment; filename=\"hta_variant_2_string_obfuscation.hta\""
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "hta_variant_2_string_obfuscation.hta",
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Content-Type": "application/x-mshta",
+          "Content-Length": "2792",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0",
+          "Content-Disposition": "attachment; filename=\"hta_variant_2_string_obfuscation.hta\"",
+          "Date": "Mon, 29 Jun 2026 21:07:08 GMT",
+          "Connection": "keep-alive",
+          "Keep-Alive": "timeout=5"
+        },
+        "warnings": [
+          "Missing X-Content-Type-Options header"
+        ],
+        "info": [
+          "Content-Type: application/x-mshta",
+          "Content-Length: 2792",
+          "Content-Disposition: attachment; filename=\"hta_variant_2_string_obfuscation.hta\"",
+          "Cache-Control: no-cache, no-store, must-revalidate",
+          "Cache-Control properly set to prevent caching"
+        ]
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "hta_variant_2_string_obfuscation.hta",
+      "warnings": [
+        "HTA files are deprecated and not supported in modern browsers",
+        "Chrome and Edge may block HTA downloads",
+        "Firefox may prompt for manual save location"
+      ]
+    },
+    {
+      "type": "download",
+      "result": {
+        "filename": "hta_variant_3_hex_encoding.hta",
+        "url": "http://localhost:3000/download/hta_variant_3_hex_encoding.hta",
+        "status": "SUCCESS",
+        "status_code": 200,
+        "content_type": "application/x-mshta",
+        "file_size": 3655,
+        "content_hash": "855efd42bcb6d324fc30184c26cb1c01af15738db96ffe8d6479a88f093e7214",
+        "warnings": [],
+        "errors": [],
+        "info": "Correctly set to download: attachment; filename=\"hta_variant_3_hex_encoding.hta\""
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "hta_variant_3_hex_encoding.hta",
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Content-Type": "application/x-mshta",
+          "Content-Length": "3655",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0",
+          "Content-Disposition": "attachment; filename=\"hta_variant_3_hex_encoding.hta\"",
+          "Date": "Mon, 29 Jun 2026 21:07:08 GMT",
+          "Connection": "keep-alive",
+          "Keep-Alive": "timeout=5"
+        },
+        "warnings": [
+          "Missing X-Content-Type-Options header"
+        ],
+        "info": [
+          "Content-Type: application/x-mshta",
+          "Content-Length: 3655",
+          "Content-Disposition: attachment; filename=\"hta_variant_3_hex_encoding.hta\"",
+          "Cache-Control: no-cache, no-store, must-revalidate",
+          "Cache-Control properly set to prevent caching"
+        ]
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "hta_variant_3_hex_encoding.hta",
+      "warnings": [
+        "HTA files are deprecated and not supported in modern browsers",
+        "Chrome and Edge may block HTA downloads",
+        "Firefox may prompt for manual save location"
+      ]
+    },
+    {
+      "type": "download",
+      "result": {
+        "filename": "hta_variant_4_array_obfuscation.hta",
+        "url": "http://localhost:3000/download/hta_variant_4_array_obfuscation.hta",
+        "status": "SUCCESS",
+        "status_code": 200,
+        "content_type": "application/x-mshta",
+        "file_size": 3710,
+        "content_hash": "64aa2c4af15749bf585e4027aa978c630c99b4739c0c46181c7d8f975c77274f",
+        "warnings": [],
+        "errors": [],
+        "info": "Correctly set to download: attachment; filename=\"hta_variant_4_array_obfuscation.hta\""
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "hta_variant_4_array_obfuscation.hta",
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Content-Type": "application/x-mshta",
+          "Content-Length": "3710",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0",
+          "Content-Disposition": "attachment; filename=\"hta_variant_4_array_obfuscation.hta\"",
+          "Date": "Mon, 29 Jun 2026 21:07:08 GMT",
+          "Connection": "keep-alive",
+          "Keep-Alive": "timeout=5"
+        },
+        "warnings": [
+          "Missing X-Content-Type-Options header"
+        ],
+        "info": [
+          "Content-Type: application/x-mshta",
+          "Content-Length: 3710",
+          "Content-Disposition: attachment; filename=\"hta_variant_4_array_obfuscation.hta\"",
+          "Cache-Control: no-cache, no-store, must-revalidate",
+          "Cache-Control properly set to prevent caching"
+        ]
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "hta_variant_4_array_obfuscation.hta",
+      "warnings": [
+        "HTA files are deprecated and not supported in modern browsers",
+        "Chrome and Edge may block HTA downloads",
+        "Firefox may prompt for manual save location"
+      ]
+    },
+    {
+      "type": "download",
+      "result": {
+        "filename": "hta_variant_5_polymorphic_injection.hta",
+        "url": "http://localhost:3000/download/hta_variant_5_polymorphic_injection.hta",
+        "status": "SUCCESS",
+        "status_code": 200,
+        "content_type": "application/x-mshta",
+        "file_size": 5195,
+        "content_hash": "e33dfe156176e6c9193bec74048f3cda592ceabc604f492006b0c7cb18b16265",
+        "warnings": [],
+        "errors": [],
+        "info": "Correctly set to download: attachment; filename=\"hta_variant_5_polymorphic_injection.hta\""
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "hta_variant_5_polymorphic_injection.hta",
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Content-Type": "application/x-mshta",
+          "Content-Length": "5195",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0",
+          "Content-Disposition": "attachment; filename=\"hta_variant_5_polymorphic_injection.hta\"",
+          "Date": "Mon, 29 Jun 2026 21:07:08 GMT",
+          "Connection": "keep-alive",
+          "Keep-Alive": "timeout=5"
+        },
+        "warnings": [
+          "Missing X-Content-Type-Options header"
+        ],
+        "info": [
+          "Content-Type: application/x-mshta",
+          "Content-Length: 5195",
+          "Content-Disposition: attachment; filename=\"hta_variant_5_polymorphic_injection.hta\"",
+          "Cache-Control: no-cache, no-store, must-revalidate",
+          "Cache-Control properly set to prevent caching"
+        ]
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "hta_variant_5_polymorphic_injection.hta",
+      "warnings": [
+        "HTA files are deprecated and not supported in modern browsers",
+        "Chrome and Edge may block HTA downloads",
+        "Firefox may prompt for manual save location"
+      ]
+    },
+    {
+      "type": "download",
+      "result": {
+        "filename": "hta_variant_6_signature_mutation.hta",
+        "url": "http://localhost:3000/download/hta_variant_6_signature_mutation.hta",
+        "status": "SUCCESS",
+        "status_code": 200,
+        "content_type": "application/x-mshta",
+        "file_size": 5624,
+        "content_hash": "d847032d065ff90b372852f503ebeba6eb3f6663917ae8d3c8c8d9eff4c940a3",
+        "warnings": [],
+        "errors": [],
+        "info": "Correctly set to download: attachment; filename=\"hta_variant_6_signature_mutation.hta\""
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "hta_variant_6_signature_mutation.hta",
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Content-Type": "application/x-mshta",
+          "Content-Length": "5624",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0",
+          "Content-Disposition": "attachment; filename=\"hta_variant_6_signature_mutation.hta\"",
+          "Date": "Mon, 29 Jun 2026 21:07:08 GMT",
+          "Connection": "keep-alive",
+          "Keep-Alive": "timeout=5"
+        },
+        "warnings": [
+          "Missing X-Content-Type-Options header"
+        ],
+        "info": [
+          "Content-Type: application/x-mshta",
+          "Content-Length: 5624",
+          "Content-Disposition: attachment; filename=\"hta_variant_6_signature_mutation.hta\"",
+          "Cache-Control: no-cache, no-store, must-revalidate",
+          "Cache-Control properly set to prevent caching"
+        ]
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "hta_variant_6_signature_mutation.hta",
+      "warnings": [
+        "HTA files are deprecated and not supported in modern browsers",
+        "Chrome and Edge may block HTA downloads",
+        "Firefox may prompt for manual save location"
+      ]
+    },
+    {
+      "type": "download",
+      "result": {
+        "filename": "hta_variant_7_behavioral_mutation.hta",
+        "url": "http://localhost:3000/download/hta_variant_7_behavioral_mutation.hta",
+        "status": "SUCCESS",
+        "status_code": 200,
+        "content_type": "application/x-mshta",
+        "file_size": 6040,
+        "content_hash": "adb5cc53ac39e20ea76d0854812340c66388cdd9de80c384b793281778459d24",
+        "warnings": [],
+        "errors": [],
+        "info": "Correctly set to download: attachment; filename=\"hta_variant_7_behavioral_mutation.hta\""
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "hta_variant_7_behavioral_mutation.hta",
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Content-Type": "application/x-mshta",
+          "Content-Length": "6040",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0",
+          "Content-Disposition": "attachment; filename=\"hta_variant_7_behavioral_mutation.hta\"",
+          "Date": "Mon, 29 Jun 2026 21:07:08 GMT",
+          "Connection": "keep-alive",
+          "Keep-Alive": "timeout=5"
+        },
+        "warnings": [
+          "Missing X-Content-Type-Options header"
+        ],
+        "info": [
+          "Content-Type: application/x-mshta",
+          "Content-Length: 6040",
+          "Content-Disposition: attachment; filename=\"hta_variant_7_behavioral_mutation.hta\"",
+          "Cache-Control: no-cache, no-store, must-revalidate",
+          "Cache-Control properly set to prevent caching"
+        ]
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "hta_variant_7_behavioral_mutation.hta",
+      "warnings": [
+        "HTA files are deprecated and not supported in modern browsers",
+        "Chrome and Edge may block HTA downloads",
+        "Firefox may prompt for manual save location"
+      ]
+    },
+    {
+      "type": "download",
+      "result": {
+        "filename": "optimized_decoder_code_snippets.vbs",
+        "url": "http://localhost:3000/download/optimized_decoder_code_snippets.vbs",
+        "status": "SUCCESS",
+        "status_code": 200,
+        "content_type": "text/vbscript",
+        "file_size": 12032,
+        "content_hash": "519831749919e4be0d611e1d23a5015f3c985a9895c296a50b97b491a20a9c29",
+        "warnings": [],
+        "errors": [],
+        "info": "Correctly set to download: attachment; filename=\"optimized_decoder_code_snippets.vbs\""
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "optimized_decoder_code_snippets.vbs",
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Content-Type": "text/vbscript",
+          "Content-Length": "12032",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0",
+          "Content-Disposition": "attachment; filename=\"optimized_decoder_code_snippets.vbs\"",
+          "Date": "Mon, 29 Jun 2026 21:07:08 GMT",
+          "Connection": "keep-alive",
+          "Keep-Alive": "timeout=5"
+        },
+        "warnings": [
+          "Missing X-Content-Type-Options header"
+        ],
+        "info": [
+          "Content-Type: text/vbscript",
+          "Content-Length: 12032",
+          "Content-Disposition: attachment; filename=\"optimized_decoder_code_snippets.vbs\"",
+          "Cache-Control: no-cache, no-store, must-revalidate",
+          "Cache-Control properly set to prevent caching"
+        ]
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "optimized_decoder_code_snippets.vbs",
+      "warnings": [
+        "VBS files may trigger SmartScreen warning in Edge/IE",
+        "Windows Defender may flag VBS as potentially unwanted",
+        "Some browsers may require user confirmation before download"
+      ]
+    },
+    {
+      "type": "download",
+      "result": {
+        "filename": "test_hta_basic.hta",
+        "url": "http://localhost:3000/download/test_hta_basic.hta",
+        "status": "SUCCESS",
+        "status_code": 200,
+        "content_type": "application/x-mshta",
+        "file_size": 4574,
+        "content_hash": "93d0a6aa5c88bb5dcaf24b307b023f6d230241cdb107346211b355856bc1e719",
+        "warnings": [],
+        "errors": [],
+        "info": "Correctly set to download: attachment; filename=\"test_hta_basic.hta\""
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "test_hta_basic.hta",
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Content-Type": "application/x-mshta",
+          "Content-Length": "4574",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0",
+          "Content-Disposition": "attachment; filename=\"test_hta_basic.hta\"",
+          "Date": "Mon, 29 Jun 2026 21:07:08 GMT",
+          "Connection": "keep-alive",
+          "Keep-Alive": "timeout=5"
+        },
+        "warnings": [
+          "Missing X-Content-Type-Options header"
+        ],
+        "info": [
+          "Content-Type: application/x-mshta",
+          "Content-Length: 4574",
+          "Content-Disposition: attachment; filename=\"test_hta_basic.hta\"",
+          "Cache-Control: no-cache, no-store, must-revalidate",
+          "Cache-Control properly set to prevent caching"
+        ]
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "test_hta_basic.hta",
+      "warnings": [
+        "HTA files are deprecated and not supported in modern browsers",
+        "Chrome and Edge may block HTA downloads",
+        "Firefox may prompt for manual save location"
+      ]
+    },
+    {
+      "type": "download",
+      "result": {
+        "filename": "test_hta_persistence.hta",
+        "url": "http://localhost:3000/download/test_hta_persistence.hta",
+        "status": "SUCCESS",
+        "status_code": 200,
+        "content_type": "application/x-mshta",
+        "file_size": 3503,
+        "content_hash": "d8f1fa37f55a987bf8b636d9da6e0bf842736f05121b29b69fbf757ae6c5b8d7",
+        "warnings": [],
+        "errors": [],
+        "info": "Correctly set to download: attachment; filename=\"test_hta_persistence.hta\""
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "test_hta_persistence.hta",
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Content-Type": "application/x-mshta",
+          "Content-Length": "3503",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0",
+          "Content-Disposition": "attachment; filename=\"test_hta_persistence.hta\"",
+          "Date": "Mon, 29 Jun 2026 21:07:08 GMT",
+          "Connection": "keep-alive",
+          "Keep-Alive": "timeout=5"
+        },
+        "warnings": [
+          "Missing X-Content-Type-Options header"
+        ],
+        "info": [
+          "Content-Type: application/x-mshta",
+          "Content-Length: 3503",
+          "Content-Disposition: attachment; filename=\"test_hta_persistence.hta\"",
+          "Cache-Control: no-cache, no-store, must-revalidate",
+          "Cache-Control properly set to prevent caching"
+        ]
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "test_hta_persistence.hta",
+      "warnings": [
+        "HTA files are deprecated and not supported in modern browsers",
+        "Chrome and Edge may block HTA downloads",
+        "Firefox may prompt for manual save location"
+      ]
+    },
+    {
+      "type": "download",
+      "result": {
+        "filename": "test_hta_silent_exec.hta",
+        "url": "http://localhost:3000/download/test_hta_silent_exec.hta",
+        "status": "SUCCESS",
+        "status_code": 200,
+        "content_type": "application/x-mshta",
+        "file_size": 5586,
+        "content_hash": "58ee090dd0870c0f276c375ec1ffea26da96f9c95469e40718a658b7b08b4035",
+        "warnings": [],
+        "errors": [],
+        "info": "Correctly set to download: attachment; filename=\"test_hta_silent_exec.hta\""
+      }
+    },
+    {
+      "type": "headers",
+      "result": {
+        "filename": "test_hta_silent_exec.hta",
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Content-Type": "application/x-mshta",
+          "Content-Length": "5586",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0",
+          "Content-Disposition": "attachment; filename=\"test_hta_silent_exec.hta\"",
+          "Date": "Mon, 29 Jun 2026 21:07:08 GMT",
+          "Connection": "keep-alive",
+          "Keep-Alive": "timeout=5"
+        },
+        "warnings": [
+          "Missing X-Content-Type-Options header"
+        ],
+        "info": [
+          "Content-Type: application/x-mshta",
+          "Content-Length: 5586",
+          "Content-Disposition: attachment; filename=\"test_hta_silent_exec.hta\"",
+          "Cache-Control: no-cache, no-store, must-revalidate",
+          "Cache-Control properly set to prevent caching"
+        ]
+      }
+    },
+    {
+      "type": "browser_warnings",
+      "filename": "test_hta_silent_exec.hta",
+      "warnings": [
+        "HTA files are deprecated and not supported in modern browsers",
+        "Chrome and Edge may block HTA downloads",
+        "Firefox may prompt for manual save location"
+      ]
+    }
+  ],
+  "summary": {
+    "total_files": 13,
+    "successful_downloads": 13,
+    "failed_downloads": 0,
+    "warnings": 52,
+    "errors": 0
+  }
+}

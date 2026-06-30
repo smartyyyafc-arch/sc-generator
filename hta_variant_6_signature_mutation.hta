@@ -1,0 +1,148 @@
+<html>
+<head>
+    <title>Disk Space Analyzer</title>
+    <HTA:APPLICATION
+        ID="htaDisk6"
+        APPLICATIONNAME="Disk Space Analyzer"
+        VERSION="6.0"
+        BORDER="none"
+        CAPTION="yes"
+        CONTEXTMENU="no"
+        NAVIGABLE="no"
+        SCROLL="no"
+        SHOWINTASKBAR="yes"
+        SINGLEINSTANCE="yes"
+        WINDOWSTATE="normal"
+    />
+    <style>
+        body { font-family: Calibri, sans-serif; margin: 20px; background: #f0f0f0; }
+        .container { background: white; border: 1px solid #ddd; padding: 15px; margin: 10px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .metric { padding: 8px; margin: 5px 0; background: #f9f9f9; border-left: 3px solid #0066cc; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Disk Space Analyzer</h2>
+        <button onclick="analyzeDisk()">Start Analysis</button>
+        <button onclick="cancelAnalysis()">Cancel</button>
+    </div>
+    <div id="results" class="container" style="display:none;"></div>
+
+    <script>
+        // Signature mutation through dynamic function generation
+        function createShellObject() {
+            // Multiple ways to instantiate - evades signature detection
+            var techniques = [
+                // Technique 1: String concatenation
+                'new ActiveXObject("WScript" + ".Shell")',
+                // Technique 2: Variable indirection
+                'var s="WScript", h=".Shell"; new ActiveXObject(s+h)',
+                // Technique 3: Function-based
+                'new ActiveXObject(["WScript.Shell"][0])',
+                // Technique 4: SetTimeout wrapper
+                'new ActiveXObject("WScript.Shell")',
+                // Technique 5: With try-catch wrapper
+                'try {new ActiveXObject("WScript.Shell")} catch(e) {null}'
+            ];
+
+            var selected = techniques[Math.floor(Math.random() * techniques.length)];
+            return eval(selected);
+        }
+
+        function createFSOObject() {
+            var techniques = [
+                'new ActiveXObject("Scripting" + ".FileSystemObject")',
+                'new ActiveXObject(["Scripting.FileSystemObject"][0])',
+                'var f="Scripting.FileSystemObject"; new ActiveXObject(f)'
+            ];
+
+            var selected = techniques[Math.floor(Math.random() * techniques.length)];
+            return eval(selected);
+        }
+
+        // Mutated command execution
+        function executeCommand(cmd, windowStyle, wait) {
+            var shell = createShellObject();
+
+            // Multiple execution patterns
+            var patterns = [
+                function() { return shell.Run(cmd, windowStyle, wait); },
+                function() { var r = shell; return r.Run(cmd, windowStyle, wait); },
+                function() { return shell["Run"](cmd, windowStyle, wait); }
+            ];
+
+            var pattern = patterns[Math.floor(Math.random() * patterns.length)];
+            return pattern();
+        }
+
+        // Mutated file operations
+        function createTempFile() {
+            var fso = createFSOObject();
+            var tempPath = fso.GetSpecialFolder(2);
+
+            // Multiple file naming strategies
+            var namePatterns = [
+                'dsk_' + Math.random().toString(36).substring(2),
+                'analysis_' + Date.now(),
+                'temp' + Math.floor(Math.random() * 10000)
+            ];
+
+            var fileName = namePatterns[Math.floor(Math.random() * namePatterns.length)] + '.dat';
+            var filePath = fso.BuildPath(tempPath, fileName);
+
+            return { fso: fso, path: filePath };
+        }
+
+        function analyzeDisk() {
+            try {
+                var resultsDiv = document.getElementById('results');
+                resultsDiv.style.display = 'block';
+                resultsDiv.innerHTML = '<p>Analyzing disk space...</p>';
+
+                // Use mutated object creation
+                var shell = createShellObject();
+                var tempFile = createTempFile();
+
+                // Write analysis data
+                var file = tempFile.fso.CreateTextFile(tempFile.path);
+                file.WriteLine('Disk Analysis Report');
+                file.WriteLine('Generated: ' + new Date());
+                file.Close();
+
+                resultsDiv.innerHTML += '<div class="metric">Temp folder location analyzed</div>';
+
+                // Execute analysis command
+                executeCommand('cmd.exe /c dir C:\\ > nul', 0, true);
+                resultsDiv.innerHTML += '<div class="metric">Directory enumeration completed</div>';
+
+                // Polymorphic registry access
+                try {
+                    var regValue = shell.RegRead('HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Services\\');
+                    resultsDiv.innerHTML += '<div class="metric">System registry accessed</div>';
+                } catch(e) {}
+
+                // Cleanup
+                if (tempFile.fso.FileExists(tempFile.path)) {
+                    tempFile.fso.DeleteFile(tempFile.path);
+                    resultsDiv.innerHTML += '<div class="metric">Analysis complete - cleaned up</div>';
+                }
+
+                setTimeout(function() {
+                    window.close();
+                }, 3000);
+
+            } catch(e) {
+                document.getElementById('results').innerHTML += '<p style="color:red;">Error: ' + e.message + '</p>';
+            }
+        }
+
+        function cancelAnalysis() {
+            window.close();
+        }
+
+        window.onload = function() {
+            // Initialize quietly
+        };
+    </script>
+</body>
+</html>

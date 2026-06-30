@@ -1,0 +1,337 @@
+================================================================================
+C2 FINGERPRINT ROUTING - QUICK REFERENCE CARD
+================================================================================
+
+FINGERPRINT TYPES
+================================================================================
+BEACON_ID              Unique beacon identifier
+SYSTEM_CONFIG          OS/hardware configuration (REQUIRED)
+NETWORK_CONFIG         Network interface and IP data
+PROCESS_INFO           Running process information
+BEHAVIORAL             Timing patterns and behaviors
+CRYPTO                 Cryptographic material
+
+MATCHING ALGORITHMS
+================================================================================
+EXACT                  Exact value match (confidence: 0 or 1)
+FUZZY                  Character overlap (confidence: 0-1, with tolerance)
+PROBABILISTIC          Jaccard similarity (confidence: 0-1)
+HIERARCHICAL           Multi-level weighted matching
+
+ROUTING STRATEGIES
+================================================================================
+DIRECT                 First target server
+LOAD_BALANCED          Least loaded server
+FAILOVER               Primary + fallback
+ROUND_ROBIN            Deterministic sequential
+GEOLOCATION            Location-based
+LATENCY_OPTIMIZED      Lowest latency server
+RANDOMIZED             Random server selection
+
+PYTHON API QUICK REFERENCE
+================================================================================
+
+Initialize Router:
+  router = C2FingerprintRouter()
+
+Register Server:
+  server_id = router.register_server(
+      name='Primary',
+      address='c2.example.com',
+      port=443,
+      protocol='https',
+      region='US-EAST'
+  )
+
+Create Fingerprint Component:
+  component = FingerprintComponent(
+      component_type=FingerprintType.SYSTEM_CONFIG,
+      value='Windows-10-x64',
+      weight=2.0,
+      variance_tolerance=0.0
+  )
+
+Register Beacon Fingerprint:
+  fingerprint = router.register_beacon_fingerprint(
+      beacon_id='beacon-001',
+      components=[component1, component2, ...],
+      target_server_id=server_id  # optional
+  )
+
+Create Routing Rule:
+  rule_id = router.create_routing_rule(
+      name='Windows Systems',
+      description='Route Windows to primary',
+      fingerprint_pattern={'system_config': 'Windows.*'},
+      target_servers=[server_id1, server_id2],
+      routing_strategy=RoutingStrategy.LOAD_BALANCED,
+      matching_algorithm=MatchingAlgorithm.FUZZY,
+      match_threshold=0.8,
+      priority=10
+  )
+
+Route Beacon:
+  decision = router.route_beacon(beacon_id='beacon-001')
+  print(decision.selected_server.getUri())
+  print(f"Confidence: {decision.confidence_score:.2%}")
+
+Update Fingerprint:
+  new_fp = router.update_fingerprint(
+      beacon_id='beacon-001',
+      new_components=[component1, component2, ...]
+  )
+
+Clear Beacon:
+  router.clear_beacon(beacon_id='beacon-001')
+
+Get Statistics:
+  stats = router.get_routing_stats()
+  print(f"Total beacons: {stats['total_beacons']}")
+  print(f"Average confidence: {stats['average_confidence']:.2%}")
+
+Export Configuration:
+  config = router.export_routing_config(include_secrets=False)
+  json.dump(config, open('routing_config.json', 'w'))
+
+JavaScript API QUICK REFERENCE
+================================================================================
+
+Initialize Router:
+  const router = new C2FingerprintRouter();
+
+Register Server:
+  const serverId = router.registerServer(
+      'Primary',
+      'c2.example.com',
+      443,
+      'https',
+      'US-EAST'
+  );
+
+Create Fingerprint Component:
+  const component = new FingerprintComponent(
+      FingerprintType.SYSTEM_CONFIG,
+      'Windows-10-x64',
+      2.0
+  );
+
+Register Beacon Fingerprint:
+  const fingerprint = router.registerBeaconFingerprint(
+      'beacon-001',
+      [component1, component2, ...],
+      serverId  // optional
+  );
+
+Create Routing Rule:
+  const ruleId = router.createRoutingRule(
+      'Windows Systems',
+      'Route Windows to primary',
+      { system_config: 'Windows.*' },
+      [serverId1, serverId2],
+      {
+          routingStrategy: RoutingStrategy.LOAD_BALANCED,
+          matchingAlgorithm: MatchingAlgorithm.FUZZY,
+          matchThreshold: 0.8,
+          priority: 10
+      }
+  );
+
+Route Beacon:
+  const decision = router.routeBeacon('beacon-001');
+  console.log(decision.selectedServer.getUri());
+
+Update Fingerprint:
+  const updatedFp = router.updateBeaconFingerprint(
+      'beacon-001',
+      [component1, component2, ...]
+  );
+
+Clear Beacon:
+  router.clearBeacon('beacon-001');
+
+Get Statistics:
+  const stats = router.getRoutingStats();
+  console.log(stats.totalBeacons);
+  console.log(stats.averageConfidence);
+
+Export Configuration:
+  const config = router.exportRoutingConfig();
+
+Listen to Events:
+  router.on('server:registered', ({ server }) => {...});
+  router.on('beacon:registered', ({ fingerprint }) => {...});
+  router.on('beacon:routed', (decision) => {...});
+  router.on('beacon:updated', ({ updatedFp }) => {...});
+  router.on('beacon:cleared', ({ beaconId }) => {...});
+
+ROUTING DECISION STRUCTURE
+================================================================================
+
+RoutingDecision contains:
+  beacon_id              Beacon identifier
+  selected_server        Selected C2Server object
+  decision_timestamp     When decision was made
+  confidence_score       Match confidence (0-1)
+  matching_rule_id       Which rule was matched
+  alternative_servers    List of fallback servers
+  routing_path           Decision trace
+
+COMMON PATTERNS
+================================================================================
+
+Pattern: Route by OS
+  fingerprint_pattern={'system_config': 'Windows.*'}
+  # or
+  fingerprint_pattern={'system_config': 'Linux.*'}
+
+Pattern: Route by Capacity
+  fingerprint_pattern={'system_config': '.*16GB.*'}
+
+Pattern: Load Balancing
+  target_servers=[server1, server2, server3]
+  routing_strategy=RoutingStrategy.LOAD_BALANCED
+
+Pattern: Failover
+  target_servers=[primary, secondary, tertiary]
+  routing_strategy=RoutingStrategy.FAILOVER
+
+Pattern: Geographic Distribution
+  target_servers=[us_server, eu_server, asia_server]
+  routing_strategy=RoutingStrategy.GEOLOCATION
+
+Pattern: Performance Optimized
+  target_servers=[fast_server1, fast_server2]
+  routing_strategy=RoutingStrategy.LATENCY_OPTIMIZED
+
+TROUBLESHOOTING CHECKLIST
+================================================================================
+
+Beacon not routing?
+  ☐ Check fingerprint registered: fingerprints[beacon_id]
+  ☐ Verify rule enabled: rule.is_enabled
+  ☐ Check target servers: rule.target_servers
+  ☐ Test rule matching: match_fingerprint_to_rule()
+  ☐ Verify server active: server.is_active
+
+Low confidence scores?
+  ☐ Check SYSTEM_CONFIG component present
+  ☐ Verify component weights (should sum 5-20)
+  ☐ Try fuzzy matching instead of exact
+  ☐ Lower match_threshold
+  ☐ Review pattern regex
+
+Server not getting beacons?
+  ☐ Check server.is_active = True
+  ☐ Verify capacity: server.getLoadPercent() < 100%
+  ☐ Confirm server in rule targets
+  ☐ Check rule priority vs other rules
+  ☐ Test with force_server_id parameter
+
+PERFORMANCE TUNING
+================================================================================
+
+Optimize Routing:
+  • Use fewer, more specific rules
+  • Order rules by priority (highest first)
+  • Use exact matching for common cases
+  • Use fuzzy matching only when needed
+  • Keep variance_tolerance low (< 0.2)
+
+Optimize Capacity:
+  • Monitor server.getLoadPercent()
+  • Adjust server.beaconLimit as needed
+  • Use LOAD_BALANCED strategy
+  • Implement server pooling
+  • Add servers before reaching 80% capacity
+
+Optimize Memory:
+  • Regularly clear old beacons: clear_beacon()
+  • Limit routing_history size
+  • Archive old statistics
+  • Clean up fingerprint_cache
+  • Monitor total memory usage
+
+Optimize Latency:
+  • Use DIRECT or ROUND_ROBIN strategies
+  • Avoid complex pattern matching
+  • Pre-compile regex patterns
+  • Cache matching results
+  • Use LATENCY_OPTIMIZED strategy
+
+SECURITY BEST PRACTICES
+================================================================================
+
+Fingerprints:
+  ✓ Use HMAC signatures: create_signature()
+  ✓ Verify signatures: verify_signature()
+  ✓ Validate components: validate_component_consistency()
+  ✓ Detect tampering: detect_tampering()
+  ✓ Require SYSTEM_CONFIG component
+
+Servers:
+  ✓ Use TLS/HTTPS
+  ✓ Implement certificate pinning
+  ✓ Verify server identities
+  ✓ Encrypt configuration
+  ✓ Implement access controls
+
+Rules:
+  ✓ Restrict rule creation
+  ✓ Audit rule changes
+  ✓ Review rules regularly
+  ✓ Use strong patterns
+  ✓ Log all rule matches
+
+Beacons:
+  ✓ Require fingerprint validation
+  ✓ Implement beacon authentication
+  ✓ Rate limit fingerprint changes
+  ✓ Monitor for anomalies
+  ✓ Log all routing decisions
+
+MONITORING METRICS
+================================================================================
+
+Server Metrics:
+  • active_beacons: Number of connected beacons
+  • capacity_percent: Load percentage
+  • latency_ms: Average response time
+  • statsLastUpdated: Last metrics update
+
+Router Metrics:
+  • total_beacons: Total registered beacons
+  • total_servers: Registered servers
+  • total_routing_rules: Active rules
+  • routing_decisions: Total decisions made
+  • average_confidence: Average match confidence
+
+Decision Metrics:
+  • confidence_score: Match confidence (0-1)
+  • routing_path: Decision trace
+  • matching_rule_id: Which rule matched
+  • alternative_servers: Failover options
+
+FILE LOCATIONS
+================================================================================
+
+Python Implementation:
+  /home/user/sc-generator/c2_fingerprint_router.py
+
+JavaScript Implementation:
+  /home/user/sc-generator/src/c2-fingerprint-router.js
+
+Test Suite:
+  /home/user/sc-generator/src/c2-fingerprint-router.test.js
+
+Full Documentation:
+  /home/user/sc-generator/C2_FINGERPRINT_ROUTING_GUIDE.md
+
+Implementation Summary:
+  /home/user/sc-generator/C2_ROUTING_IMPLEMENTATION_SUMMARY.txt
+
+Quick Reference (this file):
+  /home/user/sc-generator/C2_ROUTING_QUICK_REFERENCE.txt
+
+================================================================================
+END OF QUICK REFERENCE
+================================================================================
