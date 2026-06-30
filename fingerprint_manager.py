@@ -83,11 +83,18 @@ class FingerprintManager:
             json.dump(data, f, indent=2)
 
     def _save_proxies(self):
-        """Save proxies to disk"""
+        """Save proxies to disk with restricted permissions (0o600)"""
         px_file = os.path.join(self.config_dir, 'proxies.json')
         data = [asdict(px) for px in self.proxies.values()]
-        with open(px_file, 'w') as f:
-            json.dump(data, f, indent=2)
+        # Use os.open with explicit mode to ensure the file is never
+        # world-readable, even momentarily (avoids race with open+chmod).
+        fd = os.open(px_file, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+        try:
+            with os.fdopen(fd, 'w') as f:
+                json.dump(data, f, indent=2)
+        except Exception:
+            os.close(fd)
+            raise
 
     # Class-level constant for default fingerprint definitions
     _DEFAULT_FINGERPRINTS = [
