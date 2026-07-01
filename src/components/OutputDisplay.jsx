@@ -44,15 +44,17 @@ export default function OutputDisplay({ payload, loading }) {
     if (!payload?.id) return;
     try {
       const response = await axios.get(`${API_BASE}/preview/${payload.id}`);
-      setPreviewContent(response.data.content.substring(0, 500) + '...');
+      setPreviewContent(response.data.content ? response.data.content.substring(0, 500) + '...' : 'No preview available');
     } catch (err) {
       showStatus('Preview failed.', 'error');
     }
   };
 
-  const sizeKB = payload ? payload.size / 1024 : 0;
+  const content = payload?.content || '';
+  const sizeKB = payload?.size ? payload.size / 1024 : 0;
   const sizeStatus = sizeKB < 20 ? 'success' : sizeKB < 30 ? 'warning' : 'danger';
   const sizeLabel = sizeKB < 20 ? 'Optimal' : sizeKB < 30 ? 'Good' : 'Large';
+  const lines = content ? content.split('\n') : [];
 
   return (
     <div className="output-container">
@@ -127,7 +129,7 @@ export default function OutputDisplay({ payload, loading }) {
           <div className="stat-grid">
             <div className="stat-card">
               <div className="stat-label">Technique</div>
-              <div className="stat-value">{payload.technique?.toUpperCase()}</div>
+              <div className="stat-value">{(payload.technique || 'N/A').toUpperCase()}</div>
             </div>
             <div className="stat-card">
               <div className="stat-label">Payload Size</div>
@@ -143,28 +145,29 @@ export default function OutputDisplay({ payload, loading }) {
             </div>
           </div>
 
-          <div style={{
-            fontSize: '0.75rem',
-            color: 'var(--text-muted)',
-            marginBottom: '0.5rem',
-            fontWeight: 500,
-          }}>
-            Code Preview (first 30 lines)
-          </div>
-
-          <div className="code-preview">
-            {payload.content
-              .split('\n')
-              .slice(0, 30)
-              .map((line, idx) => (
-                <div key={idx}>{line || ' '}</div>
-              ))}
-            {payload.content.split('\n').length > 30 && (
-              <div style={{ color: 'var(--text-muted)', opacity: 0.5, marginTop: '0.5rem' }}>
-                ... ({payload.content.split('\n').length - 30} more lines)
+          {content && (
+            <>
+              <div style={{
+                fontSize: '0.75rem',
+                color: 'var(--text-muted)',
+                marginBottom: '0.5rem',
+                fontWeight: 500,
+              }}>
+                Code Preview (first 30 lines)
               </div>
-            )}
-          </div>
+
+              <div className="code-preview">
+                {lines.slice(0, 30).map((line, idx) => (
+                  <div key={idx}>{line || ' '}</div>
+                ))}
+                {lines.length > 30 && (
+                  <div style={{ color: 'var(--text-muted)', opacity: 0.5, marginTop: '0.5rem' }}>
+                    ... ({lines.length - 30} more lines)
+                  </div>
+                )}
+              </div>
+            </>
+          )}
         </>
       )}
     </div>

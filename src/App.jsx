@@ -43,6 +43,13 @@ export default function App() {
     fetchProxies();
   }, []);
 
+  const handleModeChange = (newMode) => {
+    setMode(newMode);
+    setPayload(null);
+    setError(null);
+    setLoading(false);
+  };
+
   const fetchTechniques = async () => {
     try {
       const response = await axios.get(`${API_BASE}/techniques`);
@@ -173,7 +180,7 @@ export default function App() {
             <button
               key={id}
               className={`mode-tab ${mode === id ? 'active' : ''}`}
-              onClick={() => setMode(id)}
+              onClick={() => handleModeChange(id)}
             >
               <ModeIcon size={16} />
               {label}
