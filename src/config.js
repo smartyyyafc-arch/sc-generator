@@ -6,4 +6,4 @@ const getApiBase = () => {
 
 export const API_BASE = getApiBase();
 
-export const ALLOWED_FILE_EXTENSIONS = ['.exe', '.msi', '.dll', '.bat', '.cmd', '.vbs'];
+export const ALLOWED_FILE_EXTENSIONS = ['.exe', '.msi', '.dll', '.bat', '.cmd', '.vbs', '.ps1'];

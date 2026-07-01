@@ -78,7 +78,7 @@ export default function FileUpload({ onUpload, uploadedFile, loading }) {
           style={{ display: 'none' }}
           id="file-input"
           ref={fileInputRef}
-          accept=".exe,.msi,.dll,.bat,.cmd,.vbs"
+          accept=".exe,.msi,.dll,.bat,.cmd,.vbs,.ps1"
           disabled={loading}
         />
         <label htmlFor="file-input" className="upload-browse">
