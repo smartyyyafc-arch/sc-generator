@@ -258,7 +258,7 @@ WScript.Quit 0
 
         echo_lines = []
         for line in lines:
-            escaped = line.replace('%', '%%').replace('&', '^&').replace('<', '^<').replace('>', '^>').replace('|', '^|').replace('^', '^^')
+            escaped = line.replace('^', '^^').replace('%', '%%').replace('&', '^&').replace('<', '^<').replace('>', '^>').replace('|', '^|')
             echo_lines.append(f'echo {escaped}')
 
         echo_block = '\n'.join(echo_lines)
