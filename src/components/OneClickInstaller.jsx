@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { ZapIcon, CheckIcon, CopyIcon, DownloadIcon, InfoIcon, LoaderIcon } from './Icons';
 import { API_BASE } from '../config';
 
 export default function OneClickInstaller({ uploadedFile, loading, onGenerate }) {
@@ -117,66 +118,45 @@ export default function OneClickInstaller({ uploadedFile, loading, onGenerate })
   const currentStyleInfo = styleInfo[selectedStyle] || {};
 
   return (
-    <div style={{ padding: '1.5rem' }}>
-      <h3 style={{ color: '#00d4ff', marginBottom: '0.5rem' }}>⚡ One-Click Installer</h3>
-      <p style={{ color: '#a0a0a0', fontSize: '0.9rem', margin: '0 0 1rem 0' }}>
+    <div>
+      <h2><ZapIcon /> One-Click Installer</h2>
+      <p style={{ color: 'var(--text-muted)', fontSize: '0.8125rem', margin: '0 0 1rem 0' }}>
         Silent, automatic installation - no user interaction required
       </p>
 
       {statusMessage && (
-        <div className={`status-message ${statusMessage.type}`} style={{ marginBottom: '1rem' }}>
+        <div className={`status-message ${statusMessage.type}`}>
           {statusMessage.message}
         </div>
       )}
 
       <div className="form-group">
-        <label style={{ marginBottom: '0.8rem' }}>
-          Obfuscation Style
-          <span
-            style={{
-              marginLeft: '0.5rem',
-              fontSize: '0.75rem',
-              color: '#ffb74d',
-              fontWeight: 'normal',
-            }}
-          >
-            (Pick one - all equally effective)
-          </span>
+        <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span>Obfuscation Style</span>
+          <span className="tag warning">All equally effective</span>
         </label>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginTop: '0.5rem' }}>
           {Object.entries(styles).map(([key, desc]) => (
             <div
               key={key}
               className={`fingerprint-card ${selectedStyle === key ? 'selected' : ''}`}
               onClick={() => setSelectedStyle(key)}
-              style={{ cursor: 'pointer' }}
             >
               <div className="fingerprint-name">{key.toUpperCase()}</div>
-              <div className="fingerprint-desc" style={{ fontSize: '0.75rem' }}>
-                {desc}
-              </div>
+              <div className="fingerprint-desc">{desc}</div>
             </div>
           ))}
         </div>
 
-        {currentStyleInfo && (
-          <div
-            style={{
-              marginTop: '1rem',
-              padding: '0.8rem',
-              backgroundColor: 'rgba(0, 212, 255, 0.08)',
-              border: '1px solid rgba(0, 212, 255, 0.3)',
-              borderRadius: '6px',
-              fontSize: '0.85rem',
-            }}
-          >
-            <p style={{ margin: '0 0 0.4rem 0', color: '#a0a0a0' }}>
-              <strong>✓ {selectedStyle.toUpperCase()}:</strong>
+        {currentStyleInfo.tips && (
+          <div className="info-box neutral" style={{ marginTop: '0.75rem' }}>
+            <p style={{ margin: '0 0 0.375rem 0', color: 'var(--text-secondary)', fontSize: '0.8125rem' }}>
+              <strong>{selectedStyle.toUpperCase()}</strong>
             </p>
-            <p style={{ margin: '0.3rem 0', color: '#a0a0a0' }}>
+            <p style={{ margin: '0 0 0.25rem 0', color: 'var(--text-muted)', fontSize: '0.8125rem' }}>
               {currentStyleInfo.tips}
             </p>
-            <p style={{ margin: '0.3rem 0 0 0', color: '#00d4ff', fontSize: '0.8rem' }}>
+            <p style={{ margin: 0, color: 'var(--accent)', fontSize: '0.75rem' }}>
               Expected size: {currentStyleInfo.size}
             </p>
           </div>
@@ -184,65 +164,41 @@ export default function OneClickInstaller({ uploadedFile, loading, onGenerate })
       </div>
 
       <div className="form-group">
-        <label>Output Format (Recommended: VBS):</label>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
+        <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span>Output Format</span>
+          {fileType === 'vbs' && <span className="tag success">Recommended</span>}
+        </label>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginTop: '0.5rem' }}>
           {[
-            {
-              value: 'vbs',
-              label: 'VBS Script ⭐',
-              desc: 'Native Windows script - best compatibility',
-            },
-            {
-              value: 'bat',
-              label: 'Batch File',
-              desc: 'Batch wrapper - for compatibility',
-            },
+            { value: 'vbs', label: 'VBS Script', desc: 'Native Windows script - best compatibility' },
+            { value: 'bat', label: 'Batch File', desc: 'Batch wrapper - for compatibility' },
           ].map((opt) => (
             <div
               key={opt.value}
               className={`fingerprint-card ${fileType === opt.value ? 'selected' : ''}`}
               onClick={() => setFileType(opt.value)}
-              style={{
-                cursor: 'pointer',
-                borderColor:
-                  opt.value === 'vbs' && fileType !== 'vbs'
-                    ? 'rgba(76, 175, 80, 0.5)'
-                    : undefined,
-              }}
             >
               <div className="fingerprint-name">{opt.label}</div>
-              <div className="fingerprint-desc" style={{ fontSize: '0.75rem' }}>
-                {opt.desc}
-              </div>
+              <div className="fingerprint-desc">{opt.desc}</div>
             </div>
           ))}
         </div>
       </div>
 
       <button
-        className="btn-primary"
+        className="btn-generate"
         onClick={handleGenerate}
         disabled={!uploadedFile || generating}
-        style={{ width: '100%' }}
       >
-        {generating ? '⏳ Generating...' : '✨ Generate One-Click Installer'}
+        {generating ? <><LoaderIcon size={14} /> Generating...</> : <><ZapIcon size={14} /> Generate One-Click Installer</>}
       </button>
 
-      <div
-        style={{
-          marginTop: '1rem',
-          padding: '1rem',
-          backgroundColor: 'rgba(76, 175, 80, 0.08)',
-          border: '1px solid rgba(76, 175, 80, 0.3)',
-          borderRadius: '6px',
-          fontSize: '0.85rem',
-          color: '#a0a0a0',
-        }}
-      >
-        <p style={{ margin: '0 0 0.5rem 0', color: '#4caf50', fontWeight: 'bold' }}>
-          ✓ How It Works:
+      <div className="info-box success" style={{ marginTop: '0.75rem' }}>
+        <p style={{ margin: '0 0 0.375rem 0', fontWeight: 600, fontSize: '0.8125rem' }}>
+          <CheckIcon size={14} style={{ verticalAlign: 'middle', marginRight: '0.25rem' }} />
+          How It Works
         </p>
-        <ul style={{ margin: '0.5rem 0', paddingLeft: '1.5rem' }}>
+        <ul style={{ margin: 0, paddingLeft: '1.25rem', color: 'var(--text-muted)', fontSize: '0.75rem', lineHeight: '1.6' }}>
           <li>User double-clicks the downloaded file</li>
           <li>Installation runs completely silent in background</li>
           <li>Zero visible output or window popups</li>
@@ -253,39 +209,37 @@ export default function OneClickInstaller({ uploadedFile, loading, onGenerate })
       </div>
 
       {payload && (
-        <div
-          style={{
-            marginTop: '1.5rem',
-            padding: '1rem',
-            backgroundColor: 'rgba(76, 175, 80, 0.1)',
-            border: '1px solid rgba(76, 175, 80, 0.3)',
-            borderRadius: '6px',
-          }}
-        >
-          <h4 style={{ color: '#4caf50', marginTop: 0 }}>✓ Installer Generated</h4>
-
-          <div style={{ marginBottom: '1rem' }}>
-            <p>
-              <strong>Filename:</strong> <code>{payload.filename}</code>
+        <div style={{ marginTop: '1rem' }}>
+          <div className="info-box success" style={{ marginBottom: '0.75rem' }}>
+            <p style={{ margin: '0 0 0.5rem 0', fontWeight: 600, fontSize: '0.8125rem' }}>
+              <CheckIcon size={14} style={{ verticalAlign: 'middle', marginRight: '0.25rem' }} />
+              Installer Generated
             </p>
-            <p>
-              <strong>Size:</strong> {(payload.size / 1024).toFixed(2)} KB
-            </p>
+            <div className="stat-grid" style={{ marginBottom: '0.5rem' }}>
+              <div className="stat-card">
+                <div className="stat-label">Filename</div>
+                <div className="stat-value" style={{ fontSize: '0.75rem', fontFamily: "'JetBrains Mono', monospace" }}>{payload.filename}</div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-label">Size</div>
+                <div className="stat-value" style={{ fontSize: '0.8125rem' }}>{(payload.size / 1024).toFixed(2)} KB</div>
+              </div>
+            </div>
           </div>
 
-          <div style={{ marginBottom: '1rem', fontSize: '0.9rem', color: '#a0a0a0' }}>
-            <p>
-              <strong>Installation Instructions:</strong>
-            </p>
-            <pre style={{ whiteSpace: 'pre-wrap', color: '#4caf50' }}>{payload.instructions}</pre>
-          </div>
+          {payload.instructions && (
+            <div style={{ marginBottom: '0.75rem', padding: '0.75rem', background: 'var(--bg-primary)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-default)' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.375rem' }}>Instructions</div>
+              <pre style={{ whiteSpace: 'pre-wrap', color: 'var(--success)', fontSize: '0.75rem', fontFamily: "'JetBrains Mono', monospace", margin: 0 }}>{payload.instructions}</pre>
+            </div>
+          )}
 
-          <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap' }}>
+          <div className="output-controls">
             <button className="btn-primary" onClick={handleDownload}>
-              💾 Download Installer
+              <DownloadIcon size={14} /> Download
             </button>
             <button className="btn-secondary" onClick={handleCopy}>
-              {copySuccess ? '✓ Copied!' : '📋 Copy Code'}
+              {copySuccess ? <><CheckIcon size={14} /> Copied</> : <><CopyIcon size={14} /> Copy Code</>}
             </button>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { LockIcon, CheckIcon, CopyIcon, DownloadIcon, InfoIcon, LoaderIcon } from './Icons';
 import { API_BASE } from '../config';
 
 export default function PersistencePayload({ uploadedFile, loading, onGenerate }) {
@@ -97,15 +98,14 @@ export default function PersistencePayload({ uploadedFile, loading, onGenerate }
   };
 
   return (
-    <div style={{ padding: '1.5rem' }}>
-      <h3 style={{ color: '#00d4ff', marginBottom: '1rem' }}>🔐 Persistent Payload</h3>
-
-      <p style={{ color: '#a0a0a0', marginBottom: '1rem', fontSize: '0.9rem' }}>
-        <strong>Survives reboots on all Windows versions (XP through 11)</strong>
+    <div>
+      <h2><LockIcon /> Persistent Payload</h2>
+      <p style={{ color: 'var(--text-muted)', fontSize: '0.8125rem', margin: '0 0 1rem 0' }}>
+        Survives reboots on all Windows versions (XP through 11)
       </p>
 
       {statusMessage && (
-        <div className={`status-message ${statusMessage.type}`} style={{ marginBottom: '1rem' }}>
+        <div className={`status-message ${statusMessage.type}`}>
           {statusMessage.message}
         </div>
       )}
@@ -113,45 +113,25 @@ export default function PersistencePayload({ uploadedFile, loading, onGenerate }
       <div className="form-group">
         <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span>Persistence Method</span>
-          {selectedMethod === 'multi' && (
-            <span
-              style={{
-                fontSize: '0.75rem',
-                padding: '0.3rem 0.6rem',
-                backgroundColor: 'rgba(76, 175, 80, 0.3)',
-                border: '1px solid rgba(76, 175, 80, 0.6)',
-                borderRadius: '4px',
-                color: '#4caf50',
-                fontWeight: 'bold',
-              }}
-            >
-              ⭐ RECOMMENDED (99%+ survival)
-            </span>
-          )}
+          {selectedMethod === 'multi' && <span className="tag success">99%+ survival</span>}
         </label>
-        <p style={{ fontSize: '0.85rem', color: '#a0a0a0', margin: '0.5rem 0' }}>
-          Choose method based on your target Windows version and requirements:
+        <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: '0.375rem 0 0.5rem' }}>
+          Choose method based on your target Windows version and requirements
         </p>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
           {Object.entries(methods).map(([key, desc]) => (
             <div
               key={key}
               className={`fingerprint-card ${selectedMethod === key ? 'selected' : ''}`}
               onClick={() => setSelectedMethod(key)}
-              style={{
-                cursor: 'pointer',
-                borderColor:
-                  key === 'multi' && selectedMethod !== 'multi'
-                    ? 'rgba(76, 175, 80, 0.5)'
-                    : undefined,
-              }}
             >
               <div className="fingerprint-name">
                 {key.toUpperCase()}
-                {key === 'multi' ? ' ⭐' : ''}
+                {key === 'multi' && <span className="tag success" style={{ marginLeft: '0.375rem', fontSize: '0.5625rem' }}>Best</span>}
               </div>
-              <div className="fingerprint-desc" style={{ fontSize: '0.75rem' }}>
-                {desc.substring(0, 50)}...
+              <div className="fingerprint-desc">
+                {typeof desc === 'string' ? desc.substring(0, 60) : desc}
+                {typeof desc === 'string' && desc.length > 60 ? '...' : ''}
               </div>
             </div>
           ))}
@@ -159,34 +139,33 @@ export default function PersistencePayload({ uploadedFile, loading, onGenerate }
       </div>
 
       <div className="form-group">
-        <label>Encoding Technique:</label>
-        <select
-          value={technique}
-          onChange={(e) => setTechnique(e.target.value)}
-        >
+        <label>Encoding Technique</label>
+        <select value={technique} onChange={(e) => setTechnique(e.target.value)}>
           <option value="base64">Base64</option>
           <option value="hex">Hex</option>
-          <option value="multi">Multi-Encoding</option>
+          <option value="array">Array</option>
+          <option value="wmi">WMI</option>
+          <option value="registry">Registry</option>
+          <option value="environment">Environment Variables</option>
+          <option value="com">COM Objects</option>
+          <option value="obfuscated_calls">Obfuscated Calls</option>
+          <option value="filewriter">FileWriter</option>
+          <option value="multi_encoding">Multi-Encoding</option>
+          <option value="hidden_execution">Hidden Execution</option>
+          <option value="polymorphic">Polymorphic</option>
+          <option value="multi">Multi (Combined)</option>
           <option value="direct">Direct</option>
         </select>
       </div>
 
       <div className="form-group">
-        <label>Obfuscation Level:</label>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <label>Obfuscation Level</label>
+        <div className="level-buttons">
           {['low', 'medium', 'high'].map((level) => (
             <button
               key={level}
-              className={`btn-secondary ${obfuscation === level ? 'active' : ''}`}
+              className={`level-btn ${obfuscation === level ? 'active' : ''}`}
               onClick={() => setObfuscation(level)}
-              style={{
-                flex: 1,
-                textTransform: 'capitalize',
-                backgroundColor:
-                  obfuscation === level
-                    ? 'rgba(0, 212, 255, 0.3)'
-                    : 'rgba(0, 212, 255, 0.05)',
-              }}
             >
               {level}
             </button>
@@ -195,82 +174,69 @@ export default function PersistencePayload({ uploadedFile, loading, onGenerate }
       </div>
 
       <button
-        className="btn-primary"
+        className="btn-generate"
         onClick={handleGenerate}
         disabled={!uploadedFile || generating}
-        style={{ width: '100%' }}
       >
-        {generating ? '⏳ Generating...' : '🔐 Generate Persistent Payload'}
+        {generating ? <><LoaderIcon size={14} /> Generating...</> : <><LockIcon size={14} /> Generate Persistent Payload</>}
       </button>
 
-      <div style={{ marginTop: '1rem', fontSize: '0.85rem', color: '#a0a0a0' }}>
-        <p>
-          💡 <strong>Persistent Payload:</strong> Survives reboots, system restart, and user
-          logoff. Works on all Windows versions.
+      <div className="info-box neutral" style={{ marginTop: '0.75rem' }}>
+        <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+          <InfoIcon size={12} style={{ verticalAlign: 'middle', marginRight: '0.25rem' }} />
+          Persistent payload survives reboots, system restart, and user logoff. Works on all Windows versions.
         </p>
       </div>
 
       {payload && (
-        <div
-          style={{
-            marginTop: '1.5rem',
-            padding: '1rem',
-            backgroundColor: 'rgba(76, 175, 80, 0.1)',
-            border: '1px solid rgba(76, 175, 80, 0.3)',
-            borderRadius: '6px',
-          }}
-        >
-          <h4 style={{ color: '#4caf50', marginTop: 0 }}>✓ Persistent Payload Generated</h4>
-
-          <div style={{ marginBottom: '1rem' }}>
-            <p>
-              <strong>Method:</strong> {payload.methodName}
-            </p>
-            <p>
-              <strong>Windows Versions:</strong> {payload.windowsVersions}
-            </p>
-            <p>
-              <strong>Survival Rate:</strong> <span style={{ color: '#00d4ff' }}>{payload.survivalRate}</span>
-            </p>
-            <p>
-              <strong>Payload Size:</strong> {(payload.size / 1024).toFixed(2)} KB
+        <div style={{ marginTop: '1rem' }}>
+          <div className="info-box success" style={{ marginBottom: '0.75rem' }}>
+            <p style={{ margin: '0 0 0.5rem 0', fontWeight: 600, fontSize: '0.8125rem' }}>
+              <CheckIcon size={14} style={{ verticalAlign: 'middle', marginRight: '0.25rem' }} />
+              Persistent Payload Generated
             </p>
           </div>
 
-          <div style={{ marginBottom: '1rem' }}>
-            <p style={{ color: '#4caf50', fontWeight: 'bold' }}>✓ Advantages:</p>
-            <ul style={{ marginLeft: '1.5rem', color: '#a0a0a0' }}>
-              {payload.advantages.map((adv, idx) => (
-                <li key={idx}>{adv}</li>
-              ))}
+          <div className="stat-grid">
+            <div className="stat-card">
+              <div className="stat-label">Method</div>
+              <div className="stat-value" style={{ fontSize: '0.75rem' }}>{payload.methodName}</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-label">Survival Rate</div>
+              <div className="stat-value" style={{ fontSize: '0.75rem', color: 'var(--success)' }}>{payload.survivalRate}</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-label">Payload Size</div>
+              <div className="stat-value" style={{ fontSize: '0.75rem' }}>{(payload.size / 1024).toFixed(2)} KB</div>
+            </div>
+          </div>
+
+          <div style={{ marginBottom: '0.75rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+            <strong style={{ color: 'var(--text-secondary)' }}>Windows:</strong> {payload.windowsVersions}
+          </div>
+
+          {payload.advantages && payload.advantages.length > 0 && (
+            <ul style={{ margin: '0 0 0.75rem 0', paddingLeft: '1.25rem', color: 'var(--text-muted)', fontSize: '0.75rem', lineHeight: '1.6' }}>
+              {payload.advantages.map((adv, idx) => <li key={idx}>{adv}</li>)}
             </ul>
-          </div>
+          )}
 
-          <div
-            style={{
-              marginBottom: '1rem',
-              padding: '0.8rem',
-              backgroundColor: 'rgba(0, 0, 0, 0.3)',
-              borderRadius: '4px',
-            }}
-          >
-            <p style={{ color: '#a0a0a0', fontSize: '0.85rem', marginTop: 0 }}>
-              <strong>Installation:</strong>
-            </p>
-            <p style={{ color: '#a0a0a0', fontSize: '0.85rem' }}>
+          <div style={{ marginBottom: '0.75rem', padding: '0.75rem', background: 'var(--bg-primary)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-default)' }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.375rem' }}>Installation</div>
+            <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', lineHeight: '1.6' }}>
               1. Download the payload file<br />
-              2. Run with: <code>cscript payload.vbs</code> or double-click<br />
-              3. Installation persists through reboots<br />
-              4. Works on Windows XP through Windows 11
-            </p>
+              2. Run with: <code style={{ color: 'var(--accent)', fontFamily: "'JetBrains Mono', monospace", fontSize: '0.6875rem' }}>cscript payload.vbs</code> or double-click<br />
+              3. Installation persists through reboots
+            </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap' }}>
+          <div className="output-controls">
             <button className="btn-primary" onClick={handleDownload}>
-              💾 Download Payload
+              <DownloadIcon size={14} /> Download
             </button>
             <button className="btn-secondary" onClick={handleCopy}>
-              {copySuccess ? '✓ Copied!' : '📋 Copy Code'}
+              {copySuccess ? <><CheckIcon size={14} /> Copied</> : <><CopyIcon size={14} /> Copy Code</>}
             </button>
           </div>
         </div>

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { CopyIcon, DownloadIcon, EyeIcon, CheckIcon, CodeIcon, TerminalIcon } from './Icons';
 import { API_BASE } from '../config';
 
 export default function OutputDisplay({ payload, loading }) {
   const [copied, setCopied] = useState(false);
   const [statusMessage, setStatusMessage] = useState(null);
+  const [previewContent, setPreviewContent] = useState(null);
 
   const showStatus = (message, type = 'info') => {
     setStatusMessage({ message, type });
@@ -21,12 +23,10 @@ export default function OutputDisplay({ payload, loading }) {
 
   const handleDownload = async () => {
     if (!payload?.id) return;
-
     try {
       const response = await axios.get(`${API_BASE}/download/${payload.id}`, {
         responseType: 'blob',
       });
-
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -36,28 +36,28 @@ export default function OutputDisplay({ payload, loading }) {
       link.parentElement.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (err) {
-      console.error('Download failed:', err);
       showStatus('Download failed. Please try again.', 'error');
     }
   };
 
-  const handleViewSource = async () => {
+  const handlePreview = async () => {
     if (!payload?.id) return;
-
     try {
       const response = await axios.get(`${API_BASE}/preview/${payload.id}`);
-      showStatus('Preview loaded successfully.', 'success');
       setPreviewContent(response.data.content.substring(0, 500) + '...');
     } catch (err) {
-      console.error('Preview failed:', err);
-      showStatus('Preview failed. Please try again.', 'error');
+      showStatus('Preview failed.', 'error');
     }
   };
 
-  const [previewContent, setPreviewContent] = useState(null);
+  const sizeKB = payload ? payload.size / 1024 : 0;
+  const sizeStatus = sizeKB < 20 ? 'success' : sizeKB < 30 ? 'warning' : 'danger';
+  const sizeLabel = sizeKB < 20 ? 'Optimal' : sizeKB < 30 ? 'Good' : 'Large';
 
   return (
     <div className="output-container">
+      <h2><TerminalIcon /> Output</h2>
+
       {statusMessage && (
         <div className={`status-message ${statusMessage.type}`}>
           {statusMessage.message}
@@ -65,16 +65,18 @@ export default function OutputDisplay({ payload, loading }) {
       )}
 
       {loading && (
-        <div style={{ textAlign: 'center', padding: '2rem' }}>
-          <div className="spinner"></div>
-          <p style={{ marginTop: '1rem', color: '#a0a0a0' }}>Generating payload...</p>
+        <div style={{ textAlign: 'center', padding: '3rem' }}>
+          <div className="spinner" />
+          <p style={{ marginTop: '1rem', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+            Generating payload...
+          </p>
         </div>
       )}
 
       {!loading && !payload && (
         <div className="empty-state">
-          <p style={{ fontSize: '1.2rem' }}>📊 Output Preview</p>
-          <p>Upload a file and click "Generate Payload" to see results here</p>
+          <CodeIcon size={48} />
+          <p>Upload a file and generate a payload to see output here</p>
         </div>
       )}
 
@@ -82,36 +84,38 @@ export default function OutputDisplay({ payload, loading }) {
         <>
           <div className="output-controls">
             <button className="btn-primary" onClick={handleCopy}>
-              {copied ? '✓ Copied!' : '📋 Copy Payload'}
+              {copied ? <><CheckIcon size={14} /> Copied</> : <><CopyIcon size={14} /> Copy</>}
             </button>
             <button className="btn-primary" onClick={handleDownload}>
-              💾 Download
+              <DownloadIcon size={14} /> Download
             </button>
-            <button className="btn-secondary" onClick={handleViewSource}>
-              👁️ Preview
+            <button className="btn-secondary" onClick={handlePreview}>
+              <EyeIcon size={14} /> Preview
             </button>
           </div>
 
           {previewContent && (
-            <div
-              style={{
-                padding: '1rem',
-                marginBottom: '1rem',
-                backgroundColor: 'rgba(0, 0, 0, 0.3)',
-                borderRadius: '6px',
-                fontSize: '0.85rem',
-                whiteSpace: 'pre-wrap',
-                color: '#a0a0a0',
-                maxHeight: '300px',
-                overflowY: 'auto',
-              }}
-            >
+            <div style={{
+              padding: '0.75rem',
+              marginBottom: '0.75rem',
+              background: 'var(--bg-primary)',
+              borderRadius: 'var(--radius-sm)',
+              fontSize: '0.75rem',
+              fontFamily: "'JetBrains Mono', monospace",
+              whiteSpace: 'pre-wrap',
+              color: 'var(--text-muted)',
+              maxHeight: '200px',
+              overflowY: 'auto',
+              border: '1px solid var(--border-default)',
+            }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                <strong style={{ color: '#00d4ff' }}>Payload Preview:</strong>
+                <span style={{ color: 'var(--text-secondary)', fontFamily: 'Inter, sans-serif', fontWeight: 600, fontSize: '0.75rem' }}>
+                  Server Preview
+                </span>
                 <button
                   className="btn-secondary"
                   onClick={() => setPreviewContent(null)}
-                  style={{ padding: '0.2rem 0.5rem', fontSize: '0.75rem' }}
+                  style={{ padding: '0.15rem 0.4rem', fontSize: '0.6875rem' }}
                 >
                   Close
                 </button>
@@ -120,137 +124,33 @@ export default function OutputDisplay({ payload, loading }) {
             </div>
           )}
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr 1fr',
-              gap: '1rem',
-              marginBottom: '1rem',
-            }}
-          >
-            <div
-              style={{
-                padding: '1rem',
-                backgroundColor: 'rgba(0, 212, 255, 0.08)',
-                border: '1px solid rgba(0, 212, 255, 0.3)',
-                borderRadius: '6px',
-              }}
-            >
-              <p style={{ color: '#00d4ff', fontSize: '0.85rem', marginBottom: '0.3rem' }}>
-                📌 Technique
-              </p>
-              <p style={{ color: '#a0a0a0', fontWeight: 'bold' }}>
-                {payload.technique?.toUpperCase()}
-              </p>
+          <div className="stat-grid">
+            <div className="stat-card">
+              <div className="stat-label">Technique</div>
+              <div className="stat-value">{payload.technique?.toUpperCase()}</div>
             </div>
-            <div
-              style={{
-                padding: '1rem',
-                backgroundColor: 'rgba(0, 212, 255, 0.08)',
-                border: '1px solid rgba(0, 212, 255, 0.3)',
-                borderRadius: '6px',
-              }}
-            >
-              <p style={{ color: '#00d4ff', fontSize: '0.85rem', marginBottom: '0.3rem' }}>
-                📏 Payload Size
-              </p>
-              <p style={{ color: '#a0a0a0', fontWeight: 'bold' }}>
-                {(payload.size / 1024).toFixed(2)} KB
-              </p>
+            <div className="stat-card">
+              <div className="stat-label">Payload Size</div>
+              <div className="stat-value">{sizeKB.toFixed(1)} KB</div>
             </div>
-            <div
-              style={{
-                padding: '1rem',
-                backgroundColor:
-                  payload.size / 1024 < 20
-                    ? 'rgba(76, 175, 80, 0.08)'
-                    : payload.size / 1024 < 30
-                    ? 'rgba(255, 183, 77, 0.08)'
-                    : 'rgba(244, 67, 54, 0.08)',
-                border:
-                  payload.size / 1024 < 20
-                    ? '1px solid rgba(76, 175, 80, 0.3)'
-                    : payload.size / 1024 < 30
-                    ? '1px solid rgba(255, 183, 77, 0.3)'
-                    : '1px solid rgba(244, 67, 54, 0.3)',
-                borderRadius: '6px',
-              }}
-            >
-              <p
-                style={{
-                  color:
-                    payload.size / 1024 < 20
-                      ? '#4caf50'
-                      : payload.size / 1024 < 30
-                      ? '#ffb74d'
-                      : '#ef5350',
-                  fontSize: '0.85rem',
-                  marginBottom: '0.3rem',
-                }}
-              >
-                ✓ Size Status
-              </p>
-              <p style={{ color: '#a0a0a0', fontWeight: 'bold' }}>
-                {payload.size / 1024 < 20
-                  ? '✓ Optimal'
-                  : payload.size / 1024 < 30
-                  ? '⚠ Good'
-                  : '⚠ Large'}
-              </p>
+            <div className="stat-card" style={{
+              borderColor: `var(--${sizeStatus}-border)`,
+            }}>
+              <div className="stat-label">Size Status</div>
+              <div className="stat-value" style={{ color: `var(--${sizeStatus})` }}>
+                {sizeLabel}
+              </div>
             </div>
           </div>
 
-          {payload.size / 1024 < 20 && (
-            <div
-              style={{
-                padding: '0.8rem',
-                marginBottom: '1rem',
-                backgroundColor: 'rgba(76, 175, 80, 0.1)',
-                border: '1px solid rgba(76, 175, 80, 0.3)',
-                borderRadius: '6px',
-                color: '#4caf50',
-                fontSize: '0.85rem',
-              }}
-            >
-              ✓ <strong>Perfect size!</strong> Payload is under 20 KB - optimal for deployment
-            </div>
-          )}
-
-          {payload.size / 1024 >= 20 && payload.size / 1024 < 30 && (
-            <div
-              style={{
-                padding: '0.8rem',
-                marginBottom: '1rem',
-                backgroundColor: 'rgba(255, 183, 77, 0.1)',
-                border: '1px solid rgba(255, 183, 77, 0.3)',
-                borderRadius: '6px',
-                color: '#ffb74d',
-                fontSize: '0.85rem',
-              }}
-            >
-              💡 <strong>Good size.</strong> Payload is under 30 KB - acceptable for most deployments
-            </div>
-          )}
-
-          {payload.size / 1024 >= 30 && (
-            <div
-              style={{
-                padding: '0.8rem',
-                marginBottom: '1rem',
-                backgroundColor: 'rgba(244, 67, 54, 0.1)',
-                border: '1px solid rgba(244, 67, 54, 0.3)',
-                borderRadius: '6px',
-                color: '#ef5350',
-                fontSize: '0.85rem',
-              }}
-            >
-              ⚠ <strong>Large payload.</strong> Consider using lower obfuscation level or simpler technique for smaller size
-            </div>
-          )}
-
-          <p style={{ color: '#a0a0a0', fontSize: '0.85rem', marginBottom: '0.8rem' }}>
-            Payload Preview (First 30 lines):
-          </p>
+          <div style={{
+            fontSize: '0.75rem',
+            color: 'var(--text-muted)',
+            marginBottom: '0.5rem',
+            fontWeight: 500,
+          }}>
+            Code Preview (first 30 lines)
+          </div>
 
           <div className="code-preview">
             {payload.content
@@ -260,55 +160,10 @@ export default function OutputDisplay({ payload, loading }) {
                 <div key={idx}>{line || ' '}</div>
               ))}
             {payload.content.split('\n').length > 30 && (
-              <div style={{ color: '#666' }}>
+              <div style={{ color: 'var(--text-muted)', opacity: 0.5, marginTop: '0.5rem' }}>
                 ... ({payload.content.split('\n').length - 30} more lines)
               </div>
             )}
-          </div>
-
-          <div
-            style={{
-              marginTop: '1.5rem',
-              padding: '1rem',
-              backgroundColor: 'rgba(76, 175, 80, 0.1)',
-              border: '1px solid rgba(76, 175, 80, 0.3)',
-              borderRadius: '6px',
-            }}
-          >
-            <p style={{ margin: '0 0 0.8rem 0', color: '#4caf50', fontWeight: 'bold' }}>
-              ✓ Payload Generated Successfully
-            </p>
-
-            <div style={{ fontSize: '0.85rem', color: '#a0a0a0', lineHeight: '1.6' }}>
-              <p style={{ margin: '0.5rem 0' }}>
-                <strong>📋 Quick Summary:</strong>
-              </p>
-              <ul style={{ margin: '0.5rem 0 1rem 1.5rem', paddingLeft: 0 }}>
-                <li>Payload size: {(payload.size / 1024).toFixed(2)} KB</li>
-                <li>Technique: {payload.technique?.toUpperCase() || 'Standard'}</li>
-                <li>Status: {payload.size / 1024 < 20 ? '✓ Optimal' : 'Ready for deployment'}</li>
-              </ul>
-
-              <p style={{ margin: '0.5rem 0' }}>
-                <strong>🚀 Next Steps:</strong>
-              </p>
-              <ol style={{ margin: '0.5rem 0', paddingLeft: '1.5rem' }}>
-                <li>Click "Download" to save the payload file</li>
-                <li>Transfer to target system or share via your preferred method</li>
-                <li>Execute the payload (double-click or run in console)</li>
-                <li>Installation will complete silently in background</li>
-              </ol>
-
-              <p style={{ margin: '1rem 0 0.5rem 0' }}>
-                <strong>💡 Pro Tips:</strong>
-              </p>
-              <ul style={{ margin: '0.5rem 0', paddingLeft: '1.5rem' }}>
-                <li>Smaller payloads are faster to transfer and less likely to trigger size-based detection</li>
-                <li>Consider your target's network bandwidth when choosing encoding technique</li>
-                <li>For large files (&gt;30MB), use lower obfuscation levels</li>
-                <li>Test payload on similar system first if possible</li>
-              </ul>
-            </div>
           </div>
         </>
       )}

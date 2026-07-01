@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { ChevronRightIcon } from './Icons';
 import { API_BASE } from '../config';
 
 export default function RecommendationCard({ mode }) {
@@ -7,85 +8,50 @@ export default function RecommendationCard({ mode }) {
   const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
+    const fetchRecommendations = async () => {
+      try {
+        const response = await axios.get(`${API_BASE}/recommendations`);
+        setRecommendations(response.data.recommendations);
+      } catch (err) {
+        console.error('Failed to fetch recommendations', err);
+      }
+    };
     fetchRecommendations();
   }, [mode]);
 
-  const fetchRecommendations = async () => {
-    try {
-      const response = await axios.get(`${API_BASE}/recommendations`);
-      setRecommendations(response.data.recommendations);
-    } catch (err) {
-      console.error('Failed to fetch recommendations', err);
-    }
-  };
-
-  if (!recommendations || !recommendations[mode]) {
-    return null;
-  }
+  if (!recommendations || !recommendations[mode]) return null;
 
   const rec = recommendations[mode];
 
   return (
-    <div
-      style={{
-        padding: '1rem',
-        marginBottom: '1rem',
-        backgroundColor: 'rgba(76, 175, 80, 0.08)',
-        border: '1px solid rgba(76, 175, 80, 0.4)',
-        borderRadius: '8px',
-        cursor: 'pointer',
-        transition: 'all 0.3s ease',
-      }}
-      onClick={() => setExpanded(!expanded)}
-    >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <div className="rec-card" onClick={() => setExpanded(!expanded)}>
+      <div className="rec-header">
         <div>
-          <h4 style={{ color: '#4caf50', margin: '0 0 0.5rem 0' }}>
-            {rec.title}
-          </h4>
-          <p style={{ color: '#a0a0a0', fontSize: '0.9rem', margin: 0 }}>
-            💡 {rec.hint}
-          </p>
+          <div className="rec-title">{rec.title}</div>
+          <div className="rec-hint">{rec.hint}</div>
         </div>
-        <div style={{ fontSize: '1.5rem', color: '#4caf50' }}>
-          {expanded ? '▼' : '▶'}
+        <div className={`rec-expand ${expanded ? 'open' : ''}`}>
+          <ChevronRightIcon size={16} />
         </div>
       </div>
 
       {expanded && (
-        <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid rgba(76, 175, 80, 0.3)' }}>
-          <div style={{ marginBottom: '1rem' }}>
-            <h5 style={{ color: '#4caf50', marginTop: 0 }}>📊 Expected Performance:</h5>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
-              <div style={{ padding: '0.8rem', backgroundColor: 'rgba(0, 0, 0, 0.2)', borderRadius: '4px' }}>
-                <p style={{ margin: '0 0 0.3rem 0', color: '#a0a0a0', fontSize: '0.85rem' }}>
-                  Payload Size:
-                </p>
-                <p style={{ margin: 0, color: '#00d4ff', fontWeight: 'bold' }}>
-                  {rec.expected_size}
-                </p>
-              </div>
-              <div style={{ padding: '0.8rem', backgroundColor: 'rgba(0, 0, 0, 0.2)', borderRadius: '4px' }}>
-                <p style={{ margin: '0 0 0.3rem 0', color: '#a0a0a0', fontSize: '0.85rem' }}>
-                  Success Rate:
-                </p>
-                <p style={{ margin: 0, color: '#4caf50', fontWeight: 'bold' }}>
-                  {rec.success_rate || rec.survival_rate}
-                </p>
+        <div style={{ marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid var(--border-default)' }}>
+          <div className="stat-grid" style={{ marginBottom: '0.75rem' }}>
+            <div className="stat-card">
+              <div className="stat-label">Payload Size</div>
+              <div className="stat-value" style={{ fontSize: '0.8125rem' }}>{rec.expected_size}</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-label">Success Rate</div>
+              <div className="stat-value" style={{ fontSize: '0.8125rem', color: 'var(--success)' }}>
+                {rec.success_rate || rec.survival_rate}
               </div>
             </div>
           </div>
-
-          <div>
-            <h5 style={{ color: '#4caf50', marginTop: 0 }}>✓ Best Practice Tips:</h5>
-            <ul style={{ margin: '0.5rem 0', paddingLeft: '1.5rem', color: '#a0a0a0' }}>
-              {rec.tips.map((tip, idx) => (
-                <li key={idx} style={{ marginBottom: '0.4rem', fontSize: '0.9rem' }}>
-                  {tip}
-                </li>
-              ))}
-            </ul>
-          </div>
+          <ul style={{ margin: 0, paddingLeft: '1.25rem', color: 'var(--text-muted)', fontSize: '0.8125rem', lineHeight: '1.6' }}>
+            {rec.tips.map((tip, idx) => <li key={idx}>{tip}</li>)}
+          </ul>
         </div>
       )}
     </div>

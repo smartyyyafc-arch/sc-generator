@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { UploadIcon, FileIcon, CheckIcon } from './Icons';
 import { ALLOWED_FILE_EXTENSIONS } from '../config';
 
 export default function FileUpload({ onUpload, uploadedFile, loading }) {
@@ -13,7 +14,7 @@ export default function FileUpload({ onUpload, uploadedFile, loading }) {
     );
     if (!hasValidExtension) {
       setValidationError(
-        `Invalid file type. Allowed extensions: ${ALLOWED_FILE_EXTENSIONS.join(', ')}`
+        `Invalid file type. Allowed: ${ALLOWED_FILE_EXTENSIONS.join(', ')}`
       );
       return false;
     }
@@ -21,32 +22,20 @@ export default function FileUpload({ onUpload, uploadedFile, loading }) {
     return true;
   };
 
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    setDragOver(true);
-  };
-
-  const handleDragLeave = () => {
-    setDragOver(false);
-  };
+  const handleDragOver = (e) => { e.preventDefault(); setDragOver(true); };
+  const handleDragLeave = () => setDragOver(false);
 
   const handleDrop = (e) => {
     e.preventDefault();
     setDragOver(false);
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      if (validateFile(files[0])) {
-        onUpload(files[0]);
-      }
+    if (e.dataTransfer.files.length > 0 && validateFile(e.dataTransfer.files[0])) {
+      onUpload(e.dataTransfer.files[0]);
     }
   };
 
   const handleFileChange = (e) => {
-    const files = e.target.files;
-    if (files.length > 0) {
-      if (validateFile(files[0])) {
-        onUpload(files[0]);
-      }
+    if (e.target.files.length > 0 && validateFile(e.target.files[0])) {
+      onUpload(e.target.files[0]);
     }
   };
 
@@ -58,15 +47,16 @@ export default function FileUpload({ onUpload, uploadedFile, loading }) {
   };
 
   const formatFileSize = (bytes) => {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) return '0 B';
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
+    return (bytes / Math.pow(k, i)).toFixed(1) + ' ' + sizes[i];
   };
 
   return (
     <div>
+      <h2><UploadIcon /> File Upload</h2>
       <div
         className={`file-upload-area ${dragOver ? 'dragover' : ''}`}
         onDragOver={handleDragOver}
@@ -75,21 +65,24 @@ export default function FileUpload({ onUpload, uploadedFile, loading }) {
         tabIndex={0}
         onKeyDown={handleKeyDown}
         role="button"
-        aria-label="Upload file area. Press Enter or Space to browse files."
+        aria-label="Upload file area"
       >
-        <p>📁 Drag & drop your MSI/EXE file here</p>
-        <p style={{ fontSize: '0.85rem', marginTop: '0.5rem' }}>or click to browse</p>
+        <div className="upload-icon">
+          <UploadIcon size={40} />
+        </div>
+        <p>Drag & drop your MSI/EXE file here</p>
+        <p style={{ fontSize: '0.75rem', marginTop: '0.25rem' }}>or</p>
         <input
           type="file"
           onChange={handleFileChange}
           style={{ display: 'none' }}
           id="file-input"
           ref={fileInputRef}
-          accept=".exe,.msi"
+          accept=".exe,.msi,.dll,.bat,.cmd,.vbs"
           disabled={loading}
         />
-        <label htmlFor="file-input" style={{ cursor: 'pointer' }}>
-          Click here
+        <label htmlFor="file-input" className="upload-browse">
+          Browse files
         </label>
       </div>
 
@@ -101,14 +94,13 @@ export default function FileUpload({ onUpload, uploadedFile, loading }) {
 
       {uploadedFile && (
         <div className="file-info">
-          <p>
-            <strong>✓ File Uploaded:</strong> {uploadedFile.name}
+          <p style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+            <FileIcon size={14} />
+            <strong>{uploadedFile.name}</strong>
           </p>
-          <p>
-            <strong>Size:</strong> {formatFileSize(uploadedFile.size)}
-          </p>
-          <p>
-            <strong>Status:</strong> <span style={{ color: '#4caf50' }}>Ready</span>
+          <p>{formatFileSize(uploadedFile.size)}</p>
+          <p className="file-ready" style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+            <CheckIcon size={14} /> Ready
           </p>
         </div>
       )}

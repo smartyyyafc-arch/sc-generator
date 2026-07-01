@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FingerprintIcon, PlusIcon, XIcon } from './Icons';
 
 export default function FingerprintSelector({
   fingerprints,
@@ -7,25 +8,14 @@ export default function FingerprintSelector({
   onCreateFingerprint,
 }) {
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [newFP, setNewFP] = useState({
-    name: '',
-    description: '',
-  });
+  const [newFP, setNewFP] = useState({ name: '', description: '' });
 
   const handleCreateClick = async () => {
-    if (!newFP.name) {
-      alert('Please enter a fingerprint name');
-      return;
-    }
-
+    if (!newFP.name) return;
     const config = {
       description: newFP.description,
-      modifications: {
-        pe_sections: { add_junk: true },
-        randomize_all: true,
-      },
+      modifications: { pe_sections: { add_junk: true }, randomize_all: true },
     };
-
     const id = await onCreateFingerprint(newFP.name, config);
     if (id) {
       setNewFP({ name: '', description: '' });
@@ -35,8 +25,9 @@ export default function FingerprintSelector({
 
   return (
     <div>
+      <h2><FingerprintIcon /> Fingerprinting</h2>
       <div className="form-group">
-        <label>Select Fingerprint:</label>
+        <label>Select Profile</label>
         <div className="fingerprint-grid">
           {fingerprints.map((fp) => (
             <div
@@ -44,10 +35,7 @@ export default function FingerprintSelector({
               className={`fingerprint-card ${selectedFingerprint === fp.id ? 'selected' : ''}`}
               onClick={() => onSelectFingerprint(fp.id)}
             >
-              <div className="fingerprint-name">
-                {fp.name}
-                {fp.is_custom && ' ⭐'}
-              </div>
+              <div className="fingerprint-name">{fp.name}</div>
               <div className="fingerprint-desc">{fp.description}</div>
             </div>
           ))}
@@ -57,15 +45,15 @@ export default function FingerprintSelector({
       <button
         className="btn-secondary"
         onClick={() => setShowCreateForm(!showCreateForm)}
-        style={{ width: '100%', marginTop: '0.8rem' }}
+        style={{ width: '100%' }}
       >
-        {showCreateForm ? '✕ Cancel' : '➕ Custom Fingerprint'}
+        {showCreateForm ? <><XIcon size={14} /> Cancel</> : <><PlusIcon size={14} /> Custom Profile</>}
       </button>
 
       {showCreateForm && (
-        <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: 'rgba(0, 212, 255, 0.05)', borderRadius: '6px' }}>
+        <div style={{ marginTop: '0.75rem', padding: '0.75rem', background: 'var(--bg-input)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-default)' }}>
           <div className="form-group">
-            <label>Name:</label>
+            <label>Name</label>
             <input
               type="text"
               value={newFP.name}
@@ -73,29 +61,25 @@ export default function FingerprintSelector({
               placeholder="e.g., Office 2019"
             />
           </div>
-          <div className="form-group">
-            <label>Description:</label>
+          <div className="form-group" style={{ marginBottom: 0 }}>
+            <label>Description</label>
             <input
               type="text"
               value={newFP.description}
               onChange={(e) => setNewFP({ ...newFP, description: e.target.value })}
-              placeholder="Optional description"
+              placeholder="Optional"
             />
           </div>
-          <button
-            className="btn-primary"
-            onClick={handleCreateClick}
-            style={{ width: '100%' }}
-          >
-            Create Fingerprint
+          <button className="btn-primary" onClick={handleCreateClick} style={{ width: '100%', marginTop: '0.75rem' }}>
+            Create
           </button>
         </div>
       )}
 
       {!selectedFingerprint && (
-        <div style={{ fontSize: '0.85rem', color: '#a0a0a0', marginTop: '0.8rem' }}>
-          <p>ℹ️ Optional: Fingerprints modify file signatures to evade detection.</p>
-        </div>
+        <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.625rem' }}>
+          Optional. Modifies file signatures to evade detection.
+        </p>
       )}
     </div>
   );

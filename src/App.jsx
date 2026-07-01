@@ -6,13 +6,20 @@ import FingerprintSelector from './components/FingerprintSelector';
 import ProxyManager from './components/ProxyManager';
 import OutputDisplay from './components/OutputDisplay';
 import RecommendationCard from './components/RecommendationCard';
+import { ShieldIcon, TargetIcon, ZapIcon, LockIcon, LayersIcon } from './components/Icons';
 import { API_BASE } from './config';
 import './App.css';
 
-// Lazy load components that may not be immediately needed
 const OneClickInstaller = lazy(() => import('./components/OneClickInstaller'));
 const PersistencePayload = lazy(() => import('./components/PersistencePayload'));
 const CombinedMode = lazy(() => import('./components/CombinedMode'));
+
+const MODES = [
+  { id: 'standard', label: 'Standard', icon: TargetIcon },
+  { id: 'one-click', label: 'One-Click', icon: ZapIcon },
+  { id: 'persistent', label: 'Persistent', icon: LockIcon },
+  { id: 'combined', label: 'Combined', icon: LayersIcon },
+];
 
 export default function App() {
   const [uploadedFile, setUploadedFile] = useState(null);
@@ -27,11 +34,8 @@ export default function App() {
   const [payload, setPayload] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [options, setOptions] = useState({
-    add_comments: false,
-    add_noise: false,
-  });
-  const [mode, setMode] = useState('standard');  // 'standard', 'one-click', 'persistent', or 'combined'
+  const [options, setOptions] = useState({ add_comments: false, add_noise: false });
+  const [mode, setMode] = useState('standard');
 
   useEffect(() => {
     fetchTechniques();
@@ -47,7 +51,6 @@ export default function App() {
       setSelectedTechnique(response.data.techniques[0]);
     } catch (err) {
       setError('Failed to fetch techniques');
-      console.error(err);
     }
   };
 
@@ -72,21 +75,17 @@ export default function App() {
   const handleFileUpload = async (file) => {
     setError(null);
     setLoading(true);
-
     const formData = new FormData();
     formData.append('file', file);
-
     try {
       const response = await axios.post(`${API_BASE}/upload`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-
       setUploadedFile({
         id: response.data.file_id,
         name: response.data.filename,
         size: response.data.size,
       });
-
       setError(null);
     } catch (err) {
       setError(err.response?.data?.error || 'Upload failed');
@@ -100,10 +99,8 @@ export default function App() {
       setError('Please upload a file first');
       return;
     }
-
     setError(null);
     setLoading(true);
-
     try {
       const response = await axios.post(`${API_BASE}/generate-payload`, {
         file_id: uploadedFile.id,
@@ -111,16 +108,14 @@ export default function App() {
         obfuscation: obfuscationLevel,
         fingerprint_id: selectedFingerprint,
         proxy_id: selectedProxy,
-        options: options,
+        options,
       });
-
       setPayload({
         id: response.data.output_id,
         content: response.data.payload,
         size: response.data.size,
         technique: response.data.technique,
       });
-
       setError(null);
     } catch (err) {
       setError(err.response?.data?.error || 'Payload generation failed');
@@ -131,10 +126,7 @@ export default function App() {
 
   const handleAddProxy = async (proxyUrl, proxyType) => {
     try {
-      const response = await axios.post(`${API_BASE}/proxies`, {
-        url: proxyUrl,
-        type: proxyType,
-      });
+      const response = await axios.post(`${API_BASE}/proxies`, { url: proxyUrl, type: proxyType });
       fetchProxies();
       return response.data.id;
     } catch (err) {
@@ -144,10 +136,7 @@ export default function App() {
 
   const handleCreateFingerprint = async (name, config) => {
     try {
-      const response = await axios.post(`${API_BASE}/fingerprints`, {
-        name,
-        config,
-      });
+      const response = await axios.post(`${API_BASE}/fingerprints`, { name, config });
       fetchFingerprints();
       return response.data.id;
     } catch (err) {
@@ -155,14 +144,43 @@ export default function App() {
     }
   };
 
+  const suspenseFallback = (
+    <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+      Loading...
+    </div>
+  );
+
   return (
     <div className="app">
       <header className="app-header">
         <div className="header-content">
-          <h1>🔐 SC-Generator</h1>
-          <p>Advanced VBS Encryption & Obfuscation Tool</p>
+          <div className="header-brand">
+            <div className="header-logo">
+              <ShieldIcon size={20} />
+            </div>
+            <div>
+              <h1>SC-Generator</h1>
+              <p>VBS Payload Encryption & Obfuscation</p>
+            </div>
+          </div>
+          <span className="header-version">v2.0</span>
         </div>
       </header>
+
+      <nav className="mode-tabs">
+        <div className="mode-tabs-inner">
+          {MODES.map(({ id, label, icon: ModeIcon }) => (
+            <button
+              key={id}
+              className={`mode-tab ${mode === id ? 'active' : ''}`}
+              onClick={() => setMode(id)}
+            >
+              <ModeIcon size={16} />
+              {label}
+            </button>
+          ))}
+        </div>
+      </nav>
 
       <main className="app-main">
         <div className="container">
@@ -171,7 +189,6 @@ export default function App() {
           <div className="layout">
             <div className="sidebar">
               <section className="panel">
-                <h2>📁 File Upload</h2>
                 <FileUpload
                   onUpload={handleFileUpload}
                   uploadedFile={uploadedFile}
@@ -179,57 +196,10 @@ export default function App() {
                 />
               </section>
 
-              <section className="panel">
-                <h2>⚙️ Mode Selection</h2>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '0.8rem' }}>
-                  <button
-                    className={`btn-secondary ${mode === 'standard' ? 'active' : ''}`}
-                    onClick={() => setMode('standard')}
-                    style={{
-                      backgroundColor: mode === 'standard' ? 'rgba(0, 212, 255, 0.3)' : 'rgba(0, 212, 255, 0.05)',
-                      fontSize: '0.9rem',
-                    }}
-                  >
-                    🎯 Standard
-                  </button>
-                  <button
-                    className={`btn-secondary ${mode === 'one-click' ? 'active' : ''}`}
-                    onClick={() => setMode('one-click')}
-                    style={{
-                      backgroundColor: mode === 'one-click' ? 'rgba(0, 212, 255, 0.3)' : 'rgba(0, 212, 255, 0.05)',
-                      fontSize: '0.9rem',
-                    }}
-                  >
-                    ⚡ One-Click
-                  </button>
-                  <button
-                    className={`btn-secondary ${mode === 'persistent' ? 'active' : ''}`}
-                    onClick={() => setMode('persistent')}
-                    style={{
-                      backgroundColor: mode === 'persistent' ? 'rgba(0, 212, 255, 0.3)' : 'rgba(0, 212, 255, 0.05)',
-                      fontSize: '0.9rem',
-                    }}
-                  >
-                    🔐 Persistent
-                  </button>
-                  <button
-                    className={`btn-secondary ${mode === 'combined' ? 'active' : ''}`}
-                    onClick={() => setMode('combined')}
-                    style={{
-                      backgroundColor: mode === 'combined' ? 'rgba(0, 212, 255, 0.3)' : 'rgba(0, 212, 255, 0.05)',
-                      fontSize: '0.9rem',
-                    }}
-                  >
-                    🚀 Combined
-                  </button>
-                </div>
-              </section>
-
               {mode === 'standard' && (
                 <>
                   <RecommendationCard mode="standard" />
                   <section className="panel">
-                    <h2>🎯 Encoding Technique</h2>
                     <PayloadGenerator
                       techniques={techniques}
                       techniqueMetadata={techniqueMetadata}
@@ -241,13 +211,7 @@ export default function App() {
                       onOptionsChange={setOptions}
                     />
                   </section>
-                </>
-              )}
-
-              {mode === 'standard' && (
-                <>
                   <section className="panel">
-                    <h2>🔑 Fingerprinting</h2>
                     <FingerprintSelector
                       fingerprints={fingerprints}
                       selectedFingerprint={selectedFingerprint}
@@ -255,9 +219,7 @@ export default function App() {
                       onCreateFingerprint={handleCreateFingerprint}
                     />
                   </section>
-
                   <section className="panel">
-                    <h2>🌐 Proxy Settings</h2>
                     <ProxyManager
                       proxies={proxies}
                       selectedProxy={selectedProxy}
@@ -265,13 +227,12 @@ export default function App() {
                       onAddProxy={handleAddProxy}
                     />
                   </section>
-
                   <button
                     className="btn-generate"
                     onClick={handleGeneratePayload}
                     disabled={!uploadedFile || loading}
                   >
-                    {loading ? '⏳ Generating...' : '✨ Generate Payload'}
+                    {loading ? 'Generating...' : 'Generate Payload'}
                   </button>
                 </>
               )}
@@ -280,7 +241,7 @@ export default function App() {
                 <>
                   <RecommendationCard mode="one-click" />
                   <section className="panel">
-                    <Suspense fallback={<div style={{ textAlign: 'center', padding: '1rem', color: '#a0a0a0' }}>Loading...</div>}>
+                    <Suspense fallback={suspenseFallback}>
                       <OneClickInstaller
                         uploadedFile={uploadedFile}
                         loading={loading}
@@ -303,7 +264,7 @@ export default function App() {
                 <>
                   <RecommendationCard mode="persistent" />
                   <section className="panel">
-                    <Suspense fallback={<div style={{ textAlign: 'center', padding: '1rem', color: '#a0a0a0' }}>Loading...</div>}>
+                    <Suspense fallback={suspenseFallback}>
                       <PersistencePayload
                         uploadedFile={uploadedFile}
                         loading={loading}
@@ -323,7 +284,7 @@ export default function App() {
 
               {mode === 'combined' && (
                 <section className="panel">
-                  <Suspense fallback={<div style={{ textAlign: 'center', padding: '1rem', color: '#a0a0a0' }}>Loading...</div>}>
+                  <Suspense fallback={suspenseFallback}>
                     <CombinedMode
                       uploadedFile={uploadedFile}
                       onGenerate={(result) => {
@@ -344,11 +305,7 @@ export default function App() {
 
             <div className="main-content">
               <section className="panel full-height">
-                <h2>📊 Output</h2>
-                <OutputDisplay
-                  payload={payload}
-                  loading={loading}
-                />
+                <OutputDisplay payload={payload} loading={loading} />
               </section>
             </div>
           </div>
@@ -356,7 +313,7 @@ export default function App() {
       </main>
 
       <footer className="app-footer">
-        <p>SC-Generator v1.0 | For authorized security research only</p>
+        SC-Generator v2.0 &middot; For authorized security research only
       </footer>
     </div>
   );
