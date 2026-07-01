@@ -63,7 +63,6 @@ case "$OS" in
         export DEBIAN_FRONTEND=noninteractive
         apt-get update -qq
         apt-get install -y -qq python3 python3-pip python3-venv git nginx curl ufw ca-certificates > /dev/null 2>&1
-        # Install Node.js 18 LTS via fnm (fast, no GPG/repo issues)
         if ! node --version 2>/dev/null | grep -qE '^v(1[89]|[2-9][0-9])\.'; then
             log "Installing Node.js 18 LTS..."
             apt-get remove -y nodejs npm > /dev/null 2>&1 || true
@@ -95,7 +94,7 @@ log "System dependencies installed"
 # Step 2: Create service user
 #############################################################
 if ! id "$SERVICE_USER" &>/dev/null; then
-    useradd -r -m -d "$INSTALL_DIR" -s /bin/false "$SERVICE_USER"
+    useradd -r -m -d "$INSTALL_DIR" -s /bin/bash "$SERVICE_USER"
     log "Created service user: $SERVICE_USER"
 else
     log "Service user $SERVICE_USER already exists"
@@ -117,7 +116,6 @@ else
 fi
 
 cd "$INSTALL_DIR"
-chown -R "$SERVICE_USER:$SERVICE_USER" "$INSTALL_DIR"
 log "Repository ready at $INSTALL_DIR"
 
 #############################################################
@@ -126,11 +124,9 @@ log "Repository ready at $INSTALL_DIR"
 log "Setting up Python environment..."
 
 python3 -m venv "$INSTALL_DIR/venv"
-source "$INSTALL_DIR/venv/bin/activate"
-
-pip install --upgrade pip -q
-pip install -r requirements.txt -q
-pip install gunicorn -q
+"$INSTALL_DIR/venv/bin/pip" install --upgrade pip -q
+"$INSTALL_DIR/venv/bin/pip" install -r requirements.txt -q
+"$INSTALL_DIR/venv/bin/pip" install gunicorn -q
 
 log "Python dependencies installed"
 
@@ -150,9 +146,10 @@ log "Frontend built successfully"
 #############################################################
 log "Creating working directories..."
 
-mkdir -p /tmp/sc-uploads /tmp/sc-outputs /tmp/sc-fingerprints /tmp/sc-logs
-chown -R "$SERVICE_USER:$SERVICE_USER" /tmp/sc-uploads /tmp/sc-outputs /tmp/sc-fingerprints /tmp/sc-logs
-chmod 700 /tmp/sc-fingerprints
+mkdir -p /var/lib/sc-generator/uploads \
+         /var/lib/sc-generator/outputs \
+         /var/lib/sc-generator/fingerprints \
+         /var/log/sc-generator
 
 #############################################################
 # Step 7: Create environment file
@@ -166,9 +163,6 @@ FLASK_HOST=127.0.0.1
 FLASK_PORT=5000
 CORS_ORIGINS=*
 ENVEOF
-
-chmod 600 "$INSTALL_DIR/.env"
-chown "$SERVICE_USER:$SERVICE_USER" "$INSTALL_DIR/.env"
 
 #############################################################
 # Step 8: Create gunicorn config
@@ -185,15 +179,24 @@ timeout = 120
 keepalive = 5
 max_requests = 1000
 max_requests_jitter = 50
-accesslog = "/tmp/sc-logs/access.log"
-errorlog = "/tmp/sc-logs/error.log"
+accesslog = "-"
+errorlog = "-"
 loglevel = "info"
 GUNIEOF
 
-chown "$SERVICE_USER:$SERVICE_USER" "$INSTALL_DIR/gunicorn.conf.py"
+#############################################################
+# Step 9: Fix all ownership
+#############################################################
+log "Setting file ownership..."
+
+chown -R "$SERVICE_USER:$SERVICE_USER" "$INSTALL_DIR"
+chown -R "$SERVICE_USER:$SERVICE_USER" /var/lib/sc-generator
+chown -R "$SERVICE_USER:$SERVICE_USER" /var/log/sc-generator
+chmod 600 "$INSTALL_DIR/.env"
+chmod 700 /var/lib/sc-generator/fingerprints
 
 #############################################################
-# Step 9: Create systemd service
+# Step 10: Create systemd service
 #############################################################
 log "Creating systemd service..."
 
@@ -204,11 +207,12 @@ After=network.target
 Wants=network-online.target
 
 [Service]
-Type=exec
+Type=simple
 User=$SERVICE_USER
 Group=$SERVICE_USER
 WorkingDirectory=$INSTALL_DIR
 Environment=PATH=$INSTALL_DIR/venv/bin:/usr/local/bin:/usr/bin:/bin
+Environment=HOME=$INSTALL_DIR
 EnvironmentFile=$INSTALL_DIR/.env
 ExecStart=$INSTALL_DIR/venv/bin/gunicorn -c gunicorn.conf.py app:app
 ExecReload=/bin/kill -HUP \$MAINPID
@@ -216,12 +220,9 @@ Restart=always
 RestartSec=5
 StandardOutput=journal
 StandardError=journal
+SyslogIdentifier=sc-generator
 
-# Security hardening
 NoNewPrivileges=yes
-ProtectSystem=strict
-ProtectHome=yes
-ReadWritePaths=/tmp/sc-uploads /tmp/sc-outputs /tmp/sc-fingerprints /tmp/sc-logs
 PrivateTmp=no
 
 [Install]
@@ -233,7 +234,7 @@ systemctl enable sc-generator
 log "Systemd service created and enabled"
 
 #############################################################
-# Step 10: Configure Nginx reverse proxy
+# Step 11: Configure Nginx reverse proxy
 #############################################################
 log "Configuring Nginx..."
 
@@ -246,38 +247,29 @@ server {
     listen [::]:80 default_server;
     server_name _;
 
-    # Serve React frontend
     root /opt/sc-generator/build;
     index index.html;
 
-    # Frontend routes - serve index.html for SPA
     location / {
         try_files $uri $uri/ /index.html;
     }
 
-    # Proxy API requests to Flask/Gunicorn
     location /api/ {
         proxy_pass http://127.0.0.1:5000;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
-
-        # File upload size
         client_max_body_size 100M;
-
-        # Timeouts for payload generation
         proxy_read_timeout 120s;
         proxy_connect_timeout 10s;
     }
 
-    # Cache static assets
     location /static/ {
         expires 1y;
         add_header Cache-Control "public, immutable";
     }
 
-    # Security headers
     add_header X-Content-Type-Options "nosniff" always;
     add_header X-Frame-Options "DENY" always;
     add_header X-XSS-Protection "1; mode=block" always;
@@ -285,17 +277,15 @@ server {
 }
 NGINXEOF
 
-# Enable site
 ln -sf /etc/nginx/sites-available/sc-generator /etc/nginx/sites-enabled/sc-generator 2>/dev/null || \
     cp /etc/nginx/sites-available/sc-generator /etc/nginx/conf.d/sc-generator.conf
 
-# Test nginx config
 nginx -t 2>/dev/null || err "Nginx configuration test failed"
 
 log "Nginx configured"
 
 #############################################################
-# Step 11: Configure firewall
+# Step 12: Configure firewall
 #############################################################
 log "Configuring firewall..."
 
@@ -322,20 +312,25 @@ case "$OS" in
 esac
 
 #############################################################
-# Step 12: Start services
+# Step 13: Start services
 #############################################################
 log "Starting services..."
 
-systemctl restart sc-generator
+systemctl stop sc-generator 2>/dev/null || true
+systemctl start sc-generator
 systemctl restart nginx
 
-sleep 2
+sleep 3
 
-# Verify services are running
+# Verify services with actual output
 if systemctl is-active --quiet sc-generator; then
     log "SC-Generator service: RUNNING"
 else
-    warn "SC-Generator service failed to start. Check: journalctl -u sc-generator -n 50"
+    err_msg=$(journalctl -u sc-generator -n 20 --no-pager 2>/dev/null || echo "no logs available")
+    warn "SC-Generator service failed to start!"
+    echo -e "${RED}--- Service logs ---${NC}"
+    echo "$err_msg"
+    echo -e "${RED}--- End logs ---${NC}"
 fi
 
 if systemctl is-active --quiet nginx; then
@@ -344,12 +339,21 @@ else
     warn "Nginx failed to start. Check: journalctl -u nginx -n 50"
 fi
 
-# Health check
-sleep 1
-if curl -sf http://127.0.0.1:5000/api/health > /dev/null 2>&1; then
+# Health check with retry
+HEALTH_OK=false
+for i in 1 2 3; do
+    sleep 2
+    if curl -sf http://127.0.0.1:5000/api/health > /dev/null 2>&1; then
+        HEALTH_OK=true
+        break
+    fi
+done
+
+if [ "$HEALTH_OK" = true ]; then
     log "API health check: PASSED"
 else
-    warn "API health check failed - service may still be starting"
+    warn "API health check failed after retries"
+    warn "Check logs: journalctl -u sc-generator -n 30 --no-pager"
 fi
 
 #############################################################
