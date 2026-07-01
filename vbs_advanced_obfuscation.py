@@ -89,7 +89,7 @@ regPath = "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\"
 """
 
         for i, chunk in enumerate(chunks):
-            safe_chunk = chunk.replace("\\", "\\\\").replace('"', '\\"')
+            safe_chunk = chunk.replace('"', '""')
             vbs_code += (
                 f'WshShell.RegWrite regPath & "f{i}", "{safe_chunk}", "REG_SZ"\n'
             )

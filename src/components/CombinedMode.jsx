@@ -36,7 +36,7 @@ const PRESETS = {
     description: 'Minimal footprint with fast deployment. Smallest payload size for bandwidth-constrained scenarios.',
     encoding: 'base64',
     installer: 'silent',
-    persistence: 'startup',
+    persistence: 'startup_folder',
     tags: ['Fast', 'Small Size', 'Simple'],
   },
   full_arsenal: {
@@ -86,12 +86,12 @@ const INSTALLER_OPTIONS = [
 
 const PERSISTENCE_OPTIONS = [
   { value: 'registry', label: 'Registry' },
-  { value: 'startup', label: 'Startup Folder' },
+  { value: 'startup_folder', label: 'Startup Folder' },
   { value: 'scheduled_task', label: 'Scheduled Task' },
   { value: 'wmi', label: 'WMI Event' },
   { value: 'service', label: 'Windows Service' },
-  { value: 'defender', label: 'Defender Exclusion' },
   { value: 'multi', label: 'Multi-Method (All)' },
+  { value: 'none', label: 'None' },
 ];
 
 export default function CombinedMode({ uploadedFile, onGenerate }) {
@@ -177,18 +177,14 @@ export default function CombinedMode({ uploadedFile, onGenerate }) {
     }
   };
 
-  const handleDownload = async () => {
-    if (!result?.outputId) return;
-
+  const handleDownload = () => {
+    if (!result?.content) return;
     try {
-      const response = await axios.get(`${API_BASE}/download/${result.outputId}`, {
-        responseType: 'blob',
-      });
-
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const blob = new Blob([result.content], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `combined_${result.outputId}.vbs`);
+      link.setAttribute('download', `combined_${result.outputId || 'output'}.vbs`);
       document.body.appendChild(link);
       link.click();
       link.parentElement.removeChild(link);
@@ -334,21 +330,39 @@ export default function CombinedMode({ uploadedFile, onGenerate }) {
               <div style={{ display: 'flex', gap: '0.375rem', flexWrap: 'wrap' }}>
                 {result.stages.map((stage, idx) => (
                   <span key={idx} className="tag success">
-                    {idx + 1}. {stage}
+                    {idx + 1}. {stage.stage}: {stage.technique} ({(stage.output_size / 1024).toFixed(1)} KB)
                   </span>
                 ))}
               </div>
             </div>
           )}
 
-          {Object.keys(result.metadata).length > 0 && (
+          {result.metadata && (
             <div className="stat-grid">
-              {Object.entries(result.metadata).map(([key, value]) => (
-                <div key={key} className="stat-card">
-                  <div className="stat-label">{key.replace(/_/g, ' ')}</div>
-                  <div className="stat-value" style={{ fontSize: '0.75rem' }}>{String(value)}</div>
+              {result.metadata.encoding && (
+                <div className="stat-card">
+                  <div className="stat-label">Encoding</div>
+                  <div className="stat-value" style={{ fontSize: '0.75rem' }}>{result.metadata.encoding}</div>
                 </div>
-              ))}
+              )}
+              {result.metadata.installer && (
+                <div className="stat-card">
+                  <div className="stat-label">Installer</div>
+                  <div className="stat-value" style={{ fontSize: '0.75rem' }}>{result.metadata.installer}</div>
+                </div>
+              )}
+              {result.metadata.persistence && (
+                <div className="stat-card">
+                  <div className="stat-label">Persistence</div>
+                  <div className="stat-value" style={{ fontSize: '0.75rem' }}>{result.metadata.persistence}</div>
+                </div>
+              )}
+              {result.metadata.total_stages != null && (
+                <div className="stat-card">
+                  <div className="stat-label">Active Stages</div>
+                  <div className="stat-value" style={{ fontSize: '0.75rem' }}>{result.metadata.total_stages}</div>
+                </div>
+              )}
             </div>
           )}
 

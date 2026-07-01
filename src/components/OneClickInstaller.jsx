@@ -62,18 +62,14 @@ export default function OneClickInstaller({ uploadedFile, loading, onGenerate })
     }
   };
 
-  const handleDownload = async () => {
-    if (!payload?.id) return;
-
+  const handleDownload = () => {
+    if (!payload?.content) return;
     try {
-      const response = await axios.get(`${API_BASE}/download/${payload.id}`, {
-        responseType: 'blob',
-      });
-
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const blob = new Blob([payload.content], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', payload.filename);
+      link.setAttribute('download', payload.filename || 'payload.vbs');
       document.body.appendChild(link);
       link.click();
       link.parentElement.removeChild(link);

